@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wrick Talukdar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: #f0f0f0;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: row;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        .nav-container {
+            width: 250px;
+            background-color: #1e1e1e;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-container a {
+            color: #f0f0f0;
+            text-decoration: none;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-container a:hover {
+            background-color: #444;
+        }
+
+        .content-container {
+            flex: 1;
+            padding: 30px;
+        }
+
+        /* Profile Section */
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .profile-info img {
+            border-radius: 50%;
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border: 5px solid #444;
+        }
+
+        .profile-info h2 {
+            font-size: 2.5em;
+            color: #f0f0f0;
+        }
+
+        /* Articles Timeline Section */
+        .articles-timeline {
+            position: relative;
+            margin: 20px 0;
+            padding-left: 40px;
+            border-left: 2px solid #444;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .timeline-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: -10px;
+            width: 10px;
+            height: 10px;
+            background-color: #ff9800;
+            border-radius: 50%;
+        }
+
+        .timeline-title {
+            font-size: 1.3em;
+            color: #ff9800;
+        }
+
+        .timeline-description {
+            font-size: 1em;
+            color: #b0b0b0;
+        }
+
+        .timeline-date {
+            font-size: 0.9em;
+            color: #777;
+            font-style: italic;
+        }
+
+        /* Tab Switching */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Publications Section */
+    .publications-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        margin-top: 20px;
+    }
+
+    .publication-card {
+        background-color: #1e1e1e;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        color: #f0f0f0;
+        position: relative;
+        padding-left: 60px;
+    }
+
+    .publication-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .publication-logo {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 80px;
+        height: 50px;
+        object-fit: contain;
+        border-radius: 5px;
+    }
+
+    .publication-title {
+        font-size: 1.1em; /* Smaller title font */
+        color: #ff9800;
+        margin-left: 70px;
+        margin-bottom: 15px;
+    }
+
+    .publication-description {
+        font-size: 0.9em; /* Smaller description font */
+        color: #b0b0b0;
+        margin-bottom: 20px;
+        margin-left: 70px;
+    }
+
+    .publication-link {
+        color: #ff9800;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 0.9em; /* Smaller font for link */
+        transition: color 0.3s ease;
+        margin-left: 70px;
+    }
+
+    .publication-link:hover {
+        color: #ff5722;
+    }
+
+    /* Responsive Design for Smaller Screens */
+    @media (max-width: 768px) {
+        .publications-container {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .publications-container {
+            grid-template-columns: 1fr;
+        }
+    }
+
+        footer {
+            background-color: #1e1e1e;
+            color: #b0b0b0;
+            text-align: center;
+            padding: 20px;
+        }
+
+        footer {
+            background-color: #1e1e1e;
+            color: #b0b0b0;
+            text-align: center;
+            padding: 20px;
+            border-top: 2px solid #444;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-sizing: border-box; /* Ensures proper padding is applied */
+        }
+
+
+        footer a:hover {
+            color: #ff5722;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="nav-container">
+        <a href="javascript:void(0)" onclick="showTab('home')">Home</a>
+        <a href="javascript:void(0)" onclick="showTab('projects')">Projects</a>
+        <a href="javascript:void(0)" onclick="showTab('articles')">Articles</a>
+        <a href="javascript:void(0)" onclick="showTab('publications')">Publications</a>
+    </div>
+
+    <!-- Content -->
+    <div class="content-container">
+        <!-- Home Section -->
+        <div id="home" class="tab-content active">
+            <section class="profile-info">
+                <img src="./photos/image.jpeg" alt="Wrick Photo">
+                <div>
+                    <h2>Wrick Talukdar</h2>
+                    <p>Thought Leader | GenAI, AI/ML Product Architect & Leader | Innovator</p>
+                    <p><strong>Location:</strong> California, US</p> <!-- Smaller size applied here -->
+                    <p><strong>Skills:</strong> Generative Artificial Intelligence, Machine Learning, Deep Learning, Cloud Computing, Product Architecture </p> <!-- Smaller size applied here -->
+                </div>
+            </section>
+
+            <section class="section-content">
+                <h3 class="section-title"></h3>
+                   <p>
+                        Wrick is a distinguished AI/ML architect and product leader with over two decades of experience driving technological transformations in global enterprises. Renowned for his expertise in AI, Machine Learning, and Cloud Computing, he has consistently leveraged cutting-edge technologies to deliver strategic business value for customers all over the globe.<br><br>
+
+
+                   </p>
+
+                   <p>
+                        Throughout his career, Wrick has led digital initiatives that drive significant cost savings and accelerate time-to-market. He has a proven track record of building high-performance teams that deliver innovative AI products and solutions.<br><br>
+                    </p>
+
+                    <p>
+                        As a strategic thinker, Wrick excels in aligning technology with business goals, fostering cross-functional collaboration, and addressing complex challenges with data-driven approaches. His ability to bridge technical expertise with business vision positions him as a key leader in driving sustainable growth and innovation.<br><br>
+                    </p>
+
+                    <p>
+Beyond his professional achievements, Wrick has made a significant impact on the global scientific community, with his research papers and articles widely referenced and cited by researchers. He is also a Senior Member of the Institute of Electrical and Electronics Engineers (IEEE) and serves as the Chief AI/ML Architect of Generative AI initiatives for the IEEE Industry Engagement Committee (IEC), where he helps young professionals advance in their careers using technology.</p>
+
+            </section>
+        </div>
+
+        <!-- Projects Section
+        <div id="projects" class="tab-content">
+            <h3>Projects</h3>
+            <ul>
+                <li><a href="#">AI-based Automation System</a></li>
+                <li><a href="#">Cloud Infrastructure Optimization</a></li>
+            </ul>
+        </div> -->
+
+        <div id="projects" class="tab-content">
+            <section class="section-content">
+                <h3 class="section-title">Projects</h3>
+                <div class="publications-container">
+                    <div class="publication-card">
+                        <img src="./photos/github.png" alt="odsc Logo" class="publication-logo">
+                        <h4 class="publication-title">Agentic System for Emergency Medical Service</h4>
+                        <p class="publication-description">In the critical moments of a medical emergency, every second counts. Use Generative AI and Agentic based Medi-Aid to save lives.</p>
+                        <a href="https://github.com/iamwrick/medi-aid" target="_blank" class="publication-link">Project - Dr. Pepper</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/github.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Compete with confidence using Generative AI</h4>
+                        <p class="publication-description">Use advanced AI/ML systems and Agents to generative competitive insight</p>
+                        <a href="https://github.com/iamwrick/ai_agentic_pricing_analysis" target="_blank" class="publication-link">Project - Cortex</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/github.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Recycle Predictor using advance Computer Vision</h4>
+                        <p class="publication-description">Save the planet by predicting recyclable objects with high accuracy and confidence</p>
+                        <a href="https://github.com/iamwrick/recycle-prediction" target="_blank" class="publication-link">Project - Galileo</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/github.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Agentic ChatBot</h4>
+                        <p class="publication-description">A smart ChatBot using Agentic architecture and Amazon Bedrock</p>
+                        <a href="https://github.com/iamwrick/genai-bedrock-agent-chatbot" target="_blank" class="publication-link">Link</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/github.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Build Safe and Secured Generative AI Applications</h4>
+                        <p class="publication-description">A framework to build safe, secured, and cost-effective generative AI appliations</p>
+                        <a href="https://github.com/iamwrick/generative_ai_security" target="_blank" class="publication-link">Link</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/github.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Live Meeting Assistant</h4>
+                        <p class="publication-description">Generate transcripts in real-time using advanced Automatic Speech Recognition and Genrative AI models</p>
+                        <a href="https://github.com/iamwrick/amazon-transcribe-live-meeting-assistant" target="_blank" class="publication-link">Link</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/github.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Clinical Notes Generator</h4>
+                        <p class="publication-description">Generate clinical notes using advanced machine learning models</p>
+                        <a href="https://github.com/iamwrick/clinical_notes_generator" target="_blank" class="publication-link">Link</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/github.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Generate SOAP and BIRP Notes effectively using machine learning</h4>
+                        <p class="publication-description">Easily generate SOAP and BIRP notes with a ready to use framework</p>
+                        <a href="https://github.com/iamwrick/mindfulnotes" target="_blank" class="publication-link">Link</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/github.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Recognize faces and emotions using computer vision</h4>
+                        <p class="publication-description">Easily recognize faces advanced machine learning and computer vision techqniues</p>
+                        <a href="https://github.com/iamwrick/facial_recognition" target="_blank" class="publication-link">Link</a>
+                    </div>
+                     <div class="publication-card">
+                        <img src="./photos/github.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Create draft business presentations using Generative AI</h4>
+                        <p class="publication-description">Generate business presentations in seconds using advance Generative AI techniques and tools</p>
+                        <a href="https://github.com/iamwrick/SlideDrafter" target="_blank" class="publication-link">Link</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/github.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Break the language barrier</h4>
+                        <p class="publication-description">Talk with anyone around the globe in any language using TalkLocal</p>
+                        <a href="https://github.com/iamwrick/app_talklocal" target="_blank" class="publication-link">Link</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Articles Section -->
+        <div id="articles" class="tab-content">
+            <h3>Articles</h3>
+            <div class="articles-timeline">
+
+                <div class="timeline-item">
+                    <h4 class="timeline-title">Build trust and safety for generative AI applications</h4>
+                    <p class="timeline-description">Build safe applications with GenAI to solve your business problems</p>
+                    <a href="https://aws.amazon.com/blogs/machine-learning/build-trust-and-safety-for-generative-ai-applications-with-amazon-comprehend-and-langchain/" target="_blank" class="publication-link">Read More</a>
+                </div>
+                <div class="timeline-item">
+                    <h4 class="timeline-title">Simplified Natural Language Processing(NLP) processing pipeline </h4>
+                    <p class="timeline-description">Solve complex classification using advanced natural language processing pipeline</p>
+                    <a href="https://aws.amazon.com/blogs/machine-learning/build-a-classification-pipeline-with-amazon-comprehend-custom-classification-part-i/" target="_blank" class="publication-link">Read More</a>
+                </div>
+                <div class="timeline-item">
+                    <h4 class="timeline-title">Identify objection in customer conversations using Natural Language Understanding(NLU)</h4>
+                    <p class="timeline-description">Handle objections effectively in customer conversations using Deep Learning(DL) techniques</p>
+                    <a href="https://aws.amazon.com/blogs/machine-learning/identify-objections-in-customer-conversations-using-amazon-comprehend-to-enhance-customer-experience-without-ml-expertise/" target="_blank" class="publication-link">Read More</a>
+                </div>
+                <div class="timeline-item">
+                    <h4 class="timeline-title">Use advanced layout support for document processing</h4>
+                    <p class="timeline-description">Enhance document understanding and classification using advanced machine learning and computer vision</p>
+                    <a href="https://aws.amazon.com/blogs/machine-learning/amazon-comprehend-document-classifier-adds-layout-support-for-higher-accuracy/" target="_blank" class="publication-link">Read More</a>
+                </div>
+                <div class="timeline-item">
+                    <h4 class="timeline-title">One-step document classification and entity extraction with Deep Learning(DL)</h4>
+                    <p class="timeline-description">Simplify document classification and entity extraction process using the simple pipeline we developed for any document type</p>
+                    <a href="https://aws.amazon.com/blogs/machine-learning/introducing-one-step-classification-and-entity-recognition-with-amazon-comprehend-for-intelligent-document-processing/" target="_blank" class="publication-link">Read More</a>
+                </div>
+                <div class="timeline-item">
+                    <h4 class="timeline-title">Targeted sentiment analysis using machine learning techniques</h4>
+                    <p class="timeline-description">Dive deep with targeted sentiment to uncover insights in data</p>
+                    <a href="https://aws.amazon.com/blogs/machine-learning/amazon-comprehend-targeted-sentiment-adds-synchronous-support/" target="_blank" class="publication-link">Read More</a>
+                </div>
+                <div class="timeline-item">
+                    <h4 class="timeline-title">Uncover customer sentiment using natural language processing</h4>
+                    <p class="timeline-description">Understand sentiments of customers using deep learning to make business decisions</p>
+                    <a href="https://aws.amazon.com/blogs/machine-learning/get-better-insight-from-reviews-using-amazon-comprehend/" target="_blank" class="publication-link">Read More</a>
+                </div>
+                <div class="timeline-item">
+                    <h4 class="timeline-title">Data extraction using deep learning from identity documents</h4>
+                    <p class="timeline-description">Uncover insight and extract identity data from passports, driving license, etc. using computer vision</p>
+                    <a href="https://aws.amazon.com/blogs/machine-learning/announcing-support-for-extracting-data-from-identity-documents-using-amazon-textract/" target="_blank" class="publication-link">Read More</a>
+                </div>
+                <div class="timeline-item">
+                    <h4 class="timeline-title">Using Natural Language Understand(NLU) to interact with your customers</h4>
+                    <p class="timeline-description">Understand customer interactions and conversations with advance machine learning techniques</p>
+                    <a href="https://aws.amazon.com/blogs/machine-learning/interact-with-an-amazon-lex2v2-bot-with-the-aws-cli-aws-sdk-for-python-and-aws-sdk-dotnet/" target="_blank" class="publication-link">Read More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Publications Section -->
+        <div id="publications" class="tab-content">
+            <section class="section-content">
+                <h3 class="section-title">Publications</h3>
+                <div class="publications-container">
+                    <div class="publication-card">
+                        <img src="./photos/odsc.png" alt="odsc Logo" class="publication-logo">
+                        <h4 class="publication-title">Agentic Systems for Competitive Intelligence</h4>
+                        <p class="publication-description">Explore the transformative role of Agentic systems in Competitive Intelligence, generating business insights.</p>
+                        <a href="https://opendatascience.com/agentic-systems-for-competitive-intelligence-enhancing-business-decision-making/" target="_blank" class="publication-link">Read More</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/arxiv-logo.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Improving Large Language Model (LLM) fidelity through context-aware grounding</h4>
+                        <p class="publication-description">A novel framework for contextual grounding in Large Language Models (LLMs)</p>
+                        <a href="https://arxiv.org/abs/2408.04023" target="_blank" class="publication-link">Read More</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/arxiv-logo.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Enhancing Clinical Documentation with Large Langauge Models</h4>
+                        <p class="publication-description">Deliver high-quality clinical documentation with machine learning</p>
+                        <a href="https://arxiv.org/abs/2406.06569" target="_blank" class="publication-link">Read More</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/arxiv-logo.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Synergizing Unsupervised and Supervised Learning</h4>
+                        <p class="publication-description">Novel hybrid approach that synergizes unsupervised and supervised learning to improve the accuracy of task modeling</p>
+                        <a href="https://arxiv.org/abs/2406.01096" target="_blank" class="publication-link">Read More</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/arxiv-logo.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">  Harnessing Generative AI for Patient-Centric Clinical Note Generation</h4>
+                        <p class="publication-description">Use Generative AI and Automatic Speech Recognition(ASR) to generate highly accurate clinical notes</p>
+                        <a href="https://arxiv.org/abs/2405.18346" target="_blank" class="publication-link">Read More</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/arxiv-logo.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Cost-effective approach with multi-modal embedding</h4>
+                        <p class="publication-description">a cost-effective vector sampling method that leverages pre-trained multi-modal embedding models to classify financial documents</p>
+                        <a href="https://arxiv.org/abs/2406.01618" target="_blank" class="publication-link">Read More</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/odsc.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Elevate Healthcare documentation with Generative AI</h4>
+                        <p class="publication-description">Use generative AI (Artificial Intelligence) to produce clinical notes and enhance the quality of clinical documentation</p>
+                        <a href="https://opendatascience.com/elevating-healthcare-documentation-the-significance-of-soap-birp-and-the-promise-of-generative-ai/" target="_blank" class="publication-link">Read More</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/odsc.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Transform global speech into local language</h4>
+                        <p class="publication-description">Generate local language and subtitle from any languages in the world using large language models(LLMs)</p>
+                        <a href="https://opendatascience.com/transform-global-speech-into-local-language-with-talklocal/" target="_blank" class="publication-link">Read More</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/arxiv-logo.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Impact of document skew on data extraction accuracy with LLMs</h4>
+                        <p class="publication-description">Alternative approaches with multi-modal model architecture to build robust extraction pipeline using Large Language Models(LLMs)</p>
+                        <a href="https://arxiv.org/abs/2406.10295" target="_blank" class="publication-link">Read More</a>
+                    </div>
+
+                    <div class="publication-card">
+                        <img src="./photos/jst.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Guardrails for trust, safety, and ethical development of Large Language Models(LLms)</h4>
+                        <p class="publication-description">Implement safeguards and guardrails ensure that the content generated by LLMs are safe, secure, and ethical. </p>
+                        <a href="https://thesciencebrigade.com/jst/article/view/245" target="_blank" class="publication-link">Read More</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Wrick Talukdar. All Rights Reserved. | <a href="#">Privacy Policy</a></p>
+    </footer>
+
+    <script>
+        function showTab(tabId) {
+            var tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
