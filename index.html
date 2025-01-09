@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wrick Talukdar</title>
+    <!--<title>Wrick Talukdar</title>-->
+      <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
     <style>
         * {
             margin: 0;
@@ -19,6 +21,17 @@
             display: flex;
             flex-direction: row;
             min-height: 100vh;
+        }
+         .title {
+          font-family: 'Great Vibes', cursive; /* Beautiful cursive font */
+          font-size: 48px;
+          text-align: center;
+          color: #ff9800; /* Accent color */
+          margin-top: 20px;
+        }
+         .subtitle {
+            font-size: 16px;
+            color: #dcdcdc; /* Softer grey for subtitle */
         }
 
         /* Navigation */
@@ -74,54 +87,7 @@
             color: #f0f0f0;
         }
 
-        /* Articles Timeline Section */
-        .articles-timeline {
-            position: relative;
-            margin: 20px 0;
-            padding-left: 40px;
-            border-left: 2px solid #444;
-        }
 
-        .timeline-item {
-            position: relative;
-            margin-bottom: 20px;
-            padding: 10px 15px;
-            background-color: #1e1e1e;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        .timeline-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            top: 15px;
-            left: -10px;
-            width: 10px;
-            height: 10px;
-            background-color: #ff9800;
-            border-radius: 50%;
-        }
-
-        .timeline-title {
-            font-size: 1.3em;
-            color: #ff9800;
-        }
-
-        .timeline-description {
-            font-size: 1em;
-            color: #b0b0b0;
-        }
-
-        .timeline-date {
-            font-size: 0.9em;
-            color: #777;
-            font-style: italic;
-        }
 
         /* Tab Switching */
         .tab-content {
@@ -231,14 +197,72 @@
         }
 
 
+    .timeline-item {
+      background-color: #2c2c2c; /* Slightly lighter dark for contrast */
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 6px solid #ff9800; /* Accent color for the border */
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .timeline-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    }
+
+    .timeline-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #ff9800; /* Accent color */
+      margin: 0 0 10px;
+    }
+
+    .timeline-description {
+      font-size: 16px;
+      line-height: 1.6;
+      margin: 0 0 15px;
+      color: #dcdcdc; /* Softer light grey for readability */
+    }
+
+    .publication-link {
+      font-size: 16px;
+      color: #64b5f6; /* Blue for links */
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.2s ease;
+    }
+
+    .publication-link:hover {
+      color: #42a5f5; /* Lighter blue on hover */
+    }
+
+    .details {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #b0b0b0; /* Medium grey for detail text */
+    }
+
+    .details span {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .details strong {
+      color: #ffffff; /* Bright white for emphasis */
+    }
+
+
     </style>
 </head>
 <body>
+
     <!-- Navigation -->
     <div class="nav-container">
         <a href="javascript:void(0)" onclick="showTab('home')">Home</a>
         <a href="javascript:void(0)" onclick="showTab('projects')">Projects</a>
-        <a href="javascript:void(0)" onclick="showTab('articles')">Articles</a>
+        <a href="javascript:void(0)" onclick="showTab('articles')">Research</a>
         <a href="javascript:void(0)" onclick="showTab('publications')">Publications</a>
         <!--<a href="javascript:void(0)" onclick="showTab('awards')">Awards</a>-->
 
@@ -250,12 +274,13 @@
         <div id="home" class="tab-content active">
             <section class="profile-info">
                 <img src="./photos/image.jpeg" alt="Wrick Photo">
-                <div style="font-family: 'Garamond', serif; color: #ddd;">
-                    <h2 style="margin-bottom: 10px;">Wrick Talukdar</h2>
-                    <p style="margin-bottom: 15px;">Thought Leader | GenAI, AI/ML Product Architect & Leader | Innovator | Author</p>
-                        <!--<p style="margin-bottom: 10px;"><strong>Location:</strong> California, US</p>
-                        <p style="margin-bottom: 10px;"><strong>Skills:</strong> Generative Artificial Intelligence, Machine Learning, Deep Learning, Cloud Computing, Product Architecture</p> -->
-                </div>
+                    <div class="title">Wrick Talukdar</div><br>
+
+                <!--<div style="font-family: 'Garamond', serif; color: #ddd;">
+                    <p>Thought Leader | GenAI, AI/ML Product Architect & Leader | Innovator | Author</p>
+
+                        <p style="margin-bottom: 10px;"><strong>Skills:</strong> Generative Artificial Intelligence, Machine Learning, Deep Learning, Cloud Computing, Product Architecture</p>
+                </div>-->
 
             </section>
 
@@ -263,10 +288,12 @@
                 <h3 class="section-title"></h3>
 
                 <div style="font-family: Arial, sans-serif; color: #fff; padding: 20px;">
+
             <!-- Main Content (Two-Column Layout) -->
                 <div style="display: flex; justify-content: space-between; gap: 20px; font-family: 'Garamond', serif;">
                 <!-- Left Column (Description) -->
                 <div style="flex: 2; padding: 20px; color: #ddd; font-size: 18px; line-height: 1.6;">
+
                     <p style="margin: 5px 0;">
                         Wrick is a distinguished AI/ML architect and product leader with over two decades of experience driving technological transformations in global enterprises. Renowned for his expertise in AI, Machine Learning, and Cloud Computing, he has consistently leveraged cutting-edge technologies to deliver strategic business value for customers all over the globe.<br><br>
                     </p>
@@ -337,12 +364,7 @@
             <section class="section-content">
                 <h3 class="section-title">Projects</h3>
                 <div class="publications-container">
-                    <!--<div class="publication-card">
-                        <img src="./photos/github-60.png" alt="odsc Logo" class="publication-logo">
-                        <h4 class="publication-title">Agentic System for Emergency Medical Service</h4>
-                        <p class="publication-description">In the critical moments of a medical emergency, every second counts. Use Generative AI and Agentic based Medi-Aid to save lives.</p>
-                        <a href="https://github.com/iamwrick/medi-aid" target="_blank" class="publication-link">Project - Dr. Pepper</a>
-                    </div>-->
+
                         <div class="publication-card">
                             <img src="./photos/github-60.png" alt="odsc Logo" class="publication-logo">
                             <a href="https://github.com/iamwrick/medi-aid" target="_blank">
@@ -437,54 +459,102 @@
 
         <!-- Articles Section -->
         <div id="articles" class="tab-content">
-            <h3>Articles</h3>
+            <h3>Research</h3>
             <div class="articles-timeline">
 
                 <div class="timeline-item">
-                    <h4 class="timeline-title">Build trust and safety for generative AI applications</h4>
-                    <p class="timeline-description">Build safe applications with GenAI to solve your business problems</p>
-                    <a href="https://aws.amazon.com/blogs/machine-learning/build-trust-and-safety-for-generative-ai-applications-with-amazon-comprehend-and-langchain/" target="_blank" class="publication-link">Read More</a>
-                </div>
+                    <h4 class="timeline-title">Synthetic Data Generation for Improving Clinical Documentation</h4>
+                    <p class="timeline-description">
+                      Accurate and comprehensive clinical documentation is crucial for delivering high-quality healthcare,
+                      facilitating effective communication among providers, and ensuring compliance with regulatory requirements.
+                      Through extensive experiments on a large dataset of anonymized clinical transcripts, we demonstrate the effectiveness
+                      of our approach in generating high-quality synthetic transcripts that closely resemble real-world data.
+                    </p>
+                    <div class="details">
+                      <span><strong>Subjects:</strong> Computation and Language (cs.CL); Artificial Intelligence (cs.AI); Machine Learning (cs.LG)</span>
+                      <span><strong>Cite As:</strong> arXiv:2406.06569 [cs.CL]</span>
+                      <span><strong>Journal:</strong>	International Journal of Innovative Science and Research Technology: Vol. 9 (2024): No. 5, 1553-1566</span>
+                    </div>
+                    <a href="https://arxiv.org/abs/2406.06569" target="_blank" class="publication-link">Read paper</a>
+              </div>
                 <div class="timeline-item">
-                    <h4 class="timeline-title">Simplified Natural Language Processing(NLP) processing pipeline </h4>
-                    <p class="timeline-description">Solve complex classification using advanced natural language processing pipeline</p>
-                    <a href="https://aws.amazon.com/blogs/machine-learning/build-a-classification-pipeline-with-amazon-comprehend-custom-classification-part-i/" target="_blank" class="publication-link">Read More</a>
-                </div>
+                    <h4 class="timeline-title">A Cost-Effective Approach of Classifying Financial Documents with Vector Sampling using Multi-modal Embedding Models</h4>
+                    <p class="timeline-description">
+                      Accurate classification of multi-modal financial documents, containing text, tables, charts, and images, is crucial but challenging. Traditional text-based approaches often fail to capture the complex multi-modal nature of these documents. We propose FinEmbedDiff, a cost-effective vector sampling method that leverages pre-trained multi-modal embedding models to classify financial documents. Our approach generates multi-modal embedding vectors for documents, and compares new documents with pre-computed class embeddings using vector similarity measures.
+                    </p>
+                    <div class="details">
+                      <span><strong>Subjects:</strong> Information Retrieval (cs.IR); Artificial Intelligence (cs.AI)</span>
+                      <span><strong>Cite As:</strong> arXiv:2406.01618 [cs.IR]</span>
+                      <span><strong>Journal:</strong> International Research Journal of Modernization in Engineering Technology and Science: Vol. 06 (2024): No. 5, 6142-6152</span>
+                    </div>
+                    <a href="https://arxiv.org/abs/2406.01618" target="_blank" class="publication-link">Read paper</a>
+              </div>
                 <div class="timeline-item">
-                    <h4 class="timeline-title">Identify objection in customer conversations using Natural Language Understanding(NLU)</h4>
-                    <p class="timeline-description">Handle objections effectively in customer conversations using Deep Learning(DL) techniques</p>
-                    <a href="https://aws.amazon.com/blogs/machine-learning/identify-objections-in-customer-conversations-using-amazon-comprehend-to-enhance-customer-experience-without-ml-expertise/" target="_blank" class="publication-link">Read More</a>
-                </div>
+                    <h4 class="timeline-title">Synergizing Unsupervised and Supervised Learning: A Hybrid Approach for Accurate Natural Language Task Modeling</h4>
+                    <p class="timeline-description">
+                        While supervised learning models have shown remarkable performance in various natural language processing (NLP) tasks, their success heavily relies on the availability of large-scale labeled datasets, which can be costly and time-consuming to obtain. This paper presents a novel hybrid approach that synergizes unsupervised and supervised learning to improve the accuracy of NLP task modeling.
+                    </p>
+                    <div class="details">
+                      <span><strong>Subjects:</strong> Computation and Language (cs.CL); Machine Learning (cs.LG)</span>
+                      <span><strong>Cite As:</strong> arXiv:2406.01096 [cs.CL]</span>
+                      <span><strong>Journal:</strong> International Journal of Innovative Science and Research Technology: Vol. 9 (2024): No. 5, 1499-1508</span>
+                    </div>
+                    <a href="https://arxiv.org/abs/2406.01096" target="_blank" class="publication-link">Read paper</a>
+              </div>
                 <div class="timeline-item">
-                    <h4 class="timeline-title">Use advanced layout support for document processing</h4>
-                    <p class="timeline-description">Enhance document understanding and classification using advanced machine learning and computer vision</p>
-                    <a href="https://aws.amazon.com/blogs/machine-learning/amazon-comprehend-document-classifier-adds-layout-support-for-higher-accuracy/" target="_blank" class="publication-link">Read More</a>
-                </div>
+                    <h4 class="timeline-title">LLMs can be highly effective in healthcare</h4>
+                    <p class="timeline-description">
+                        Comprehensive clinical documentation is crucial for effective healthcare delivery, yet it poses a significant burden on healthcare professionals, leading to burnout, increased medical errors, and compromised patient safety.
+                        We present a case study demonstrating the application of natural language processing (NLP) and automatic speech recognition (ASR) technologies to transcribe patient-clinician interactions, coupled with advanced prompting techniques to generate draft clinical notes using large language models (LLMs).
+                    </p>
+                    <div class="details">
+                      <span><strong>Subjects:</strong> Artificial Intelligence (cs.AI)</span>
+                      <span><strong>Cite As:</strong> arXiv:2405.18346 [cs.AI]</span>
+                      <span><strong>Journal:</strong> International Journal of Innovative Science and Research Technology: Vol. 9 (2024): No. 5, 994-1008</span>
+                    </div>
+                    <a href="https://arxiv.org/abs/2405.18346" target="_blank" class="publication-link">Read paper</a>
+              </div>
                 <div class="timeline-item">
-                    <h4 class="timeline-title">One-step document classification and entity extraction with Deep Learning(DL)</h4>
-                    <p class="timeline-description">Simplify document classification and entity extraction process using the simple pipeline we developed for any document type</p>
-                    <a href="https://aws.amazon.com/blogs/machine-learning/introducing-one-step-classification-and-entity-recognition-with-amazon-comprehend-for-intelligent-document-processing/" target="_blank" class="publication-link">Read More</a>
-                </div>
+                    <h4 class="timeline-title">Data extraction using multi-modal LLMs</h4>
+                    <p class="timeline-description">
+                        Multi-modal large language models (LLMs) have shown remarkable performance in various natural language processing tasks, including data extraction from documents. However, the accuracy of these models can be significantly affected by document in-plane rotation, also known as skew, a common issue in real-world scenarios for scanned documents.
+                        This study investigates the impact of document skew on the data extraction accuracy of three state-of-the-art multi-modal LLMs: Anthropic Claude V3 Sonnet, GPT-4-Turbo, and Llava:v1.6. We focus on extracting specific entities from synthetically generated sample documents with varying degrees of skewness.
+                    </p>
+                    <div class="details">
+                      <span><strong>Subjects:</strong> Computation and Language (cs.CL); Information Retrieval (cs.IR)                        </span>
+                      <span><strong>Cite As:</strong> arXiv:2406.10295 [cs.CL]</span>
+                      <span><strong>Journal:</strong> 	Journal of Artificial Intelligence Research: Vol. 4 (2024): No. 1, 176-195</span>
+                    </div>
+                    <a href="https://arxiv.org/abs/2406.10295" target="_blank" class="publication-link">Read paper</a>
+              </div>
                 <div class="timeline-item">
-                    <h4 class="timeline-title">Targeted sentiment analysis using machine learning techniques</h4>
-                    <p class="timeline-description">Dive deep with targeted sentiment to uncover insights in data</p>
-                    <a href="https://aws.amazon.com/blogs/machine-learning/amazon-comprehend-targeted-sentiment-adds-synchronous-support/" target="_blank" class="publication-link">Read More</a>
-                </div>
+                    <h4 class="timeline-title">Context aware grounding can improve LLM's fidelity</h4>
+                    <p class="timeline-description">
+                        As Large Language Models (LLMs) become increasingly sophisticated and ubiquitous in natural language processing (NLP) applications, ensuring their robustness, trustworthiness, and alignment with human values has become a critical challenge. This paper presents a novel framework for contextual grounding in textual models, with a particular emphasis on the Context Representation stage.
+                    </p>
+                    <div class="details">
+                      <span><strong>Subjects:</strong> Computation and Language (cs.CL); Artificial Intelligence (cs.AI)                       </span>
+                      <span><strong>Cite As:</strong> arXiv:2408.04023 [cs.CL]</span>
+                      <span><strong>Journal:</strong> World Journal of Advanced Engineering Technology and Sciences, 2023, 10(2), 283-296</span>
+                    </div>
+                    <a href="https://arxiv.org/abs/2408.04023" target="_blank" class="publication-link">Read paper</a>
+              </div>
                 <div class="timeline-item">
-                    <h4 class="timeline-title">Uncover customer sentiment using natural language processing</h4>
-                    <p class="timeline-description">Understand sentiments of customers using deep learning to make business decisions</p>
-                    <a href="https://aws.amazon.com/blogs/machine-learning/get-better-insight-from-reviews-using-amazon-comprehend/" target="_blank" class="publication-link">Read More</a>
-                </div>
-                <div class="timeline-item">
-                    <h4 class="timeline-title">Data extraction using deep learning from identity documents</h4>
-                    <p class="timeline-description">Uncover insight and extract identity data from passports, driving license, etc. using computer vision</p>
-                    <a href="https://aws.amazon.com/blogs/machine-learning/announcing-support-for-extracting-data-from-identity-documents-using-amazon-textract/" target="_blank" class="publication-link">Read More</a>
-                </div>
-                <div class="timeline-item">
-                    <h4 class="timeline-title">Using Natural Language Understand(NLU) to interact with your customers</h4>
-                    <p class="timeline-description">Understand customer interactions and conversations with advance machine learning techniques</p>
-                    <a href="https://aws.amazon.com/blogs/machine-learning/interact-with-an-amazon-lex2v2-bot-with-the-aws-cli-aws-sdk-for-python-and-aws-sdk-dotnet/" target="_blank" class="publication-link">Read More</a>
-                </div>
+                    <h4 class="timeline-title">Trust, safety, and ethics in development of LLMs</h4>
+                    <p class="timeline-description">
+
+                    </p>
+                    <div class="details">
+                      <span><strong>Subjects:</strong> Computation and Language (cs.CL); Artificial Intelligence (cs.AI)</span>
+                      <span><strong>Cite As:</strong> https://doi.org/10.55662/JST.2023.4605</span>
+                      <span><strong>Journal:</strong> https://thesciencebrigade.com/jst/article/view/245/237</span>
+                    </div>
+                    <a href="https://thesciencebrigade.com/jst/article/view/245/237" target="_blank" class="publication-link">Read paper</a>
+              </div>
+
+
+
+                
             </div>
         </div>
 
@@ -561,6 +631,62 @@
                         <h4 class="publication-title">Guardrails for trust, safety, and ethical development of Large Language Models(LLms)</h4>
                         <p class="publication-description">Implement safeguards and guardrails ensure that the content generated by LLMs are safe, secure, and ethical. </p>
                         <a href="https://thesciencebrigade.com/jst/article/view/245" target="_blank" class="publication-link">Read More</a>
+                    </div>
+
+                    <div class="publication-card">
+                        <img src="./photos/trust&safety.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Use Comprehend to ensure privacy and safety of LLMs</h4>
+                        <p class="publication-description">Enhance the overall safety and privacy of AI application using Amazon Comprehend. </p>
+                        <a href="https://aws.amazon.com/blogs/machine-learning/build-trust-and-safety-for-generative-ai-applications-with-amazon-comprehend-and-langchain/" target="_blank" class="publication-link">Read More</a>
+                    </div>
+
+                     <div class="publication-card">
+                        <img src="./photos/classify-pipeline.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Enterprise grade Natural Language Pipeline</h4>
+                        <p class="publication-description">Build a classification pipeline easily using the simplified solution. </p>
+                        <a href="https://aws.amazon.com/blogs/machine-learning/build-a-classification-pipeline-with-amazon-comprehend-custom-classification-part-i/" target="_blank" class="publication-link">Read More</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/objection-handling.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Handle customer objections efficiently using AI</h4>
+                        <p class="publication-description">Enhance customer experience easily using efficient machine learning objection handling techniques.</p>
+                        <a href="https://aws.amazon.com/blogs/machine-learning/identify-objections-in-customer-conversations-using-amazon-comprehend-to-enhance-customer-experience-without-ml-expertise/" target="_blank" class="publication-link">Read More</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/layout-support.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Use Computer Vision(CV) to enhance extraction</h4>
+                        <p class="publication-description">Train bespoke document classification models on native documents that support layout in addition to text, increasing the accuracy of the results.</p>
+                        <a href="https://aws.amazon.com/blogs/machine-learning/amazon-comprehend-document-classifier-adds-layout-support-for-higher-accuracy/" target="_blank" class="publication-link">Read More</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/idp.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Intelligent document processing</h4>
+                        <p class="publication-description">Use advanced machine learning techniques and computer vision to process millions of documents efficiently with high accuracy.</p>
+                        <a href="https://aws.amazon.com/blogs/machine-learning/introducing-one-step-classification-and-entity-recognition-with-amazon-comprehend-for-intelligent-document-processing/" target="_blank" class="publication-link">Read More</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/targeted-sentiment.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Understand targeted sentiment with machine learning</h4>
+                        <p class="publication-description">Enable accurate and scalable brand and competitor insights using artificial intelligence.</p>
+                        <a href="https://aws.amazon.com/blogs/machine-learning/amazon-comprehend-targeted-sentiment-adds-synchronous-support/" target="_blank" class="publication-link">Read More</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/targeted-sentiment.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Get critical insight from customers using machine learning</h4>
+                        <p class="publication-description">Extract meaningful information from product reviews, analyze it to understand how users of different demographics are reacting to products, and discover aggregated information on user affinity towards a product.</p>
+                        <a href="https://aws.amazon.com/blogs/machine-learning/get-better-insight-from-reviews-using-amazon-comprehend/" target="_blank" class="publication-link">Read More</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/identity-doc.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Extract key information from identity documents</h4>
+                        <p class="publication-description">Automatically extract information from identification documents, such as driver’s licenses and passports.</p>
+                        <a href="https://aws.amazon.com/blogs/machine-learning/announcing-support-for-extracting-data-from-identity-documents-using-amazon-textract/" target="_blank" class="publication-link">Read More</a>
+                    </div>
+                    <div class="publication-card">
+                        <img src="./photos/nlu.png" alt="Publisher Logo" class="publication-logo">
+                        <h4 class="publication-title">Natural Language Understanding</h4>
+                        <p class="publication-description">Build conversational experience using Lex.</p>
+                        <a href="https://aws.amazon.com/blogs/machine-learning/interact-with-an-amazon-lex2v2-bot-with-the-aws-cli-aws-sdk-for-python-and-aws-sdk-dotnet/" target="_blank" class="publication-link">Read More</a>
                     </div>
                 </div>
             </section>
