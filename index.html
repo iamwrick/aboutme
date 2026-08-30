@@ -63,7 +63,7 @@
 
         body {
             font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            background: var(--primary-bg);
             color: var(--primary-text);
             line-height: 1.65;
             font-weight: 400;
@@ -79,11 +79,12 @@
             right: 0;
             bottom: 0;
             background: 
+                linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%),
                 radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
                 radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.01) 0%, transparent 50%);
             pointer-events: none;
-            z-index: -1;
+            z-index: -2;
         }
         /* Modern Navigation */
         .nav-container {
@@ -3809,9 +3810,213 @@
             .connect-modern { grid-template-columns: 1fr; gap: 2rem; }
         }
 
+
+        /* Scroll Reveal Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal-left.revealed {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal-right.revealed {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal-scale.revealed {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+
+        /* Book Reviews & Endorsements */
+        .book-reviews-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .book-reviews-header {
+            margin-bottom: 1.25rem;
+        }
+
+        .book-reviews-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .book-reviews-rating {
+            font-size: 1.2rem;
+            color: #fbbf24;
+            letter-spacing: 2px;
+        }
+
+        .book-reviews-count {
+            font-size: 0.82rem;
+            color: var(--muted-text);
+        }
+
+        .book-reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+        }
+
+        .book-review-card {
+            padding: 1.5rem;
+            border-left: 2px solid rgba(251,191,36,0.3);
+            background: rgba(255,255,255,0.02);
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+
+        .book-review-stars {
+            font-size: 0.8rem;
+            color: #fbbf24;
+            letter-spacing: 1px;
+            margin-bottom: 0.6rem;
+        }
+
+        .book-review-text {
+            font-family: 'Crimson Text', serif;
+            font-size: 0.95rem;
+            font-style: italic;
+            color: var(--secondary-text);
+            line-height: 1.65;
+            margin-bottom: 0.75rem;
+        }
+
+        .book-review-author {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .book-review-author strong {
+            font-size: 0.8rem;
+            color: var(--primary-text);
+        }
+
+        .book-review-author span {
+            font-size: 0.68rem;
+            color: var(--muted-text);
+        }
+
+        @media (max-width: 768px) {
+            .book-reviews-grid { grid-template-columns: 1fr; }
+        }
+
+
+        /* Particle Canvas */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        /* Press Feature Banner */
+        .press-banner {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.7rem 1.25rem;
+            background: linear-gradient(135deg, rgba(251,191,36,0.04), transparent);
+            border: 1px solid rgba(251,191,36,0.12);
+            border-radius: 0.6rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .press-banner:hover {
+            border-color: rgba(251,191,36,0.3);
+            background: rgba(251,191,36,0.06);
+        }
+
+        .press-banner-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #fbbf24;
+            background: rgba(251,191,36,0.12);
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            flex-shrink: 0;
+        }
+
+        .press-banner-text {
+            font-family: 'Crimson Text', serif;
+            font-size: 0.9rem;
+            font-style: italic;
+            color: var(--secondary-text);
+            flex: 1;
+        }
+
+        .press-banner-source {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--muted-text);
+            white-space: nowrap;
+        }
+
+        .press-banner-arrow {
+            font-size: 0.65rem;
+            color: var(--muted-text);
+            transition: transform 0.2s;
+        }
+
+        .press-banner:hover .press-banner-arrow {
+            transform: translateX(3px);
+            color: #fbbf24;
+        }
+
+        /* Footer polish */
+        .footer-updated {
+            font-size: 0.75rem;
+            color: var(--muted-text);
+            margin-left: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .press-banner { flex-wrap: wrap; }
+            .press-banner-text { font-size: 0.82rem; }
+        }
+
     </style>
 </head>
 <body>
+    <canvas id="particle-canvas"></canvas>
     <!-- Scroll Bar with tooltip navigation -->
     <div class="scroll-indicator" id="section-scrubber">
         <div class="scroll-bar-track">
@@ -3901,6 +4106,19 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Press Feature Banner -->
+            <section class="section" style="padding: 0.75rem 2rem;">
+                <div class="section-container">
+                    <a href="https://ceoworld.biz/2025/04/23/from-curiosity-to-real-world-impact-how-wrick-talukdar-is-shaping-the-future-of-ai/" target="_blank" class="press-banner">
+                        <span class="press-banner-label">Featured</span>
+                        <span class="press-banner-text">"From Curiosity to Real-World Impact: How Wrick Talukdar is Shaping the Future of AI"</span>
+                        <span class="press-banner-source">— CEO World Magazine</span>
+                        <i class="fas fa-arrow-right press-banner-arrow"></i>
+                    </a>
+                </div>
+            </section>
+
 
             
 
@@ -5566,7 +5784,44 @@
                         </div>
                     </div>
 
-                    <div class="books-grid">
+                    
+                    <!-- Reviews & Endorsements -->
+                    <div class="book-reviews-section">
+                        <div class="book-reviews-header">
+                            <div class="book-reviews-stat">
+                                <span class="book-reviews-rating">★★★★</span>
+                                <span class="book-reviews-count">94 reviews on Amazon</span>
+                            </div>
+                        </div>
+                        <div class="book-reviews-grid">
+                            <div class="book-review-card">
+                                <div class="book-review-stars">★★★★★</div>
+                                <p class="book-review-text">"More than a technical reference, this book serves as an essential guide for shaping the future of Generative AI and intelligent agents. I wholeheartedly endorse this timely and insightful work."</p>
+                                <div class="book-review-author">
+                                    <strong>Matthew R. Scott</strong>
+                                    <span>CTO, Minset.ai</span>
+                                </div>
+                            </div>
+                            <div class="book-review-card">
+                                <div class="book-review-stars">★★★★★</div>
+                                <p class="book-review-text">"As somebody that has been working on artificial intelligence for decades, I believe this book will be a great resource for students, researchers, and professionals alike, charting a clear path forward."</p>
+                                <div class="book-review-author">
+                                    <strong>Dr. Alex Acero</strong>
+                                    <span>Member, National Academy of Engineering · IEEE Fellow</span>
+                                </div>
+                            </div>
+                            <div class="book-review-card">
+                                <div class="book-review-stars">★★★★★</div>
+                                <p class="book-review-text">"This isn't a 'just prompt it' playbook — it's a signal that agentic systems are moving from novelty to necessity. Multi-agent systems aren't theoretical anymore, they're the scaffolding for how real enterprise autonomy will scale."</p>
+                                <div class="book-review-author">
+                                    <strong>Doug Shannon</strong>
+                                    <span>GenAI Thought Leader · Forbes Technology Council</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+<div class="books-grid">
                         <!-- Book 1: Building Agentic AI Systems -->
                         <div class="card">
                             <div style="text-align: center; margin-bottom: 1.5rem;">
@@ -6428,7 +6683,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2025 Wrick Talukdar. All rights reserved.</p>
+        <p>&copy; <span id="footer-year">2026</span> Wrick Talukdar. All rights reserved. <span class="footer-updated">Last updated: August 2026</span></p>
     </footer>
 
 
@@ -6710,6 +6965,158 @@
             }
             type();
         })();
+
+
+        // Scroll Reveal — fade in elements as they enter viewport
+        (function() {
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        // Stagger the reveal for siblings
+                        const delay = entry.target.dataset.revealDelay || 0;
+                        setTimeout(() => {
+                            entry.target.classList.add('revealed');
+                        }, delay);
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -40px 0px'
+            });
+
+            // Apply reveal classes to elements
+            function applyRevealClasses() {
+                // Section headers
+                document.querySelectorAll('.section-header, .impact-heading, .articles-hero-strip, .focus-header, .connect-modern, .award-banner').forEach(el => {
+                    if (!el.classList.contains('reveal')) {
+                        el.classList.add('reveal');
+                        revealObserver.observe(el);
+                    }
+                });
+
+                // Cards and timeline items with staggered delays
+                document.querySelectorAll('.card, .pro-company, .article-card, .pub-entry, .testimonial-card, .focus-card, .connect-card, .mem-row').forEach((el, i) => {
+                    if (!el.classList.contains('reveal')) {
+                        el.classList.add('reveal');
+                        el.dataset.revealDelay = (i % 6) * 80; // stagger within groups
+                        revealObserver.observe(el);
+                    }
+                });
+
+                // Featured article
+                document.querySelectorAll('.featured-article').forEach(el => {
+                    if (!el.classList.contains('reveal-scale')) {
+                        el.classList.add('reveal-scale');
+                        revealObserver.observe(el);
+                    }
+                });
+
+                // Trust bar, featured-in
+                document.querySelectorAll('.trust-bar, .featured-in-logos').forEach(el => {
+                    if (!el.classList.contains('reveal')) {
+                        el.classList.add('reveal');
+                        revealObserver.observe(el);
+                    }
+                });
+
+                // Timeline content blocks
+                document.querySelectorAll('.timeline-content').forEach((el, i) => {
+                    if (!el.classList.contains('reveal')) {
+                        el.classList.add(i % 2 === 0 ? 'reveal-left' : 'reveal-right');
+                        revealObserver.observe(el);
+                    }
+                });
+            }
+
+            // Run on load and on tab switch
+            applyRevealClasses();
+
+            // Re-apply when tabs switch (new content becomes visible)
+            const origShowTab = showTab;
+            showTab = function(tabId) {
+                origShowTab(tabId);
+                setTimeout(applyRevealClasses, 100);
+            };
+        })();
+
+
+        // Neural Net Particle Background
+        (function() {
+            const canvas = document.getElementById('particle-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            const maxParticles = 60;
+            const connectionDistance = 150;
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.vx = (Math.random() - 0.5) * 0.4;
+                    this.vy = (Math.random() - 0.5) * 0.4;
+                    this.radius = Math.random() * 1.5 + 0.5;
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < maxParticles; i++) {
+                particles.push(new Particle());
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Draw connections
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < connectionDistance) {
+                            const alpha = (1 - dist / connectionDistance) * 0.15;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                // Update and draw particles
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
+
+        // Auto-update footer year
+        document.getElementById('footer-year').textContent = new Date().getFullYear();
 
     </script>
 </body>
