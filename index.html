@@ -3105,6 +3105,417 @@
             .trust-sub { font-size: 0.5rem; }
         }
 
+
+        /* Research Impact Banner */
+
+
+        .impact-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .impact-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        .impact-source {
+            font-size: 0.75rem;
+            color: var(--muted-text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: color 0.2s;
+        }
+
+        .impact-source:hover {
+            color: #00d0af;
+        }
+
+        .impact-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .impact-grid-primary {
+            grid-template-columns: repeat(3, 1fr);
+            margin-bottom: 1.25rem;
+        }
+
+        .impact-grid-secondary {
+            grid-template-columns: repeat(4, 1fr);
+            margin-top: 1rem;
+        }
+
+        .impact-card-hero {
+            background: transparent;
+            border: none;
+            padding: 1rem 0.5rem;
+        }
+
+        .impact-card-hero .impact-number {
+            font-size: 2.2rem;
+        }
+
+        /* Percentile Badges */
+        .impact-percentiles {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .percentile-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            flex: 1;
+        }
+
+        .percentile-highlight {
+            background: rgba(74,222,128,0.06);
+            border-color: rgba(74,222,128,0.2);
+        }
+
+        .percentile-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            white-space: nowrap;
+        }
+
+        .percentile-highlight .percentile-num {
+            color: #4ade80;
+        }
+
+        .percentile-desc {
+            font-size: 0.7rem;
+            color: var(--muted-text);
+            line-height: 1.3;
+        }
+
+        /* Score Breakdown Bar */
+        .impact-breakdown {
+            margin-bottom: 0.5rem;
+        }
+
+        .breakdown-bar {
+            display: flex;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .breakdown-segment {
+            height: 100%;
+            transition: width 1.5s ease;
+        }
+
+        .breakdown-legend {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .breakdown-legend span {
+            font-size: 0.6rem;
+            color: var(--muted-text);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .legend-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .impact-card {
+            text-align: center;
+            padding: 0.75rem 0.5rem;
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .impact-card:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .impact-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            line-height: 1;
+            margin-bottom: 0.35rem;
+        }
+
+        .impact-label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin-bottom: 0.1rem;
+        }
+
+        .impact-sublabel {
+            font-size: 0.6rem;
+            color: var(--muted-text);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 768px) {
+            .impact-grid-primary { grid-template-columns: repeat(3, 1fr); }
+            .impact-grid-secondary { grid-template-columns: repeat(2, 1fr); }
+            .impact-number { font-size: 1.3rem; }
+            .impact-card-hero .impact-number { font-size: 1.6rem; }
+            .impact-heading { flex-direction: column; gap: 0.5rem; align-items: flex-start; }
+            .impact-percentiles { flex-direction: column; }
+        }
+
+        @media (max-width: 480px) {
+            .impact-grid-primary { grid-template-columns: 1fr; }
+            .impact-grid-secondary { grid-template-columns: repeat(2, 1fr); }
+        }
+
+
+        .impact-trend {
+            color: #4ade80;
+            font-size: 0.55rem;
+            font-weight: 600;
+        }
+
+
+        .impact-sources {
+            display: flex;
+            gap: 1.25rem;
+            align-items: center;
+        }
+
+
+        .stat-item-highlight .stat-number {
+            color: var(--accent-color);
+            position: relative;
+        }
+
+        .stat-item-highlight .stat-number::after {
+            content: '↑';
+            font-size: 0.7rem;
+            color: #4ade80;
+            margin-left: 0.3rem;
+            vertical-align: super;
+        }
+
+
+        .top-paper-callout {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.25rem;
+            padding: 0.75rem 1.25rem;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 0.75rem;
+        }
+
+        .top-paper-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            white-space: nowrap;
+            color: #fbbf24;
+        }
+
+        .top-paper-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .top-paper-title {
+            font-size: 0.82rem;
+            color: var(--primary-text);
+            font-weight: 500;
+        }
+
+        .top-paper-cites {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #4ade80;
+        }
+
+
+        /* Book Awards */
+        .book-award {
+            margin-top: 1.5rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .award-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--muted-text);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 0.75rem;
+        }
+
+        .award-header i {
+            color: #fbbf24;
+            font-size: 0.8rem;
+        }
+
+        .award-badges {
+            display: flex;
+            gap: 0.6rem;
+            justify-content: center;
+        }
+
+        .award-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.9rem;
+            border-radius: 0.6rem;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .award-winner {
+            background: rgba(251, 191, 36, 0.08);
+            border-color: rgba(251, 191, 36, 0.2);
+        }
+
+        .award-finalist {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .award-icon {
+            font-size: 1.1rem;
+        }
+
+        .award-type {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--primary-text);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .award-winner .award-type {
+            color: #fbbf24;
+        }
+
+        .award-category {
+            font-size: 0.68rem;
+            color: var(--muted-text);
+        }
+
+
+        /* Award Banner — Books page top */
+        .award-banner {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2.5rem;
+            background: linear-gradient(135deg, rgba(251,191,36,0.06), rgba(251,191,36,0.02), transparent);
+            border: 1px solid rgba(251,191,36,0.2);
+            border-radius: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .award-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #fbbf24, transparent);
+        }
+
+        .award-banner-trophy {
+            font-size: 2.5rem;
+            color: #fbbf24;
+            flex-shrink: 0;
+            filter: drop-shadow(0 0 12px rgba(251,191,36,0.3));
+        }
+
+        .award-banner-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .award-banner-title {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #fbbf24;
+        }
+
+        .award-banner-book {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        .award-banner-details {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.15rem;
+        }
+
+        .award-banner-winner {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #fbbf24;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .award-banner-finalist {
+            font-size: 0.8rem;
+            color: var(--secondary-text);
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .award-banner-program {
+            font-size: 0.7rem;
+            color: var(--muted-text);
+            margin-top: 0.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .award-banner { flex-direction: column; text-align: center; align-items: center; }
+            .award-banner-details { justify-content: center; }
+        }
+
     </style>
 </head>
 <body>
@@ -3179,6 +3590,10 @@
                     </div>
                 </div>
             </section>
+            
+
+            
+
             <!-- Trust Bar -->
             <section class="trust-bar-section">
                 <div class="trust-bar-label">Affiliated & Contributing To</div>
@@ -3957,7 +4372,98 @@
                     <div class="section-header">
                         <h2 class="section-title">Research</h2>
                         <p class="section-subtitle">Advancing AI and machine learning through scientific research</p>
+                    
+                    <!-- Research Impact Stats -->
+                    <div class="research-impact-strip">
+<div class="section-container">
+
+                    <div class="impact-heading">
+                        <h3 class="impact-title">Research Impact</h3>
+                        <div class="impact-sources">
+                            <a href="https://www.researchgate.net/profile/Wrick-Talukdar-2" target="_blank" class="impact-source">
+                                <i class="fab fa-researchgate"></i> ResearchGate
+                            </a>
+                            <a href="https://scholar.google.com/scholar?q=author:wrick+talukdar" target="_blank" class="impact-source">
+                                <i class="fas fa-graduation-cap"></i> Google Scholar
+                            </a>
+                        </div>
                     </div>
+
+                    <!-- Primary Stats Row -->
+                    <div class="impact-grid impact-grid-primary">
+                        <div class="impact-card impact-card-hero">
+                            <div class="impact-number">592.1</div>
+                            <div class="impact-label">Research Interest Score</div>
+                            <div class="impact-sublabel"><span class="impact-trend">↑ +1.1 last week</span></div>
+                        </div>
+                        <div class="impact-card impact-card-hero">
+                            <div class="impact-number">1,112</div>
+                            <div class="impact-label">Citations</div>
+                            <div class="impact-sublabel"><span class="impact-trend">↑ & counting</span></div>
+                        </div>
+                        <div class="impact-card impact-card-hero">
+                            <div class="impact-number">7,248</div>
+                            <div class="impact-label">Reads</div>
+                            <div class="impact-sublabel"><span class="impact-trend">↑ +11 last week</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Percentile Badges -->
+                    <div class="impact-percentiles">
+                        <div class="percentile-badge">
+                            <span class="percentile-num">Top 13%</span>
+                            <span class="percentile-desc">of all ResearchGate members</span>
+                        </div>
+                        <div class="percentile-badge percentile-highlight">
+                            <span class="percentile-num">Top 1%</span>
+                            <span class="percentile-desc">among researchers who first published in 2021</span>
+                        </div>
+                    </div>
+
+                    <!-- Score Breakdown -->
+                    <div class="impact-breakdown">
+                        <div class="breakdown-bar">
+                            <div class="breakdown-segment" style="width: 93.9%; background: var(--accent-color);" title="Citations 93.9%"></div>
+                            <div class="breakdown-segment" style="width: 6.1%; background: rgba(255,255,255,0.15);" title="Other 6.1%"></div>
+                        </div>
+                        <div class="breakdown-legend">
+                            <span><span class="legend-dot" style="background: var(--accent-color);"></span>Citations drive 93.9% of research interest</span>
+                        </div>
+                    </div>
+
+                    <!-- Secondary Stats -->
+                    <div class="impact-grid impact-grid-secondary">
+                        <div class="impact-card">
+                            <div class="impact-number">6</div>
+                            <div class="impact-label">h-index</div>
+                        </div>
+                        <div class="impact-card">
+                            <div class="impact-number">26</div>
+                            <div class="impact-label">Publications</div>
+                        </div>
+                        <div class="impact-card">
+                            <div class="impact-number">3</div>
+                            <div class="impact-label">Books</div>
+                        </div>
+                        <div class="impact-card">
+                            <div class="impact-number">37</div>
+                            <div class="impact-label">Articles</div>
+                        </div>
+                    </div>
+
+                    <!-- Top Cited Paper Callout -->
+                    <div class="top-paper-callout">
+                        <div class="top-paper-badge">Most Cited</div>
+                        <div class="top-paper-info">
+                            <div class="top-paper-title">Intelligent Clinical Documentation: Harnessing Generative AI</div>
+                            <div class="top-paper-cites">989 citations</div>
+                        </div>
+                    </div>
+
+                </div>
+                    </div>
+
+</div>
                     
                     <div class="timeline">
                         
@@ -4683,6 +5189,23 @@
                         <p class="section-subtitle">Comprehensive guides on AI, machine learning, and emerging technologies</p>
                     </div>
                     
+
+                    <!-- Award Highlight Banner -->
+                    <div class="award-banner">
+                        <div class="award-banner-trophy">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="award-banner-content">
+                            <div class="award-banner-title">Award-Winning Author</div>
+                            <div class="award-banner-book">Building Agentic AI Systems</div>
+                            <div class="award-banner-details">
+                                <span class="award-banner-winner"><i class="fas fa-medal"></i> Winner — Technology (General)</span>
+                                <span class="award-banner-finalist"><i class="fas fa-award"></i> Finalist — Technology (Game Changer)</span>
+                            </div>
+                            <div class="award-banner-program">2025 Goody Business Book Awards</div>
+                        </div>
+                    </div>
+
                     <div class="books-grid">
                         <!-- Book 1: Building Agentic AI Systems -->
                         <div class="card">
@@ -4707,6 +5230,7 @@
                                     Packt
                                 </a>
                             </div>
+
                         </div>
 
                         <!-- Book 2: Generative AI Ethics -->
@@ -4861,6 +5385,10 @@
 
                     <!-- Stats Bar -->
                     <div class="articles-stats">
+                        <div class="stat-item stat-item-highlight">
+                            <span class="stat-number">50,000+</span>
+                            <span class="stat-label">Total Reads</span>
+                        </div>
                         <div class="stat-item">
                             <span class="stat-number" id="articles-count">37</span>
                             <span class="stat-label">Articles</span>
@@ -5724,6 +6252,56 @@
                 }
             });
         });
+
+        // Animated counters — count up on scroll
+        (function() {
+            const counters = document.querySelectorAll('.counter');
+            let animated = false;
+            
+            function animateCounters() {
+                if (animated) return;
+                counters.forEach(counter => {
+                    const rect = counter.getBoundingClientRect();
+                    if (rect.top < window.innerHeight && rect.bottom > 0) {
+                        animated = true;
+                        const target = parseFloat(counter.dataset.target);
+                        const decimal = parseInt(counter.dataset.decimal || '0');
+                        const suffix = counter.dataset.suffix !== undefined ? counter.dataset.suffix : '';
+                        const duration = 2000;
+                        const start = performance.now();
+                        
+                        function update(now) {
+                            const elapsed = now - start;
+                            const progress = Math.min(elapsed / duration, 1);
+                            // Ease out cubic
+                            const eased = 1 - Math.pow(1 - progress, 3);
+                            const current = eased * target;
+                            
+                            if (decimal > 0) {
+                                counter.textContent = current.toFixed(decimal) + suffix;
+                            } else if (target >= 1000) {
+                                counter.textContent = Math.floor(current).toLocaleString() + suffix;
+                            } else {
+                                counter.textContent = Math.floor(current) + suffix;
+                            }
+                            
+                            if (progress < 1) {
+                                requestAnimationFrame(update);
+                            }
+                        }
+                        requestAnimationFrame(update);
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', animateCounters);
+            // Also trigger on tab switch
+            const origShowTab = window.showTab || function(){};
+            if (typeof showTab === 'function') {
+                setTimeout(animateCounters, 500);
+            }
+        })();
+
     </script>
 </body>
 </html>
