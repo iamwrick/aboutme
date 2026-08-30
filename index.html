@@ -1363,13 +1363,7 @@
             align-items: center;
         }
         
-        .timeline-item:nth-child(even) .timeline-content {
-            order: 2;
-        }
-        
-        .timeline-item:nth-child(even) .timeline-date {
-            text-align: left;
-        }
+        /* All items: date on left, content on right — consistent layout */
         
         .timeline-content {
             background: var(--card-bg);
@@ -2266,13 +2260,400 @@
     }
 
 
+    
+        /* Tab content switching */
+        .tab-content {
+            display: none;
+            padding: 1rem 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content h3 {
+            font-family: 'Crimson Text', serif;
+            font-size: 2.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .tab-content h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            border-radius: 2px;
+        }
+
+        /* Scroll indicator with tooltip */
+        .scroll-indicator {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            z-index: 999;
+            cursor: pointer;
+        }
+
+        .scroll-indicator .scroll-bar-track {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--border-color);
+        }
+
+        .scroll-indicator .scroll-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            transition: width 0.15s ease;
+        }
+
+        .scroll-indicator:hover .scroll-bar-track {
+            height: 6px;
+            box-shadow: 0 0 8px rgba(255,255,255,0.15);
+        }
+
+        .scrubber-tooltip {
+            position: fixed;
+            top: 56px;
+            padding: 6px 14px;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            z-index: 1000;
+            white-space: nowrap;
+            transform: translateX(-50%);
+        }
+
+        .scrubber-tooltip.visible { opacity: 1; }
+
+        .scrubber-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0; height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid rgba(0, 0, 0, 0.92);
+        }
+
+        /* Publications — Scientific Journal Style */
+        .pub-hero { margin-bottom: 2rem; }
+
+        .pub-stats-row {
+            display: flex; gap: 2.5rem; margin-top: 1.5rem;
+            padding: 1.25rem 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .pub-stat { display: flex; flex-direction: column; }
+
+        .pub-stat-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem; font-weight: 600; color: var(--primary-text); line-height: 1;
+        }
+
+        .pub-stat-label {
+            font-size: 0.7rem; color: var(--muted-text); text-transform: uppercase;
+            letter-spacing: 0.8px; margin-top: 0.25rem;
+        }
+
+        .pub-filter-bar { margin-bottom: 1.5rem; }
+
+        .pub-filter-row {
+            display: flex; gap: 0.4rem; overflow-x: auto;
+            padding-bottom: 0.5rem; scrollbar-width: none;
+        }
+        .pub-filter-row::-webkit-scrollbar { display: none; }
+
+        .pub-filter {
+            background: transparent; border: 1px solid var(--border-color);
+            color: var(--secondary-text); padding: 0.3rem 0.75rem; border-radius: 2rem;
+            font-size: 0.68rem; font-weight: 500; cursor: pointer;
+            transition: all 0.2s ease; white-space: nowrap; font-family: inherit;
+        }
+        .pub-filter:hover { border-color: rgba(255,255,255,0.25); color: var(--primary-text); }
+        .pub-filter.active { background: rgba(255,255,255,0.1); border-color: var(--accent-color); color: var(--accent-color); }
+        .pub-pill-count { font-size: 0.6rem; opacity: 0.5; margin-left: 0.1rem; }
+
+        .pub-list { display: flex; flex-direction: column; gap: 0; }
+
+        .pub-entry {
+            display: flex; align-items: flex-start; gap: 1.25rem;
+            padding: 1.25rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.2s ease;
+        }
+        .pub-entry:first-child { border-top: 1px solid rgba(255,255,255,0.05); }
+        .pub-entry:hover {
+            background: rgba(255,255,255,0.02); padding-left: 0.75rem;
+            padding-right: 0.75rem; margin-left: -0.75rem; margin-right: -0.75rem;
+            border-radius: 0.75rem;
+        }
+        .pub-entry.hidden { display: none; }
+
+        .pub-entry-number {
+            font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+            color: rgba(255,255,255,0.15); font-weight: 500; min-width: 24px;
+            padding-top: 0.15rem; user-select: none;
+        }
+        .pub-entry-content { flex: 1; min-width: 0; }
+        .pub-entry-top { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.35rem; flex-wrap: wrap; }
+
+        .pub-entry-badge {
+            font-size: 0.6rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+            color: var(--primary-bg);
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary));
+            padding: 0.15rem 0.55rem; border-radius: 1rem;
+        }
+        .pub-entry-publisher { font-size: 0.7rem; color: var(--muted-text); display: flex; align-items: center; gap: 0.3rem; }
+
+        .pub-entry-title {
+            font-family: 'Crimson Text', serif; font-size: 1.15rem; font-weight: 600;
+            color: var(--primary-text); line-height: 1.3; margin-bottom: 0.3rem;
+        }
+        .pub-entry-desc {
+            font-size: 0.82rem; color: var(--secondary-text); line-height: 1.55;
+            margin-bottom: 0.5rem; display: -webkit-box; -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .pub-entry-meta { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+        .pub-meta-tag {
+            font-size: 0.65rem; color: var(--muted-text); background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06); padding: 0.15rem 0.5rem; border-radius: 1rem;
+        }
+        .pub-entry-link {
+            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; background: rgba(255,255,255,0.04); color: var(--muted-text);
+            font-size: 0.75rem; text-decoration: none; transition: all 0.2s ease; flex-shrink: 0;
+            margin-top: 0.15rem;
+        }
+        .pub-entry-link:hover { background: rgba(255,255,255,0.1); color: var(--accent-color); }
+
+        /* Articles Section */
+        .articles-stats { display: flex; gap: 3rem; margin-bottom: 2.5rem; padding: 1.5rem 0; border-bottom: 1px solid var(--border-color); }
+        .stat-item { display: flex; flex-direction: column; }
+        .stat-number { font-family: 'Crimson Text', serif; font-size: 1.8rem; font-weight: 600; color: var(--primary-text); line-height: 1; }
+        .stat-label { font-size: 0.75rem; color: var(--muted-text); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.3rem; }
+
+        .featured-article {
+            background: linear-gradient(135deg, rgba(30,30,30,0.9), rgba(20,20,20,0.95));
+            border: 1px solid var(--border-color); border-radius: 1.5rem; padding: 2.5rem;
+            margin-bottom: 2.5rem; position: relative; overflow: hidden;
+        }
+        .featured-article::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent-color), transparent); }
+        .featured-badge { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--primary-bg); background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary)); padding: 0.3rem 0.9rem; border-radius: 2rem; margin-bottom: 1.25rem; }
+        .featured-content { display: flex; justify-content: space-between; align-items: center; gap: 3rem; }
+        .featured-text { flex: 1; }
+        .featured-title { font-family: 'Crimson Text', serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; color: var(--primary-text); margin: 0.75rem 0; line-height: 1.25; }
+        .featured-excerpt { font-size: 1rem; color: var(--secondary-text); line-height: 1.7; margin-bottom: 1.25rem; max-width: 600px; }
+        .featured-read { font-size: 0.95rem; font-weight: 600; color: var(--accent-color); text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: gap 0.2s ease; }
+        .featured-read:hover { gap: 0.8rem; }
+        .featured-icon { width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; color: rgba(255,255,255,0.06); flex-shrink: 0; }
+
+        .articles-filter-bar { margin-bottom: 1.5rem; }
+        .filter-heading { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted-text); margin-bottom: 0.75rem; }
+        .filter-pills { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: none; }
+        .filter-pills::-webkit-scrollbar { display: none; }
+        .filter-pill { background: rgba(255,255,255,0.04); border: 1px solid var(--border-color); color: var(--secondary-text); padding: 0.35rem 0.85rem; border-radius: 2rem; font-size: 0.72rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; font-family: inherit; }
+        .filter-pill:hover { border-color: rgba(255,255,255,0.2); color: var(--primary-text); }
+        .filter-pill.active { background: rgba(255,255,255,0.12); border-color: var(--accent-color); color: var(--accent-color); }
+        .pill-count { font-size: 0.65rem; opacity: 0.6; margin-left: 0.15rem; }
+
+        .articles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.25rem; margin-top: 0.5rem; }
+        .article-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 1rem; overflow: hidden; transition: all 0.3s ease; display: flex; flex-direction: column; }
+        .article-card.hidden { display: none; }
+        .article-card:hover { border-color: rgba(255,255,255,0.2); box-shadow: 0 8px 24px rgba(0,0,0,0.3); transform: translateY(-4px); }
+        .article-card-image-placeholder { width: 100%; height: 80px; background: linear-gradient(135deg, rgba(30,30,30,1), rgba(50,50,50,1)); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--muted-text); }
+        .article-card-body { padding: 1rem 1.1rem; display: flex; flex-direction: column; flex: 1; }
+        .article-card-meta { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; flex-wrap: wrap; }
+        .article-card-tag { font-size: 0.62rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent-color); background: rgba(255,255,255,0.08); padding: 0.2rem 0.6rem; border-radius: 2rem; }
+        .article-card-date { font-size: 0.68rem; color: var(--muted-text); }
+        .article-card-title { font-family: 'Crimson Text', serif; font-size: 1.05rem; font-weight: 600; color: var(--primary-text); margin-bottom: 0.5rem; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .article-card-excerpt { font-size: 0.78rem; color: var(--secondary-text); line-height: 1.5; margin-bottom: 0.6rem; flex: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .article-card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 0.5rem; border-top: 1px solid var(--border-color); }
+        .article-card-read { font-size: 0.78rem; font-weight: 500; color: var(--accent-color); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; transition: gap 0.2s ease; }
+        .article-card-read:hover { gap: 0.6rem; }
+        .article-card-readtime { font-size: 0.68rem; color: var(--muted-text); }
+
+        @media (max-width: 768px) {
+            .pub-stats-row { gap: 1.5rem; flex-wrap: wrap; }
+            .pub-entry-number { display: none; }
+            .pub-entry { gap: 0.75rem; }
+            .articles-stats { gap: 1.5rem; }
+            .featured-content { flex-direction: column; gap: 1rem; }
+            .featured-icon { display: none; }
+            .articles-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+        }
+
+        @media (max-width: 480px) {
+            .articles-grid { grid-template-columns: 1fr; }
+        }
+
+
+        /* Research paper journal accents — CSS only, no HTML changes */
+        .timeline-content::before {
+            content: '\f15c';  /* FontAwesome file-alt icon */
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 1.5rem;
+            left: -0.6rem;
+            width: 1.2rem;
+            height: 1.2rem;
+            font-size: 0.55rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 4px;
+            color: rgba(255,255,255,0.25);
+            z-index: 1;
+        }
+
+        .timeline-content::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg,
+                rgba(255,255,255,0.15) 0%,
+                rgba(255,255,255,0.05) 100%);
+            border-radius: 3px 0 0 3px;
+        }
+
+        .timeline-content:hover::after {
+            background: linear-gradient(180deg,
+                var(--accent-color) 0%,
+                rgba(255,255,255,0.1) 100%);
+        }
+
+        .timeline-content:hover::before {
+            color: var(--accent-color);
+            border-color: rgba(255,255,255,0.25);
+        }
+
+        /* Subtle paper texture on the card */
+        .timeline-content {
+            position: relative;
+            border-left: none !important;
+        }
+
+        /* Paper corner fold effect */
+        .timeline-item .timeline-content {
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+        }
+
+        .timeline-item .timeline-content:hover {
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+        }
+
+
+        /* Research paper metadata cards (left column) */
+        .paper-meta-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem;
+            padding: 1.25rem;
+            text-align: right;
+        }
+
+        .paper-year {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.12);
+            line-height: 1;
+            letter-spacing: -1px;
+        }
+
+        .paper-venue {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(255,255,255,0.05);
+            padding: 0.25rem 0.7rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .paper-venue i {
+            font-size: 0.65rem;
+            opacity: 0.7;
+        }
+
+        .paper-type {
+            font-size: 0.65rem;
+            color: var(--muted-text);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .paper-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--muted-text);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-top: 0.25rem;
+        }
+
+        .paper-id i {
+            font-size: 0.6rem;
+            opacity: 0.5;
+        }
+
+
+
+        @media (max-width: 768px) {
+            .paper-meta-card {
+                align-items: flex-start;
+                text-align: left;
+                padding: 0.75rem 0;
+            }
+            .paper-year { font-size: 1.5rem; }
+        }
+
     </style>
 </head>
 <body>
-    <!-- Scroll Progress Indicator -->
-    <div class="scroll-indicator">
-        <div class="scroll-progress" id="scroll-progress"></div>
+    <!-- Scroll Bar with tooltip navigation -->
+    <div class="scroll-indicator" id="section-scrubber">
+        <div class="scroll-bar-track">
+            <div class="scroll-bar-fill" id="scroll-bar-fill"></div>
+        </div>
     </div>
+    <div class="scrubber-tooltip" id="scrubber-tooltip"></div>
 
     <!-- Mobile Menu Button -->
     <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle mobile menu">
@@ -2290,6 +2671,7 @@
             <a href="#" class="logo">Wrick Talukdar</a>
             <div class="nav-links">
                 <a href="javascript:void(0)" onclick="showTab('home')" class="active">Home</a>
+                <a href="javascript:void(0)" onclick="showTab('articles')">Articles</a>
                 <a href="javascript:void(0)" onclick="showTab('research')">Research</a>
                 <a href="javascript:void(0)" onclick="showTab('publications')">Publications</a>
                 <a href="javascript:void(0)" onclick="showTab('books')">Books</a>
@@ -2774,7 +3156,7 @@
         </div>
 
         <!-- HIDDEN: Projects Section
-        <!-- Projects Section -->
+        [-- Projects Section --]
         <div id="projects" class="tab-content">
             <section class="section">
                 <div class="section-container">
@@ -3012,9 +3394,14 @@
                     <div class="timeline">
                         
                         <div class="timeline-item">
-                            <div class="timeline-date"></div>
+                            <div class="timeline-date"><div class="paper-meta-card">
+                                <div class="paper-year">2026</div>
+                                <div class="paper-venue"><i class="fas fa-flask"></i> Academia AI</div>
+                                <div class="paper-type">Journal</div>
+                                
+                            </div></div>
                             <div class="timeline-content">
-                                <h4 class="timeline-title">Meta-Reasoning in Autonomous Agents/h4>
+                                <h4 class="timeline-title">Meta-Reasoning in Autonomous Agents</h4>
                                 <p class="timeline-description">
                                     This study examines how meta-reasoning affects the performance of LLM-based autonomous agents across GAIA and AgentBench. It aims to provide empirical evidence on whether self-monitoring and regulation improve adaptability and trustworthiness in different settings.
                                 </p>
@@ -3029,7 +3416,12 @@
                         </div>
 
                         <div class="timeline-item">
-                            <div class="timeline-date"></div>
+                            <div class="timeline-date"><div class="paper-meta-card">
+                                <div class="paper-year">2024</div>
+                                <div class="paper-venue"><i class="fas fa-flask"></i> IJISRT</div>
+                                <div class="paper-type">Journal</div>
+                                <div class="paper-id"><i class="fas fa-file-alt"></i> arXiv:2406.06569</div>
+                            </div></div>
                             <div class="timeline-content">
                                 <h4 class="timeline-title">Synthetic Data Generation for Clinical Documentation</h4>
                                 <p class="timeline-description">
@@ -3048,7 +3440,12 @@
                         </div>
 
                         <div class="timeline-item">
-                            <div class="timeline-date"></div>
+                            <div class="timeline-date"><div class="paper-meta-card">
+                                <div class="paper-year">2024</div>
+                                <div class="paper-venue"><i class="fas fa-flask"></i> IRJMETS</div>
+                                <div class="paper-type">Journal</div>
+                                <div class="paper-id"><i class="fas fa-file-alt"></i> arXiv:2406.01618</div>
+                            </div></div>
                             <div class="timeline-content">
                                 <h4 class="timeline-title">Cost-Effective Multi-Modal Financial Document Classification</h4>
                                 <p class="timeline-description">
@@ -3067,7 +3464,12 @@
                         </div>
 
                         <div class="timeline-item">
-                            <div class="timeline-date"></div>
+                            <div class="timeline-date"><div class="paper-meta-card">
+                                <div class="paper-year">2024</div>
+                                <div class="paper-venue"><i class="fas fa-flask"></i> IJISRT</div>
+                                <div class="paper-type">Journal</div>
+                                <div class="paper-id"><i class="fas fa-file-alt"></i> arXiv:2406.01096</div>
+                            </div></div>
                             <div class="timeline-content">
                                 <h4 class="timeline-title">Synergizing Unsupervised and Supervised Learning</h4>
                                 <p class="timeline-description">
@@ -3086,7 +3488,12 @@
                         </div>
 
                         <div class="timeline-item">
-                            <div class="timeline-date"></div>
+                            <div class="timeline-date"><div class="paper-meta-card">
+                                <div class="paper-year">2024</div>
+                                <div class="paper-venue"><i class="fas fa-flask"></i> IJISRT</div>
+                                <div class="paper-type">Journal</div>
+                                <div class="paper-id"><i class="fas fa-file-alt"></i> arXiv:2405.18346</div>
+                            </div></div>
                             <div class="timeline-content">
                                 <h4 class="timeline-title">LLMs for Healthcare Documentation</h4>
                                 <p class="timeline-description">
@@ -3105,7 +3512,12 @@
                         </div>
 
                         <div class="timeline-item">
-                            <div class="timeline-date"></div>
+                            <div class="timeline-date"><div class="paper-meta-card">
+                                <div class="paper-year">2024</div>
+                                <div class="paper-venue"><i class="fas fa-flask"></i> J. AI Research</div>
+                                <div class="paper-type">Journal</div>
+                                <div class="paper-id"><i class="fas fa-file-alt"></i> arXiv:2406.10295</div>
+                            </div></div>
                             <div class="timeline-content">
                                 <h4 class="timeline-title">Document Skew Impact on Multi-Modal LLMs</h4>
                                 <p class="timeline-description">
@@ -3124,7 +3536,12 @@
                         </div>
 
                         <div class="timeline-item">
-                            <div class="timeline-date"></div>
+                            <div class="timeline-date"><div class="paper-meta-card">
+                                <div class="paper-year">2023</div>
+                                <div class="paper-venue"><i class="fas fa-flask"></i> WJAETS</div>
+                                <div class="paper-type">Journal</div>
+                                
+                            </div></div>
                             <div class="timeline-content">
                                 <h4 class="timeline-title">Context-Aware Grounding for LLM Fidelity</h4>
                                 <p class="timeline-description">
@@ -3143,7 +3560,12 @@
                         </div>
 
                         <div class="timeline-item">
-                            <div class="timeline-date">2023</div>
+                            <div class="timeline-date"><div class="paper-meta-card">
+                                <div class="paper-year">2024</div>
+                                <div class="paper-venue"><i class="fas fa-flask"></i> J. Science & Tech</div>
+                                <div class="paper-type">Journal</div>
+                                <div class="paper-id"><i class="fas fa-file-alt"></i> arXiv:2408.04023</div>
+                            </div></div>
                             <div class="timeline-content">
                                 <h4 class="timeline-title">Trust, Safety, and Ethics in LLM Development</h4>
                                 <p class="timeline-description">
@@ -3162,7 +3584,12 @@
                         </div>
 
                         <div class="timeline-item">
-                            <div class="timeline-date"></div>
+                            <div class="timeline-date"><div class="paper-meta-card">
+                                <div class="paper-year">2023</div>
+                                <div class="paper-venue"><i class="fas fa-flask"></i> Euro. J. Tech</div>
+                                <div class="paper-type">Journal</div>
+                                
+                            </div></div>
                             <div class="timeline-content">
                                 <h4 class="timeline-title">Gas Station of the Future: AI/ML and IoT Integration</h4>
                                 <p class="timeline-description">
@@ -3188,741 +3615,498 @@
         <div id="publications" class="tab-content">
             <section class="section">
                 <div class="section-container">
-                    <div class="section-header">
-                        <h2 class="section-title">Publications</h2>
-                        <p class="section-subtitle">Contributing to the advancement of AI and machine learning through published research</p>
-                    </div>
-                    <div class="publications-grid">
-                        <div class="publication-item">
-                            <div class="publication-badge">Research</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">IEEE Computer Society</div>
-                                <h3 class="publication-title">LiteLLM as a Control Plane</h3>
-                            </div>
-                            <p class="publication-description">
-                                LiteLLM as a Control Plane for Scalable Intelligent Document Processing.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Tech Trends</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Agentic AI</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://www.computer.org/publications/tech-news/trends/litellm-control-plane" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-                    <div class="publications-grid">
-                        <div class="publication-item">
-                            <div class="publication-badge">Research</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">IEEE Computer Society</div>
-                                <h3 class="publication-title">AI Agentic Mesh</h3>
-                            </div>
-                            <p class="publication-description">
-                                The Agentic Mesh represents a structured networked fabric for intelligent agents in modern enterprises.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Tech Trends</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Agentic AI</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://www.computer.org/publications/tech-news/trends/ai-agentic-mesh" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-                        <div class="publication-item">
-                            <div class="publication-badge">Research</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">IEEE Computer Society</div>
-                                <h3 class="publication-title">Meta Reasoning in Agentic Systems</h3>
-                            </div>
-                            <p class="publication-description">
-                                AI agents that monitor and adjust their own reasoning have emerged as a promising paradigm 
-                                for overcoming limitations in traditional AI systems.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Tech Trends</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Meta-cognitive AI</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://www.computer.org/publications/tech-news/trends/meta-reasoning" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
 
-                        <div class="publication-item">
-                            <div class="publication-badge">Paper</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">IEEE Xplore</div>
-                                <h3 class="publication-title">LLMs Impact on Consumer Technologies</h3>
-                            </div>
-                            <p class="publication-description">
-                                Architectural frameworks need to evolve to deploy LLMs at scale for consumer technologies, 
-                                addressing computational costs and scalability challenges.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Research Paper</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">LLM Deployment</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://ieeexplore.ieee.org/document/10958205" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
+                    <!-- Publications Header -->
+                    <div class="pub-hero">
+                        <div class="pub-hero-text">
+                            <h2 class="section-title">Publications</h2>
+                            <p class="section-subtitle">Contributing to the advancement of AI and machine learning through peer-reviewed research and technical writing</p>
                         </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">Security</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">INFORMS</div>
-                                <h3 class="publication-title">Security in Agentic Systems</h3>
-                            </div>
-                            <p class="publication-description">
-                                As agentic systems evolve, their increasing complexity introduces significant security 
-                                vulnerabilities that require immediate and proactive attention.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Security Analysis</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">AI Security</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://pubsonline.informs.org/do/10.1287/LYTX.2025.02.01/full/" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">Research</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">IEEE Computer Society</div>
-                                <h3 class="publication-title">Reinforcement Learning in Agentic Systems</h3>
-                            </div>
-                            <p class="publication-description">
-                                Reinforcement Learning has emerged as a cornerstone of modern AI, enabling systems to learn 
-                                optimal strategies through interaction with their environments.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Community Voice</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">RL Algorithms</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://www.computer.org/publications/tech-news/community-voices/reinforcement-learning-in-agentic-systems" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">Innovation</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">IEEE Computer Society</div>
-                                <h3 class="publication-title">Autonomous AI Agents for Decision Making</h3>
-                            </div>
-                            <p class="publication-description">
-                                AI-powered autonomous agents driven by LLMs are transforming industries by enabling systems 
-                                that learn, reason, and act independently.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Community Voice</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Autonomous AI</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://www.computer.org/publications/tech-news/community-voices/autonomous-ai-agents" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">Research</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">The Edge Review</div>
-                                <h3 class="publication-title">Rise of Agentic AI Across Industries</h3>
-                            </div>
-                            <p class="publication-description">
-                                Agentic AI and multi-agent systems are revolutionizing industries by enabling intelligent, 
-                                autonomous decision-making capabilities across diverse sectors.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Industry Analysis</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Industry Applications</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://www.theedgereview.org/magazine/issue-1/the-rise-of-agentic-ai-across-industries" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">Data Science</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">ODSC</div>
-                                <h3 class="publication-title">Agentic Systems for Competitive Intelligence</h3>
-                            </div>
-                            <p class="publication-description">
-                                Explore the transformative role of Agentic systems in Competitive Intelligence, 
-                                generating business insights and enhancing decision-making processes.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Business Intelligence</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Competitive Analysis</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://opendatascience.com/agentic-systems-for-competitive-intelligence-enhancing-business-decision-making/" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">Insurance Tech</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">ODSC</div>
-                                <h3 class="publication-title">Transform Insurance Risk Assessment with Agents</h3>
-                            </div>
-                            <p class="publication-description">
-                                Enhance risk assessment and evaluate risk factors in real-time using agentic systems 
-                                to transform the insurance industry's approach to risk management.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Industry Application</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Risk Assessment</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://opendatascience.com/transform-insurance-risk-assessment-with-agentic-systems/" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">Healthcare AI</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">arXiv</div>
-                                <h3 class="publication-title">Harnessing Generative AI for Patient-Centric Clinical Notes</h3>
-                            </div>
-                            <p class="publication-description">
-                                Use Generative AI and Automatic Speech Recognition (ASR) to generate highly accurate 
-                                clinical notes that enhance healthcare documentation quality.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Research Paper</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Clinical AI</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://arxiv.org/abs/2405.18346" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">FinTech</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">arXiv</div>
-                                <h3 class="publication-title">Cost-Effective Multi-Modal Embedding Approach</h3>
-                            </div>
-                            <p class="publication-description">
-                                A cost-effective vector sampling method that leverages pre-trained multi-modal 
-                                embedding models to classify financial documents with high accuracy.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Research Paper</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Financial ML</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://arxiv.org/abs/2406.01618" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">Healthcare</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">ODSC</div>
-                                <h3 class="publication-title">Elevate Healthcare Documentation with Generative AI</h3>
-                            </div>
-                            <p class="publication-description">
-                                Use generative AI to produce clinical notes and enhance the quality of clinical 
-                                documentation, focusing on SOAP, BIRP methodologies and AI integration.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Healthcare AI</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Clinical Documentation</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://opendatascience.com/elevating-healthcare-documentation-the-significance-of-soap-birp-and-the-promise-of-generative-ai/" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">Language Tech</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">ODSC</div>
-                                <h3 class="publication-title">Transform Global Speech into Local Language</h3>
-                            </div>
-                            <p class="publication-description">
-                                Innovative approaches to speech-to-text translation that enable global content 
-                                to be transformed into local languages with high accuracy and cultural context.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Language Processing</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Speech Translation</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://opendatascience.com/transform-global-speech-into-local-language-with-talklocal/" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">AI Ethics</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">Journal of Science and Technology</div>
-                                <h3 class="publication-title">Guardrails for Trust and Safety in LLM Development</h3>
-                            </div>
-                            <p class="publication-description">
-                                Implements safeguards to ensure generated content is safe, secure, and ethical 
-                                in Large Language Model development and deployment.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Ethics Research</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">AI Safety</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://thesciencebrigade.com/jst/article/view/245" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">AWS ML</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">AWS Blog</div>
-                                <h3 class="publication-title">Build Trust and Safety for Generative AI with Amazon Comprehend</h3>
-                            </div>
-                            <p class="publication-description">
-                                Use Amazon Comprehend to ensure privacy and safety of LLMs by implementing 
-                                comprehensive content filtering and safety measures.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Technical Guide</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">AI Safety</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://aws.amazon.com/blogs/machine-learning/build-trust-and-safety-for-generative-ai-applications-with-amazon-comprehend-and-langchain/" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">AWS ML</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">AWS Blog</div>
-                                <h3 class="publication-title">Enterprise Grade Natural Language Pipeline</h3>
-                            </div>
-                            <p class="publication-description">
-                                Build a classification pipeline easily using the simplified solution for 
-                                enterprise-grade natural language processing with high accuracy and scalability.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Technical Guide</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">NLP Pipeline</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://aws.amazon.com/blogs/machine-learning/build-a-classification-pipeline-with-amazon-comprehend-custom-classification-part-i/" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">Customer Experience</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">AWS Blog</div>
-                                <h3 class="publication-title">Handle Customer Objections Efficiently Using AI</h3>
-                            </div>
-                            <p class="publication-description">
-                                Enhance customer experience easily using efficient machine learning objection 
-                                handling techniques to improve satisfaction and conversion rates.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Customer AI</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Customer Service</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://aws.amazon.com/blogs/machine-learning/identify-objections-in-customer-conversations-using-amazon-comprehend-to-enhance-customer-experience-without-ml-expertise/" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">Computer Vision</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">AWS Blog</div>
-                                <h3 class="publication-title">Use Computer Vision to Enhance Extraction</h3>
-                            </div>
-                            <p class="publication-description">
-                                Train bespoke document classification models on native documents that support layout 
-                                in addition to text, increasing the accuracy of the results.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Computer Vision</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Document Processing</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://aws.amazon.com/blogs/machine-learning/amazon-comprehend-document-classifier-adds-layout-support-for-higher-accuracy/" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">Document Processing</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">AWS Blog</div>
-                                <h3 class="publication-title">Intelligent Document Processing</h3>
-                            </div>
-                            <p class="publication-description">
-                                Use advanced machine learning techniques and computer vision to process millions 
-                                of documents efficiently with high accuracy and automated workflows.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Document AI</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Automation</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://aws.amazon.com/blogs/machine-learning/introducing-one-step-classification-and-entity-recognition-with-amazon-comprehend-for-intelligent-document-processing/" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">Sentiment Analysis</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">AWS Blog</div>
-                                <h3 class="publication-title">Understand Targeted Sentiment with Machine Learning</h3>
-                            </div>
-                            <p class="publication-description">
-                                Enable accurate and scalable brand and competitor insights using artificial 
-                                intelligence for targeted sentiment analysis and business intelligence.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Sentiment AI</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Business Intelligence</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://aws.amazon.com/blogs/machine-learning/amazon-comprehend-targeted-sentiment-adds-synchronous-support/" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">Product Analytics</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">AWS Blog</div>
-                                <h3 class="publication-title">Get Critical Insight from Customers Using Machine Learning</h3>
-                            </div>
-                            <p class="publication-description">
-                                Extract meaningful information from product reviews, analyze it to understand how users 
-                                of different demographics are reacting to products and services.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Analytics</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Customer Insights</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://aws.amazon.com/blogs/machine-learning/get-better-insight-from-reviews-using-amazon-comprehend/" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">Identity Processing</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">AWS Blog</div>
-                                <h3 class="publication-title">Extract Key Information from Identity Documents</h3>
-                            </div>
-                            <p class="publication-description">
-                                Automatically extract information from identification documents using advanced 
-                                machine learning techniques for secure and accurate document processing.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Document AI</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Identity Verification</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://aws.amazon.com/blogs/machine-learning/extract-key-information-from-identity-documents/" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">Medical AI</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">ODSC</div>
-                                <h3 class="publication-title">How Agentic Systems Can Save Lives in Medical Emergencies</h3>
-                            </div>
-                            <p class="publication-description">
-                                Agentic systems can be highly effective in emergency situations, providing life-changing 
-                                capabilities for healthcare emergency management and rapid response.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Healthcare AI</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Emergency Medicine</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://opendatascience.com/how-agentic-systems-can-save-lives-in-medical-emergencies/" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">Clinical AI</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">arXiv</div>
-                                <h3 class="publication-title">Clinical Documentation with LLMs</h3>
-                            </div>
-                            <p class="publication-description">
-                                Deliver high-quality clinical documentation with machine learning, enhancing healthcare 
-                                documentation processes and patient care quality through AI integration.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Research Paper</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Clinical Documentation</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://arxiv.org/abs/2406.06569" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="publication-item">
-                            <div class="publication-badge">Retail AI</div>
-                            <div class="publication-header">
-                                <div class="publication-subtitle">AWS Blog</div>
-                                <h3 class="publication-title">AI/ML in Retail Downstream Applications</h3>
-                            </div>
-                            <p class="publication-description">
-                                Explore advanced AI and machine learning applications in retail downstream processes, 
-                                optimizing customer experience and business operations through intelligent automation.
-                            </p>
-                            <div class="publication-meta">
-                                <div class="meta-item">
-                                    <div class="meta-label">Type</div>
-                                    <div class="meta-value">Industry Application</div>
-                                </div>
-                                <div class="meta-item">
-                                    <div class="meta-label">Focus</div>
-                                    <div class="meta-value">Retail Technology</div>
-                                </div>
-                            </div>
-                            <div class="publication-actions">
-                                <a href="https://aws.amazon.com/blogs/machine-learning/ai-ml-retail-downstream/" target="_blank" class="pub-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                    Read Publication
-                                </a>
+                        <div class="pub-stats-row">
+                            <div class="pub-stat">
+                                <span class="pub-stat-num" id="pub-count">26</span>
+                                <span class="pub-stat-label">Publications</span>
+                            </div>
+                            <div class="pub-stat">
+                                <span class="pub-stat-num">8</span>
+                                <span class="pub-stat-label">Venues</span>
+                            </div>
+                            <div class="pub-stat">
+                                <span class="pub-stat-num">8</span>
+                                <span class="pub-stat-label">AWS Blog</span>
+                            </div>
+                            <div class="pub-stat">
+                                <span class="pub-stat-num">5</span>
+                                <span class="pub-stat-label">IEEE</span>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Publisher Filter -->
+                    <div class="pub-filter-bar">
+                        <div class="pub-filter-row">
+                            <button class="pub-filter active" data-filter="all" onclick="filterPubs('all')">All <span class="pub-pill-count">26</span></button>
+                            <button class="pub-filter" data-filter="AWS Blog" onclick="filterPubs('AWS Blog')">AWS Blog <span class="pub-pill-count">9</span></button>
+                            <button class="pub-filter" data-filter="IEEE Computer Society" onclick="filterPubs('IEEE Computer Society')">IEEE Computer Society <span class="pub-pill-count">5</span></button>
+                            <button class="pub-filter" data-filter="IEEE Xplore" onclick="filterPubs('IEEE Xplore')">IEEE Xplore <span class="pub-pill-count">1</span></button>
+                            <button class="pub-filter" data-filter="INFORMS" onclick="filterPubs('INFORMS')">INFORMS <span class="pub-pill-count">1</span></button>
+                            <button class="pub-filter" data-filter="Journal of Science and Technology" onclick="filterPubs('Journal of Science and Technology')">Journal of Science and Technology <span class="pub-pill-count">1</span></button>
+                            <button class="pub-filter" data-filter="ODSC" onclick="filterPubs('ODSC')">ODSC <span class="pub-pill-count">5</span></button>
+                            <button class="pub-filter" data-filter="The Edge Review" onclick="filterPubs('The Edge Review')">The Edge Review <span class="pub-pill-count">1</span></button>
+                            <button class="pub-filter" data-filter="arXiv" onclick="filterPubs('arXiv')">arXiv <span class="pub-pill-count">3</span></button>
+
+                        </div>
+                    </div>
+
+                    <!-- Publications List -->
+                    <div class="pub-list">
+
+                            <div class="pub-entry" data-publisher="IEEE Computer Society">
+                                <div class="pub-entry-number">01</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Research</span>
+                                        <span class="pub-entry-publisher"><i class="fas fa-microchip"></i> IEEE Computer Society</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">LiteLLM as a Control Plane</h3>
+                                    <p class="pub-entry-desc">LiteLLM as a Control Plane for Scalable Intelligent Document Processing.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Tech Trends</span><span class="pub-meta-tag">Agentic AI</span></div>
+                                </div>
+                                <a href="https://www.computer.org/publications/tech-news/trends/litellm-control-plane" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="IEEE Computer Society">
+                                <div class="pub-entry-number">02</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Research</span>
+                                        <span class="pub-entry-publisher"><i class="fas fa-microchip"></i> IEEE Computer Society</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">AI Agentic Mesh</h3>
+                                    <p class="pub-entry-desc">The Agentic Mesh represents a structured networked fabric for intelligent agents in modern enterprises.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Tech Trends</span><span class="pub-meta-tag">Agentic AI</span></div>
+                                </div>
+                                <a href="https://www.computer.org/publications/tech-news/trends/ai-agentic-mesh" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="IEEE Computer Society">
+                                <div class="pub-entry-number">03</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Research</span>
+                                        <span class="pub-entry-publisher"><i class="fas fa-microchip"></i> IEEE Computer Society</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Meta Reasoning in Agentic Systems</h3>
+                                    <p class="pub-entry-desc">AI agents that monitor and adjust their own reasoning have emerged as a promising paradigm 
+                                for overcoming limitations in traditional AI systems.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Tech Trends</span><span class="pub-meta-tag">Meta-cognitive AI</span></div>
+                                </div>
+                                <a href="https://www.computer.org/publications/tech-news/trends/meta-reasoning" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="IEEE Xplore">
+                                <div class="pub-entry-number">04</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Paper</span>
+                                        <span class="pub-entry-publisher"><i class="fas fa-microchip"></i> IEEE Xplore</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">LLMs Impact on Consumer Technologies</h3>
+                                    <p class="pub-entry-desc">Architectural frameworks need to evolve to deploy LLMs at scale for consumer technologies, 
+                                addressing computational costs and scalability challenges.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Research Paper</span><span class="pub-meta-tag">LLM Deployment</span></div>
+                                </div>
+                                <a href="https://ieeexplore.ieee.org/document/10958205" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="INFORMS">
+                                <div class="pub-entry-number">05</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Security</span>
+                                        <span class="pub-entry-publisher"><i class="fas fa-shield-alt"></i> INFORMS</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Security in Agentic Systems</h3>
+                                    <p class="pub-entry-desc">As agentic systems evolve, their increasing complexity introduces significant security 
+                                vulnerabilities that require immediate and proactive attention.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Security Analysis</span><span class="pub-meta-tag">AI Security</span></div>
+                                </div>
+                                <a href="https://pubsonline.informs.org/do/10.1287/LYTX.2025.02.01/full/" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="IEEE Computer Society">
+                                <div class="pub-entry-number">06</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Research</span>
+                                        <span class="pub-entry-publisher"><i class="fas fa-microchip"></i> IEEE Computer Society</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Reinforcement Learning in Agentic Systems</h3>
+                                    <p class="pub-entry-desc">Reinforcement Learning has emerged as a cornerstone of modern AI, enabling systems to learn 
+                                optimal strategies through interaction with their environments.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Community Voice</span><span class="pub-meta-tag">RL Algorithms</span></div>
+                                </div>
+                                <a href="https://www.computer.org/publications/tech-news/community-voices/reinforcement-learning-in-agentic-systems" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="IEEE Computer Society">
+                                <div class="pub-entry-number">07</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Innovation</span>
+                                        <span class="pub-entry-publisher"><i class="fas fa-microchip"></i> IEEE Computer Society</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Autonomous AI Agents for Decision Making</h3>
+                                    <p class="pub-entry-desc">AI-powered autonomous agents driven by LLMs are transforming industries by enabling systems 
+                                that learn, reason, and act independently.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Community Voice</span><span class="pub-meta-tag">Autonomous AI</span></div>
+                                </div>
+                                <a href="https://www.computer.org/publications/tech-news/community-voices/autonomous-ai-agents" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="The Edge Review">
+                                <div class="pub-entry-number">08</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Research</span>
+                                        <span class="pub-entry-publisher"><i class="fas fa-newspaper"></i> The Edge Review</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Rise of Agentic AI Across Industries</h3>
+                                    <p class="pub-entry-desc">Agentic AI and multi-agent systems are revolutionizing industries by enabling intelligent, 
+                                autonomous decision-making capabilities across diverse sectors.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Industry Analysis</span><span class="pub-meta-tag">Industry Applications</span></div>
+                                </div>
+                                <a href="https://www.theedgereview.org/magazine/issue-1/the-rise-of-agentic-ai-across-industries" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="ODSC">
+                                <div class="pub-entry-number">09</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Data Science</span>
+                                        <span class="pub-entry-publisher"><i class="fas fa-chart-bar"></i> ODSC</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Agentic Systems for Competitive Intelligence</h3>
+                                    <p class="pub-entry-desc">Explore the transformative role of Agentic systems in Competitive Intelligence, 
+                                generating business insights and enhancing decision-making processes.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Business Intelligence</span><span class="pub-meta-tag">Competitive Analysis</span></div>
+                                </div>
+                                <a href="https://opendatascience.com/agentic-systems-for-competitive-intelligence-enhancing-business-decision-making/" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="ODSC">
+                                <div class="pub-entry-number">10</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Insurance Tech</span>
+                                        <span class="pub-entry-publisher"><i class="fas fa-chart-bar"></i> ODSC</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Transform Insurance Risk Assessment with Agents</h3>
+                                    <p class="pub-entry-desc">Enhance risk assessment and evaluate risk factors in real-time using agentic systems 
+                                to transform the insurance industry's approach to risk management.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Industry Application</span><span class="pub-meta-tag">Risk Assessment</span></div>
+                                </div>
+                                <a href="https://opendatascience.com/transform-insurance-risk-assessment-with-agentic-systems/" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="arXiv">
+                                <div class="pub-entry-number">11</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Healthcare AI</span>
+                                        <span class="pub-entry-publisher"><i class="fas fa-flask"></i> arXiv</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Harnessing Generative AI for Patient-Centric Clinical Notes</h3>
+                                    <p class="pub-entry-desc">Use Generative AI and Automatic Speech Recognition (ASR) to generate highly accurate 
+                                clinical notes that enhance healthcare documentation quality.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Research Paper</span><span class="pub-meta-tag">Clinical AI</span></div>
+                                </div>
+                                <a href="https://arxiv.org/abs/2405.18346" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="arXiv">
+                                <div class="pub-entry-number">12</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">FinTech</span>
+                                        <span class="pub-entry-publisher"><i class="fas fa-flask"></i> arXiv</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Cost-Effective Multi-Modal Embedding Approach</h3>
+                                    <p class="pub-entry-desc">A cost-effective vector sampling method that leverages pre-trained multi-modal 
+                                embedding models to classify financial documents with high accuracy.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Research Paper</span><span class="pub-meta-tag">Financial ML</span></div>
+                                </div>
+                                <a href="https://arxiv.org/abs/2406.01618" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="ODSC">
+                                <div class="pub-entry-number">13</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Healthcare</span>
+                                        <span class="pub-entry-publisher"><i class="fas fa-chart-bar"></i> ODSC</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Elevate Healthcare Documentation with Generative AI</h3>
+                                    <p class="pub-entry-desc">Use generative AI to produce clinical notes and enhance the quality of clinical 
+                                documentation, focusing on SOAP, BIRP methodologies and AI integration.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Healthcare AI</span><span class="pub-meta-tag">Clinical Documentation</span></div>
+                                </div>
+                                <a href="https://opendatascience.com/elevating-healthcare-documentation-the-significance-of-soap-birp-and-the-promise-of-generative-ai/" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="ODSC">
+                                <div class="pub-entry-number">14</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Language Tech</span>
+                                        <span class="pub-entry-publisher"><i class="fas fa-chart-bar"></i> ODSC</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Transform Global Speech into Local Language</h3>
+                                    <p class="pub-entry-desc">Innovative approaches to speech-to-text translation that enable global content 
+                                to be transformed into local languages with high accuracy and cultural context.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Language Processing</span><span class="pub-meta-tag">Speech Translation</span></div>
+                                </div>
+                                <a href="https://opendatascience.com/transform-global-speech-into-local-language-with-talklocal/" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="Journal of Science and Technology">
+                                <div class="pub-entry-number">15</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">AI Ethics</span>
+                                        <span class="pub-entry-publisher"><i class="fas fa-book-open"></i> Journal of Science and Technology</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Guardrails for Trust and Safety in LLM Development</h3>
+                                    <p class="pub-entry-desc">Implements safeguards to ensure generated content is safe, secure, and ethical 
+                                in Large Language Model development and deployment.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Ethics Research</span><span class="pub-meta-tag">AI Safety</span></div>
+                                </div>
+                                <a href="https://thesciencebrigade.com/jst/article/view/245" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="AWS Blog">
+                                <div class="pub-entry-number">16</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">AWS ML</span>
+                                        <span class="pub-entry-publisher"><i class="fas fab fa-aws"></i> AWS Blog</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Build Trust and Safety for Generative AI with Amazon Comprehend</h3>
+                                    <p class="pub-entry-desc">Use Amazon Comprehend to ensure privacy and safety of LLMs by implementing 
+                                comprehensive content filtering and safety measures.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Technical Guide</span><span class="pub-meta-tag">AI Safety</span></div>
+                                </div>
+                                <a href="https://aws.amazon.com/blogs/machine-learning/build-trust-and-safety-for-generative-ai-applications-with-amazon-comprehend-and-langchain/" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="AWS Blog">
+                                <div class="pub-entry-number">17</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">AWS ML</span>
+                                        <span class="pub-entry-publisher"><i class="fas fab fa-aws"></i> AWS Blog</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Enterprise Grade Natural Language Pipeline</h3>
+                                    <p class="pub-entry-desc">Build a classification pipeline easily using the simplified solution for 
+                                enterprise-grade natural language processing with high accuracy and scalability.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Technical Guide</span><span class="pub-meta-tag">NLP Pipeline</span></div>
+                                </div>
+                                <a href="https://aws.amazon.com/blogs/machine-learning/build-a-classification-pipeline-with-amazon-comprehend-custom-classification-part-i/" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="AWS Blog">
+                                <div class="pub-entry-number">18</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Customer Experience</span>
+                                        <span class="pub-entry-publisher"><i class="fas fab fa-aws"></i> AWS Blog</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Handle Customer Objections Efficiently Using AI</h3>
+                                    <p class="pub-entry-desc">Enhance customer experience easily using efficient machine learning objection 
+                                handling techniques to improve satisfaction and conversion rates.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Customer AI</span><span class="pub-meta-tag">Customer Service</span></div>
+                                </div>
+                                <a href="https://aws.amazon.com/blogs/machine-learning/identify-objections-in-customer-conversations-using-amazon-comprehend-to-enhance-customer-experience-without-ml-expertise/" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="AWS Blog">
+                                <div class="pub-entry-number">19</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Computer Vision</span>
+                                        <span class="pub-entry-publisher"><i class="fas fab fa-aws"></i> AWS Blog</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Use Computer Vision to Enhance Extraction</h3>
+                                    <p class="pub-entry-desc">Train bespoke document classification models on native documents that support layout 
+                                in addition to text, increasing the accuracy of the results.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Computer Vision</span><span class="pub-meta-tag">Document Processing</span></div>
+                                </div>
+                                <a href="https://aws.amazon.com/blogs/machine-learning/amazon-comprehend-document-classifier-adds-layout-support-for-higher-accuracy/" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="AWS Blog">
+                                <div class="pub-entry-number">20</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Document Processing</span>
+                                        <span class="pub-entry-publisher"><i class="fas fab fa-aws"></i> AWS Blog</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Intelligent Document Processing</h3>
+                                    <p class="pub-entry-desc">Use advanced machine learning techniques and computer vision to process millions 
+                                of documents efficiently with high accuracy and automated workflows.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Document AI</span><span class="pub-meta-tag">Automation</span></div>
+                                </div>
+                                <a href="https://aws.amazon.com/blogs/machine-learning/introducing-one-step-classification-and-entity-recognition-with-amazon-comprehend-for-intelligent-document-processing/" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="AWS Blog">
+                                <div class="pub-entry-number">21</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Sentiment Analysis</span>
+                                        <span class="pub-entry-publisher"><i class="fas fab fa-aws"></i> AWS Blog</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Understand Targeted Sentiment with Machine Learning</h3>
+                                    <p class="pub-entry-desc">Enable accurate and scalable brand and competitor insights using artificial 
+                                intelligence for targeted sentiment analysis and business intelligence.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Sentiment AI</span><span class="pub-meta-tag">Business Intelligence</span></div>
+                                </div>
+                                <a href="https://aws.amazon.com/blogs/machine-learning/amazon-comprehend-targeted-sentiment-adds-synchronous-support/" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="AWS Blog">
+                                <div class="pub-entry-number">22</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Product Analytics</span>
+                                        <span class="pub-entry-publisher"><i class="fas fab fa-aws"></i> AWS Blog</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Get Critical Insight from Customers Using Machine Learning</h3>
+                                    <p class="pub-entry-desc">Extract meaningful information from product reviews, analyze it to understand how users 
+                                of different demographics are reacting to products and services.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Analytics</span><span class="pub-meta-tag">Customer Insights</span></div>
+                                </div>
+                                <a href="https://aws.amazon.com/blogs/machine-learning/get-better-insight-from-reviews-using-amazon-comprehend/" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="AWS Blog">
+                                <div class="pub-entry-number">23</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Identity Processing</span>
+                                        <span class="pub-entry-publisher"><i class="fas fab fa-aws"></i> AWS Blog</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Extract Key Information from Identity Documents</h3>
+                                    <p class="pub-entry-desc">Automatically extract information from identification documents using advanced 
+                                machine learning techniques for secure and accurate document processing.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Document AI</span><span class="pub-meta-tag">Identity Verification</span></div>
+                                </div>
+                                <a href="https://aws.amazon.com/blogs/machine-learning/extract-key-information-from-identity-documents/" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="ODSC">
+                                <div class="pub-entry-number">24</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Medical AI</span>
+                                        <span class="pub-entry-publisher"><i class="fas fa-chart-bar"></i> ODSC</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">How Agentic Systems Can Save Lives in Medical Emergencies</h3>
+                                    <p class="pub-entry-desc">Agentic systems can be highly effective in emergency situations, providing life-changing 
+                                capabilities for healthcare emergency management and rapid response.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Healthcare AI</span><span class="pub-meta-tag">Emergency Medicine</span></div>
+                                </div>
+                                <a href="https://opendatascience.com/how-agentic-systems-can-save-lives-in-medical-emergencies/" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="arXiv">
+                                <div class="pub-entry-number">25</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Clinical AI</span>
+                                        <span class="pub-entry-publisher"><i class="fas fa-flask"></i> arXiv</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">Clinical Documentation with LLMs</h3>
+                                    <p class="pub-entry-desc">Deliver high-quality clinical documentation with machine learning, enhancing healthcare 
+                                documentation processes and patient care quality through AI integration.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Research Paper</span><span class="pub-meta-tag">Clinical Documentation</span></div>
+                                </div>
+                                <a href="https://arxiv.org/abs/2406.06569" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                            <div class="pub-entry" data-publisher="AWS Blog">
+                                <div class="pub-entry-number">26</div>
+                                <div class="pub-entry-content">
+                                    <div class="pub-entry-top">
+                                        <span class="pub-entry-badge">Retail AI</span>
+                                        <span class="pub-entry-publisher"><i class="fas fab fa-aws"></i> AWS Blog</span>
+                                    </div>
+                                    <h3 class="pub-entry-title">AI/ML in Retail Downstream Applications</h3>
+                                    <p class="pub-entry-desc">Explore advanced AI and machine learning applications in retail downstream processes, 
+                                optimizing customer experience and business operations through intelligent automation.</p>
+                                    <div class="pub-entry-meta"><span class="pub-meta-tag">Industry Application</span><span class="pub-meta-tag">Retail Technology</span></div>
+                                </div>
+                                <a href="https://aws.amazon.com/blogs/machine-learning/ai-ml-retail-downstream/" target="_blank" class="pub-entry-link" title="Read Publication">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+
+                    </div>
+
                 </div>
             </section>
         </div>
 
-        <!-- Books Section -->
         <div id="books" class="tab-content">
             <section class="section">
                 <div class="section-container">
@@ -4151,6 +4335,635 @@
             </section>
         </div>
 
+        <!-- Articles Section -->
+        <div id="articles" class="tab-content">
+            <section class="section">
+                <div class="section-container">
+
+                    <!-- Stats Bar -->
+                    <div class="articles-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="articles-count">35</span>
+                            <span class="stat-label">Articles</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">23</span>
+                            <span class="stat-label">Topics</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">2015–2026</span>
+                            <span class="stat-label">Spanning</span>
+                        </div>
+                    </div>
+
+                    <!-- Featured Article -->
+                    <div class="featured-article">
+                        <div class="featured-badge"><i class="fas fa-star"></i> Latest</div>
+                        <div class="featured-content">
+                            <div class="featured-text">
+                                <div class="article-card-meta">
+                                    <span class="article-card-tag">Agentic AI</span>
+                                    <span class="article-card-date">Aug 30, 2026</span>
+                                </div>
+                                <h2 class="featured-title">Building Reliable Tool-Calling Agents: Lessons from the Field</h2>
+                                <p class="featured-excerpt">Why string-parsing LLM output is a trap, and how structured tool-use APIs 
+                                    change the reliability calculus for production agent systems.</p>
+                                <a href="articles/building-reliable-tool-calling-agents.html" class="featured-read">Read article <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                            <div class="featured-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category Filter -->
+                    <div class="articles-filter-bar">
+                        <h3 class="filter-heading">Browse by Topic</h3>
+                        <div class="filter-pills">
+                            <button class="filter-pill active" data-filter="all" onclick="filterArticles('all')">All</button>
+                            <button class="filter-pill" data-filter="AI Ethics" onclick="filterArticles('AI Ethics')">AI Ethics <span class="pill-count">2</span></button>
+                            <button class="filter-pill" data-filter="Agentic AI" onclick="filterArticles('Agentic AI')">Agentic AI <span class="pill-count">4</span></button>
+                            <button class="filter-pill" data-filter="Computer Vision" onclick="filterArticles('Computer Vision')">Computer Vision <span class="pill-count">1</span></button>
+                            <button class="filter-pill" data-filter="Deep Learning" onclick="filterArticles('Deep Learning')">Deep Learning <span class="pill-count">1</span></button>
+                            <button class="filter-pill" data-filter="Document AI" onclick="filterArticles('Document AI')">Document AI <span class="pill-count">3</span></button>
+                            <button class="filter-pill" data-filter="Edge Computing" onclick="filterArticles('Edge Computing')">Edge Computing <span class="pill-count">1</span></button>
+                            <button class="filter-pill" data-filter="Generative AI" onclick="filterArticles('Generative AI')">Generative AI <span class="pill-count">2</span></button>
+                            <button class="filter-pill" data-filter="Healthcare AI" onclick="filterArticles('Healthcare AI')">Healthcare AI <span class="pill-count">2</span></button>
+                            <button class="filter-pill" data-filter="IoT & AI" onclick="filterArticles('IoT & AI')">IoT & AI <span class="pill-count">1</span></button>
+                            <button class="filter-pill" data-filter="LLM Research" onclick="filterArticles('LLM Research')">LLM Research <span class="pill-count">3</span></button>
+                            <button class="filter-pill" data-filter="MLOps" onclick="filterArticles('MLOps')">MLOps <span class="pill-count">1</span></button>
+                            <button class="filter-pill" data-filter="Machine Learning" onclick="filterArticles('Machine Learning')">Machine Learning <span class="pill-count">1</span></button>
+                            <button class="filter-pill" data-filter="NLP" onclick="filterArticles('NLP')">NLP <span class="pill-count">2</span></button>
+                            <button class="filter-pill" data-filter="Privacy & ML" onclick="filterArticles('Privacy & ML')">Privacy & ML <span class="pill-count">1</span></button>
+                            <button class="filter-pill" data-filter="Reinforcement Learning" onclick="filterArticles('Reinforcement Learning')">Reinforcement Learning <span class="pill-count">1</span></button>
+                            <button class="filter-pill" data-filter="Responsible AI" onclick="filterArticles('Responsible AI')">Responsible AI <span class="pill-count">1</span></button>
+                            <button class="filter-pill" data-filter="Financial AI" onclick="filterArticles('Financial AI')">Financial AI <span class="pill-count">1</span></button>
+                            <button class="filter-pill" data-filter="Speech AI" onclick="filterArticles('Speech AI')">Speech AI <span class="pill-count">2</span></button>
+                            <button class="filter-pill" data-filter="Multimodal AI" onclick="filterArticles('Multimodal AI')">Multimodal AI <span class="pill-count">1</span></button>
+                            <button class="filter-pill" data-filter="Physical AI" onclick="filterArticles('Physical AI')">Physical AI <span class="pill-count">1</span></button>
+                            <button class="filter-pill" data-filter="Enterprise AI" onclick="filterArticles('Enterprise AI')">Enterprise AI <span class="pill-count">1</span></button>
+                            <button class="filter-pill" data-filter="AI Engineering" onclick="filterArticles('AI Engineering')">AI Engineering <span class="pill-count">1</span></button>
+                            <button class="filter-pill" data-filter="Data Engineering" onclick="filterArticles('Data Engineering')">Data Engineering <span class="pill-count">1</span></button>
+
+                        </div>
+                    </div>
+
+                    <!-- Articles Grid -->
+                    <div class="articles-grid">
+
+                            <div class="article-card" data-tag="Document AI">
+                                <div class="article-card-image-placeholder"><i class="fas fa-file-alt"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Document AI</span>
+                                        <span class="article-card-date">Jul 2026</span>
+                                    </div>
+                                    <h3 class="article-card-title">Intelligent Document Processing at Scale with Amazon Bedrock</h3>
+                                    <p class="article-card-excerpt">A practitioner's guide to building enterprise IDP pipelines using 
+                                    Bedrock Data Automation, Textract, and multi-modal foundation models.</p>
+                                    <div class="article-card-footer">
+                                        <a href="#" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">8 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="AI Ethics">
+                                <div class="article-card-image-placeholder"><i class="fas fa-shield-alt"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">AI Ethics</span>
+                                        <span class="article-card-date">Aug 30, 2026</span>
+                                    </div>
+                                    <h3 class="article-card-title">Navigating the Ethics of Generative AI in Healthcare</h3>
+                                    <p class="article-card-excerpt">Examining privacy boundaries, bias detection strategies, and responsible 
+                                    deployment patterns for clinical AI applications.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/navigating-ethics-generative-ai-healthcare.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">10 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Agentic AI">
+                                <div class="article-card-image-placeholder"><i class="fas fa-brain"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Agentic AI</span>
+                                        <span class="article-card-date">Mar 2026</span>
+                                    </div>
+                                    <h3 class="article-card-title">Meta-Reasoning in Autonomous Agents: Do Self-Monitoring LLMs Actually Perform Better?</h3>
+                                    <p class="article-card-excerpt">Empirical evidence on whether self-monitoring and regulation improve adaptability and trustworthiness in LLM-based autonomous agents across GAIA and AgentBench.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/meta-reasoning-autonomous-agents.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">8 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Agentic AI">
+                                <div class="article-card-image-placeholder"><i class="fas fa-sitemap"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Agentic AI</span>
+                                        <span class="article-card-date">Jan 2026</span>
+                                    </div>
+                                    <h3 class="article-card-title">Agentic Design Patterns for Production Systems</h3>
+                                    <p class="article-card-excerpt">From ReAct loops to multi-agent orchestration — the design patterns that separate demo agents from production-grade autonomous systems.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/agentic-design-patterns-production.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">10 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Healthcare AI">
+                                <div class="article-card-image-placeholder"><i class="fas fa-hospital"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Healthcare AI</span>
+                                        <span class="article-card-date">Jun 2024</span>
+                                    </div>
+                                    <h3 class="article-card-title">Synthetic Data Generation for Clinical Documentation: Bridging Privacy and Utility</h3>
+                                    <p class="article-card-excerpt">How LLMs can generate high-fidelity synthetic clinical transcripts that preserve statistical properties while containing zero real patient information.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/synthetic-data-clinical-documentation.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">9 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Document AI">
+                                <div class="article-card-image-placeholder"><i class="fas fa-file-invoice-dollar"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Document AI</span>
+                                        <span class="article-card-date">Jun 2024</span>
+                                    </div>
+                                    <h3 class="article-card-title">Cost-Effective Multi-Modal Classification for Financial Documents</h3>
+                                    <p class="article-card-excerpt">Why text-only approaches fail for financial documents, and how multi-modal methods capture layout, visual, and textual signals for robust classification.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/multimodal-financial-document-classification.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">7 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Machine Learning">
+                                <div class="article-card-image-placeholder"><i class="fas fa-project-diagram"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Machine Learning</span>
+                                        <span class="article-card-date">Jun 2024</span>
+                                    </div>
+                                    <h3 class="article-card-title">Synergizing Unsupervised and Supervised Learning: When Labels Are Scarce</h3>
+                                    <p class="article-card-excerpt">Supervised models need labels; unsupervised methods don't — but combining them strategically yields results neither achieves alone.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/unsupervised-supervised-synergy-nlp.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">8 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Document AI">
+                                <div class="article-card-image-placeholder"><i class="fas fa-file-image"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Document AI</span>
+                                        <span class="article-card-date">May 2024</span>
+                                    </div>
+                                    <h3 class="article-card-title">How Document Skew Breaks Multi-Modal LLMs — and What to Do About It</h3>
+                                    <p class="article-card-excerpt">Multi-modal LLMs excel at document extraction — until the scan is tilted. Measuring and mitigating the impact of skew on extraction accuracy.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/document-skew-multimodal-llms.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">7 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="LLM Research">
+                                <div class="article-card-image-placeholder"><i class="fas fa-anchor"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">LLM Research</span>
+                                        <span class="article-card-date">May 2024</span>
+                                    </div>
+                                    <h3 class="article-card-title">Context-Aware Grounding: Keeping LLMs Faithful to the Source</h3>
+                                    <p class="article-card-excerpt">Grounding techniques that anchor LLM outputs to source documents, reducing hallucination and improving fidelity in extraction pipelines.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/context-aware-grounding-llm-fidelity.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">9 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="AI Ethics">
+                                <div class="article-card-image-placeholder"><i class="fas fa-shield-alt"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">AI Ethics</span>
+                                        <span class="article-card-date">Aug 2024</span>
+                                    </div>
+                                    <h3 class="article-card-title">Trust, Safety, and Ethics in LLM Development: A Practitioner's Framework</h3>
+                                    <p class="article-card-excerpt">As LLMs grow more capable, the risks of information leakage, misinformation, and misalignment grow too. A practical framework for building trustworthy systems.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/trust-safety-ethics-llm-development.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">11 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Healthcare AI">
+                                <div class="article-card-image-placeholder"><i class="fas fa-notes-medical"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Healthcare AI</span>
+                                        <span class="article-card-date">Apr 2024</span>
+                                    </div>
+                                    <h3 class="article-card-title">LLMs for Healthcare Documentation: Automating the Clinical Burden</h3>
+                                    <p class="article-card-excerpt">Clinical documentation consumes 35% of a physician's day. How LLMs are transforming note generation, coding, and summarization — with guardrails.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/llms-healthcare-documentation-automation.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">8 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="IoT & AI">
+                                <div class="article-card-image-placeholder"><i class="fas fa-gas-pump"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">IoT & AI</span>
+                                        <span class="article-card-date">Nov 2023</span>
+                                    </div>
+                                    <h3 class="article-card-title">The Gas Station of the Future: Where AI/ML Meets IoT at the Edge</h3>
+                                    <p class="article-card-excerpt">Reimagining fuel retail with computer vision, predictive maintenance, and real-time IoT analytics — a case study in applied AI at the edge.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/gas-station-future-ai-iot.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">6 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Edge Computing">
+                                <div class="article-card-image-placeholder"><i class="fas fa-microchip"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Edge Computing</span>
+                                        <span class="article-card-date">May 2023</span>
+                                    </div>
+                                    <h3 class="article-card-title">Edge AI: Deploying Deep Learning on Resource-Constrained Devices</h3>
+                                    <p class="article-card-excerpt">Model pruning, quantization, knowledge distillation, and TinyML — the techniques that shrink billion-parameter models to run on microcontrollers and phones.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/edge-ai-deploying-models-resource-constrained.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">7 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="LLM Research">
+                                <div class="article-card-image-placeholder"><i class="fas fa-magic"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">LLM Research</span>
+                                        <span class="article-card-date">Aug 2022</span>
+                                    </div>
+                                    <h3 class="article-card-title">Few-Shot Learning with Large Language Models: The GPT-3 Moment</h3>
+                                    <p class="article-card-excerpt">When GPT-3 showed that prompting could replace fine-tuning for many tasks, it changed the economics and accessibility of NLP overnight.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/few-shot-learning-large-language-models.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">9 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="MLOps">
+                                <div class="article-card-image-placeholder"><i class="fas fa-cogs"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">MLOps</span>
+                                        <span class="article-card-date">Apr 2021</span>
+                                    </div>
+                                    <h3 class="article-card-title">MLOps: Bridging the Gap Between Notebooks and Production</h3>
+                                    <p class="article-card-excerpt">87% of ML models never reach production. Feature stores, model registries, CI/CD for ML, and monitoring — the infrastructure that changes that statistic.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/mlops-bridging-gap-notebooks-production.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">8 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Responsible AI">
+                                <div class="article-card-image-placeholder"><i class="fas fa-search"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Responsible AI</span>
+                                        <span class="article-card-date">Feb 2020</span>
+                                    </div>
+                                    <h3 class="article-card-title">Explainable AI: Opening the Black Box Before Regulators Do</h3>
+                                    <p class="article-card-excerpt">SHAP, LIME, attention visualization — the practical toolkit for making ML decisions interpretable when stakeholders ask 'why?'</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/explainable-ai-opening-black-box.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">7 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Privacy & ML">
+                                <div class="article-card-image-placeholder"><i class="fas fa-network-wired"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Privacy & ML</span>
+                                        <span class="article-card-date">Oct 2020</span>
+                                    </div>
+                                    <h3 class="article-card-title">Federated Learning: Training Models Without Sharing Data</h3>
+                                    <p class="article-card-excerpt">How federated learning enables collaborative model training across hospitals, banks, and devices — without raw data ever leaving the source.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/federated-learning-privacy-preserving-ml.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">8 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Generative AI">
+                                <div class="article-card-image-placeholder"><i class="fas fa-palette"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Generative AI</span>
+                                        <span class="article-card-date">Jun 2019</span>
+                                    </div>
+                                    <h3 class="article-card-title">GANs and the Dawn of Creative AI</h3>
+                                    <p class="article-card-excerpt">From mode collapse to StyleGAN — how adversarial training unlocked image synthesis and laid the groundwork for today's diffusion models.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/generative-adversarial-networks-creative-ai.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">8 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Reinforcement Learning">
+                                <div class="article-card-image-placeholder"><i class="fas fa-gamepad"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Reinforcement Learning</span>
+                                        <span class="article-card-date">Sep 2019</span>
+                                    </div>
+                                    <h3 class="article-card-title">Reinforcement Learning Beyond Games: From AlphaGo to Real-World Control</h3>
+                                    <p class="article-card-excerpt">AlphaGo captured headlines, but the real story is RL's migration to robotics, supply chain, and recommendation systems — with hard-won lessons about sample efficiency.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/reinforcement-learning-beyond-games.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">9 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="NLP">
+                                <div class="article-card-image-placeholder"><i class="fas fa-language"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">NLP</span>
+                                        <span class="article-card-date">Nov 2018</span>
+                                    </div>
+                                    <h3 class="article-card-title">Transfer Learning Comes to NLP: From Word2Vec to BERT</h3>
+                                    <p class="article-card-excerpt">The journey from static word embeddings to contextualized representations — and why pre-training then fine-tuning became the dominant paradigm.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/transfer-learning-revolution-nlp.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">8 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Deep Learning">
+                                <div class="article-card-image-placeholder"><i class="fas fa-bolt"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Deep Learning</span>
+                                        <span class="article-card-date">Dec 2017</span>
+                                    </div>
+                                    <h3 class="article-card-title">The Rise of Transformers: Why Attention Changed Everything</h3>
+                                    <p class="article-card-excerpt">How the self-attention mechanism in 'Attention Is All You Need' replaced recurrence, launched the transformer era, and reshaped every corner of AI.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/rise-of-transformers-attention-is-all-you-need.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">9 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Computer Vision">
+                                <div class="article-card-image-placeholder"><i class="fas fa-image"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Computer Vision</span>
+                                        <span class="article-card-date">Mar 2016</span>
+                                    </div>
+                                    <h3 class="article-card-title">CNNs at Scale: Lessons from ImageNet to Production Deployment</h3>
+                                    <p class="article-card-excerpt">What ResNets, batch normalization, and data augmentation taught us about training deep networks — and how those lessons still apply to modern vision models.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/convolutional-neural-networks-image-classification.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">7 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="article-card" data-tag="NLP">
+                                <div class="article-card-image-placeholder"><i class="fas fa-font"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">NLP</span>
+                                        <span class="article-card-date">Sep 2015</span>
+                                    </div>
+                                    <h3 class="article-card-title">How Word Embeddings Changed NLP Forever</h3>
+                                    <p class="article-card-excerpt">From one-hot vectors to Word2Vec and GloVe — the representation revolution that made machines understand meaning and analogy.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/word-embeddings-changed-nlp-forever.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">7 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Generative AI">
+                                <div class="article-card-image-placeholder"><i class="fas fa-wand-magic-sparkles"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Generative AI</span>
+                                        <span class="article-card-date">Oct 2022</span>
+                                    </div>
+                                    <h3 class="article-card-title">Diffusion Models: The Math Behind AI's Creative Explosion</h3>
+                                    <p class="article-card-excerpt">How denoising score matching and classifier-free guidance dethroned GANs and powered DALL-E, Stable Diffusion, and Midjourney.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/diffusion-models-ai-image-generation.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">9 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="article-card" data-tag="Financial AI">
+                                <div class="article-card-image-placeholder"><i class="fas fa-chart-line"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Financial AI</span>
+                                        <span class="article-card-date">Feb 2025</span>
+                                    </div>
+                                    <h3 class="article-card-title">Generative AI on Wall Street: From Document Parsing to Autonomous Trading Memos</h3>
+                                    <p class="article-card-excerpt">How investment banks and fintechs are deploying LLMs for 10-K analysis, risk summarization, and client reporting — with the guardrails regulators demand.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/financial-generative-ai-wall-street.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">9 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Speech AI">
+                                <div class="article-card-image-placeholder"><i class="fas fa-microphone-alt"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Speech AI</span>
+                                        <span class="article-card-date">Jul 2025</span>
+                                    </div>
+                                    <h3 class="article-card-title">Speech-to-Speech AI: The End of the Text Bottleneck</h3>
+                                    <p class="article-card-excerpt">From cascaded ASR→LLM→TTS pipelines to native speech-to-speech models — how end-to-end voice AI is achieving sub-500ms latency with emotional nuance.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/speech-to-speech-real-time-ai.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">8 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Speech AI">
+                                <div class="article-card-image-placeholder"><i class="fas fa-headset"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Speech AI</span>
+                                        <span class="article-card-date">Mar 2025</span>
+                                    </div>
+                                    <h3 class="article-card-title">Domain-Specific Speech Recognition: When Whisper Isn't Enough</h3>
+                                    <p class="article-card-excerpt">Medical dictation, legal transcription, financial earnings calls — why general-purpose ASR fails in specialized domains and how to fix it.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/domain-specific-speech-recognition.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">8 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Multimodal AI">
+                                <div class="article-card-image-placeholder"><i class="fas fa-layer-group"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Multimodal AI</span>
+                                        <span class="article-card-date">Sep 2025</span>
+                                    </div>
+                                    <h3 class="article-card-title">Multimodal Foundation Models: Toward Unified Intelligence</h3>
+                                    <p class="article-card-excerpt">GPT-4o, Gemini, Claude — models that see, hear, read, and reason simultaneously. What unified multimodality means for the next generation of AI systems.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/multimodal-foundation-models-unified-intelligence.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">10 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Physical AI">
+                                <div class="article-card-image-placeholder"><i class="fas fa-robot"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Physical AI</span>
+                                        <span class="article-card-date">Apr 2026</span>
+                                    </div>
+                                    <h3 class="article-card-title">Physical AI: When Foundation Models Meet the Real World</h3>
+                                    <p class="article-card-excerpt">From simulation to manipulation — how vision-language-action models, world simulators, and sim-to-real transfer are finally making robots useful.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/physical-ai-robots-real-world.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">9 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Agentic AI">
+                                <div class="article-card-image-placeholder"><i class="fas fa-rocket"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Agentic AI</span>
+                                        <span class="article-card-date">Jun 2026</span>
+                                    </div>
+                                    <h3 class="article-card-title">The Future of Agentic AI: From Copilots to Fully Autonomous Systems</h3>
+                                    <p class="article-card-excerpt">The trajectory from tool-augmented assistants to goal-driven autonomous agents — and the trust, safety, and governance infrastructure we need to get there.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/future-agentic-ai-autonomous-systems.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">11 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="LLM Research">
+                                <div class="article-card-image-placeholder"><i class="fas fa-compress-arrows-alt"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">LLM Research</span>
+                                        <span class="article-card-date">Nov 2024</span>
+                                    </div>
+                                    <h3 class="article-card-title">Small Language Models: The Case for Efficient, Specialized AI</h3>
+                                    <p class="article-card-excerpt">Phi, Gemma, Mistral — why smaller models fine-tuned for specific tasks are beating GPT-4 at a fraction of the cost and latency.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/small-language-models-efficient-ai.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">7 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Enterprise AI">
+                                <div class="article-card-image-placeholder"><i class="fas fa-project-diagram"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Enterprise AI</span>
+                                        <span class="article-card-date">May 2025</span>
+                                    </div>
+                                    <h3 class="article-card-title">Beyond RAG: Knowledge Graphs as the Enterprise Memory Layer</h3>
+                                    <p class="article-card-excerpt">RAG retrieves chunks; knowledge graphs understand relationships. How enterprises are combining both for grounded, context-aware AI that actually knows the org.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/rag-to-knowledge-graphs-enterprise.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">9 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="AI Engineering">
+                                <div class="article-card-image-placeholder"><i class="fas fa-code"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">AI Engineering</span>
+                                        <span class="article-card-date">Aug 2025</span>
+                                    </div>
+                                    <h3 class="article-card-title">AI Code Generation: Rewriting Software Engineering From the Inside</h3>
+                                    <p class="article-card-excerpt">Copilot, Cursor, Devin — how AI coding assistants evolved from autocomplete to autonomous software engineers, and what it means for the profession.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/ai-code-generation-software-engineering.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">8 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="article-card" data-tag="Data Engineering">
+                                <div class="article-card-image-placeholder"><i class="fas fa-database"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">Data Engineering</span>
+                                        <span class="article-card-date">Jan 2026</span>
+                                    </div>
+                                    <h3 class="article-card-title">Synthetic Data 2.0: The Next Frontier in Model Training</h3>
+                                    <p class="article-card-excerpt">We're running out of internet data. How self-play, model-generated datasets, and constitutional AI are creating the training data for the next generation of models.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/synthetic-data-next-frontier-model-training.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">8 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                    </div>
+
+                </div>
+            </section>
+        </div>
 
 
     </main>
@@ -4163,16 +4976,20 @@
 
     <script>
         // Modern Tab Switching with Navigation Updates
+        // Section definitions for the scroll bar
+        const scrollSections = ['home', 'articles', 'research', 'publications', 'books', 'memberships'];
+        const scrollSectionLabels = { home: 'Home', articles: 'Articles', research: 'Research', publications: 'Publications', books: 'Books', memberships: 'Memberships' };
+        
         function showTab(tabId) {
-            // Remove active class from all tabs and nav links
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
             
-            // Add active class to selected tab
             document.getElementById(tabId).classList.add('active');
             
-            // Add active class to corresponding nav link
-            document.querySelector(`a[onclick="showTab('${tabId}')"]`).classList.add('active');
+            const navLink = document.querySelector(`a[onclick="showTab('${tabId}')"]`);
+            if (navLink) navLink.classList.add('active');
+            
+            updateScrollBarFill(tabId);
             
             // Close mobile menu if open
             const nav = document.querySelector('.nav-container');
@@ -4186,17 +5003,113 @@
                 document.body.style.overflow = '';
             }
             
-            // Smooth scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+        
+        function updateScrollBarFill(tabId) {
+            const idx = scrollSections.indexOf(tabId);
+            const fill = document.getElementById('scroll-bar-fill');
+            if (fill && idx >= 0) {
+                fill.style.width = ((idx + 1) / scrollSections.length) * 100 + '%';
+            }
+        }
+        
+        function getSectionFromX(clientX) {
+            const scrubber = document.getElementById('section-scrubber');
+            const rect = scrubber.getBoundingClientRect();
+            const pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+            const idx = Math.min(Math.floor(pct * scrollSections.length), scrollSections.length - 1);
+            return scrollSections[idx];
+        }
+        
+        // Tooltip + drag logic
+        (function() {
+            const scrubber = document.getElementById('section-scrubber');
+            const tooltip = document.getElementById('scrubber-tooltip');
+            if (!scrubber || !tooltip) return;
+            let isDragging = false;
+            
+            function showTooltip(clientX) {
+                const tab = getSectionFromX(clientX);
+                tooltip.textContent = scrollSectionLabels[tab];
+                tooltip.style.left = clientX + 'px';
+                tooltip.classList.add('visible');
+            }
+            
+            function hideTooltip() {
+                tooltip.classList.remove('visible');
+            }
+            
+            scrubber.addEventListener('mouseenter', (e) => showTooltip(e.clientX));
+            
+            scrubber.addEventListener('mousemove', (e) => {
+                showTooltip(e.clientX);
+                if (isDragging) {
+                    const tab = getSectionFromX(e.clientX);
+                    showTab(tab);
+                }
+            });
+            
+            scrubber.addEventListener('mouseleave', () => {
+                if (!isDragging) hideTooltip();
+            });
+            
+            scrubber.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                const tab = getSectionFromX(e.clientX);
+                showTab(tab);
+                e.preventDefault();
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                showTooltip(e.clientX);
+                const tab = getSectionFromX(e.clientX);
+                showTab(tab);
+            });
+            
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    hideTooltip();
+                }
+            });
+            
+            // Touch support
+            scrubber.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                const x = e.touches[0].clientX;
+                showTooltip(x);
+                showTab(getSectionFromX(x));
+            }, { passive: true });
+            
+            scrubber.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const x = e.touches[0].clientX;
+                showTooltip(x);
+                showTab(getSectionFromX(x));
+            }, { passive: true });
+            
+            scrubber.addEventListener('touchend', () => {
+                isDragging = false;
+                hideTooltip();
+            });
+            
+            // Initialize
+            window.addEventListener('load', () => updateScrollBarFill('home'));
+        })();
 
-        // Scroll Progress Indicator
+        // Page scroll — keep fill in sync with page position
         window.addEventListener('scroll', () => {
-            const scrollProgress = document.getElementById('scroll-progress');
-            const scrollTop = window.pageYOffset;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = (scrollTop / docHeight) * 100;
-            scrollProgress.style.width = progress + '%';
+            const fill = document.getElementById('scroll-bar-fill');
+            if (fill) {
+                const scrollTop = window.pageYOffset;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                if (docHeight > 0) {
+                    const progress = (scrollTop / docHeight) * 100;
+                    fill.style.width = progress + '%';
+                }
+            }
         });
 
         // Add scroll animations
@@ -4265,6 +5178,60 @@
                 }
             });
         });
+
+
+
+        // Publication filter by publisher
+        function filterPubs(publisher) {
+            const entries = document.querySelectorAll('.pub-entry');
+            const pills = document.querySelectorAll('.pub-filter');
+            
+            pills.forEach(p => p.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            let count = 0;
+            entries.forEach(entry => {
+                if (publisher === 'all' || entry.dataset.publisher === publisher) {
+                    entry.classList.remove('hidden');
+                    count++;
+                } else {
+                    entry.classList.add('hidden');
+                }
+            });
+            
+            document.getElementById('pub-count').textContent = count;
+        }
+
+        // Article filter by category
+        function filterArticles(tag) {
+            const cards = document.querySelectorAll('.article-card');
+            const pills = document.querySelectorAll('.filter-pill');
+            
+            pills.forEach(p => p.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            let visibleCount = 0;
+            cards.forEach(card => {
+                if (tag === 'all' || card.dataset.tag === tag) {
+                    card.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            
+            // Update count (featured + visible grid cards)
+            document.getElementById('articles-count').textContent = tag === 'all' ? '35' : visibleCount;
+        }
+
+        // Check if returning from an article page — open the Articles tab
+        (function() {
+            const tab = sessionStorage.getItem('openTab');
+            if (tab) {
+                sessionStorage.removeItem('openTab');
+                showTab(tab);
+            }
+        })();
     </script>
 </body>
 </html>
