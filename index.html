@@ -2475,10 +2475,86 @@
         .pub-entry-link:hover { background: rgba(255,255,255,0.1); color: var(--accent-color); }
 
         /* Articles Section */
-        .articles-stats { display: flex; gap: 3rem; margin-bottom: 2.5rem; padding: 1.5rem 0; border-bottom: 1px solid var(--border-color); }
-        .stat-item { display: flex; flex-direction: column; }
-        .stat-number { font-family: 'Crimson Text', serif; font-size: 1.8rem; font-weight: 600; color: var(--primary-text); line-height: 1; }
-        .stat-label { font-size: 0.75rem; color: var(--muted-text); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.3rem; }
+        /* Articles Hero Strip */
+        .articles-hero-strip {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .articles-hero-left {
+            flex: 1;
+        }
+
+        .articles-hero-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin-bottom: 0.4rem;
+        }
+
+        .articles-hero-desc {
+            font-size: 0.85rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            max-width: 500px;
+        }
+
+        .articles-hero-metrics {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .articles-metric {
+            text-align: center;
+            position: relative;
+        }
+
+        .articles-metric-num {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            line-height: 1;
+        }
+
+        .articles-metric-label {
+            display: block;
+            font-size: 0.6rem;
+            color: var(--muted-text);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.25rem;
+        }
+
+        .articles-metric-trend {
+            position: absolute;
+            top: -4px;
+            right: -10px;
+            font-size: 0.6rem;
+            color: #4ade80;
+            font-weight: 700;
+        }
+
+        .articles-metric-divider {
+            width: 1px;
+            height: 30px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .articles-hero-strip { flex-direction: column; text-align: center; padding: 1.5rem; }
+            .articles-hero-desc { max-width: none; }
+            .articles-hero-metrics { gap: 1rem; }
+        }
 
         .featured-article {
             background: linear-gradient(135deg, rgba(30,30,30,0.9), rgba(20,20,20,0.95));
@@ -3305,20 +3381,6 @@
         }
 
 
-        .stat-item-highlight .stat-number {
-            color: var(--accent-color);
-            position: relative;
-        }
-
-        .stat-item-highlight .stat-number::after {
-            content: '↑';
-            font-size: 0.7rem;
-            color: #4ade80;
-            margin-left: 0.3rem;
-            vertical-align: super;
-        }
-
-
         .top-paper-callout {
             display: flex;
             align-items: center;
@@ -3516,6 +3578,237 @@
             .award-banner-details { justify-content: center; }
         }
 
+
+        /* Hero Typing Animation */
+        .typing-cursor {
+            animation: blink 1s infinite;
+            color: var(--accent-color);
+            font-weight: 300;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Featured In Strip */
+        .featured-in-strip {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .featured-in-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--muted-text);
+            white-space: nowrap;
+        }
+
+        .featured-in-logos {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .featured-in-item {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.35);
+            text-decoration: none;
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+
+        .featured-in-item:hover {
+            color: var(--accent-color);
+        }
+
+        /* Testimonials */
+        .testimonials-strip {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .testimonial-card {
+            padding: 1.5rem;
+            border-left: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .testimonial-quote {
+            font-family: 'Crimson Text', serif;
+            font-size: 1rem;
+            font-style: italic;
+            color: var(--secondary-text);
+            line-height: 1.7;
+            margin-bottom: 0.75rem;
+        }
+
+        .testimonial-source {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--muted-text);
+        }
+
+        /* Current Focus */
+        .focus-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+
+        .focus-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        .focus-date {
+            font-size: 0.7rem;
+            color: var(--muted-text);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .focus-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .focus-card {
+            padding: 1.25rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .focus-card:hover {
+            border-color: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.02);
+        }
+
+        .focus-icon {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            margin-bottom: 0.6rem;
+        }
+
+        .focus-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin-bottom: 0.3rem;
+        }
+
+        .focus-desc {
+            font-size: 0.75rem;
+            color: var(--muted-text);
+            line-height: 1.5;
+        }
+
+        /* Connect — Modern Split Layout */
+        .connect-modern {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .connect-eyebrow {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-color);
+            margin-bottom: 0.75rem;
+        }
+
+        .connect-heading {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 600;
+            color: var(--primary-text);
+            line-height: 1.2;
+            margin-bottom: 0.75rem;
+        }
+
+        .connect-desc {
+            font-size: 0.92rem;
+            color: var(--secondary-text);
+            line-height: 1.7;
+        }
+
+        .connect-right {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .connect-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.85rem 1.1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+
+        .connect-card:hover {
+            border-color: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.03);
+            transform: translateX(6px);
+        }
+
+        .connect-card-icon {
+            font-size: 1.3rem;
+            width: 2.5rem;
+            display: flex;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .connect-card-info {
+            flex: 1;
+        }
+
+        .connect-card-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        .connect-card-handle {
+            font-size: 0.72rem;
+            color: var(--muted-text);
+        }
+
+        .connect-card-arrow {
+            font-size: 0.7rem;
+            color: var(--muted-text);
+            transition: all 0.2s ease;
+        }
+
+        .connect-card:hover .connect-card-arrow {
+            color: var(--accent-color);
+            transform: translateX(3px);
+        }
+
+        @media (max-width: 768px) {
+            .featured-in-strip { flex-direction: column; align-items: flex-start; }
+            .testimonials-strip { grid-template-columns: 1fr; }
+            .focus-grid { grid-template-columns: 1fr 1fr; }
+            .connect-modern { grid-template-columns: 1fr; gap: 2rem; }
+        }
+
     </style>
 </head>
 <body>
@@ -3564,7 +3857,9 @@
                 <div class="hero-content">
                     <div class="hero-text">
                         <h1 class="hero-title">Wrick Talukdar</h1>
-                        <p class="hero-subtitle">Thought Leader | Innovator | Product Advisor | Bestselling Author</p>
+                        <p class="hero-subtitle">
+                            <span id="typing-text"></span><span class="typing-cursor">|</span>
+                        </p>
                         <p class="hero-description">
                             Distinguished technology leader with over two decades of experience driving 
                             technological transformations in global enterprises. Renowned for expertise in AI, Machine Learning, Generative AI,
@@ -3590,6 +3885,23 @@
                     </div>
                 </div>
             </section>
+            <!-- Featured In -->
+            <section class="section" style="padding: 1.5rem 2rem;">
+                <div class="section-container">
+                    <div class="featured-in-strip">
+                        <span class="featured-in-label">Featured In</span>
+                        <div class="featured-in-logos">
+                            <a href="https://ceoworld.biz/2025/04/23/from-curiosity-to-real-world-impact-how-wrick-talukdar-is-shaping-the-future-of-ai/" target="_blank" class="featured-in-item">CEO World</a>
+                            <a href="https://www.bintelligence.com/judge/wrick-talukdar" target="_blank" class="featured-in-item">Business Intelligence Group</a>
+                            <a href="https://www.computer.org/publications/tech-news/trends/litellm-control-plane" target="_blank" class="featured-in-item">IEEE Computer Society</a>
+                            <a href="https://aws.amazon.com/blogs/machine-learning/author/wtalukda/" target="_blank" class="featured-in-item">AWS Machine Learning Blog</a>
+                            <a href="https://ieeexplore.ieee.org/document/10958205" target="_blank" class="featured-in-item">IEEE Xplore</a>
+                            <a href="https://www.theedgereview.org/magazine/issue-1/the-rise-of-agentic-ai-across-industries" target="_blank" class="featured-in-item">The Edge Review</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             
 
             
@@ -3671,7 +3983,23 @@
                 </div>
             </section>
 
-            <!-- Professional Timeline Section -->
+            
+            <!-- Testimonials & Press -->
+            <section class="section" style="padding: 2rem 2rem 3rem;">
+                <div class="section-container">
+                    <div class="testimonials-strip">
+                        <div class="testimonial-card">
+                            <p class="testimonial-quote">"From curiosity to real-world impact — Wrick Talukdar is shaping the future of AI. Currently serving as Technology Leader at AWS, he is widely credited for pioneering scalable, enterprise-grade award-winning AI products."</p>
+                            <div class="testimonial-source">— CEO World Magazine, 2025</div>
+                        </div>
+                        <div class="testimonial-card">
+                            <p class="testimonial-quote">"A distinguished AI/ML architect and product leader with over two decades of experience. An innovator and thought leader, spearheading large-scale technological transformations across global enterprises."</p>
+                            <div class="testimonial-source">— Business Intelligence Group</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+<!-- Professional Timeline Section -->
             <section class="section">
                 <div class="section-container">
                     <div class="section-header">
@@ -4136,6 +4464,39 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Current Focus -->
+            <section class="section" style="padding: 2rem 2rem 3rem;">
+                <div class="section-container">
+                    <div class="focus-header">
+                        <h3 class="focus-title">What I'm Working On Now</h3>
+                        <span class="focus-date">August 2026</span>
+                    </div>
+                    <div class="focus-grid">
+                        <div class="focus-card">
+                            <div class="focus-icon"><i class="fas fa-robot"></i></div>
+                            <div class="focus-name">Agentic AI Systems</div>
+                            <div class="focus-desc">Multi-agent orchestration, autonomous planning, and production-grade agent architectures</div>
+                        </div>
+                        <div class="focus-card">
+                            <div class="focus-icon"><i class="fas fa-layer-group"></i></div>
+                            <div class="focus-name">Multimodal AI</div>
+                            <div class="focus-desc">Vision-language models for document understanding and intelligent processing</div>
+                        </div>
+                        <div class="focus-card">
+                            <div class="focus-icon"><i class="fas fa-microphone-alt"></i></div>
+                            <div class="focus-name">Speech-to-Speech AI</div>
+                            <div class="focus-desc">Real-time voice interfaces with sub-500ms latency and emotional intelligence</div>
+                        </div>
+                        <div class="focus-card">
+                            <div class="focus-icon"><i class="fas fa-shield-alt"></i></div>
+                            <div class="focus-name">AI Safety & Ethics</div>
+                            <div class="focus-desc">Trust frameworks, guardrails, and responsible deployment for enterprise AI</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </div>
 
         <!-- HIDDEN: Projects Section
@@ -4690,28 +5051,27 @@
             <section class="section">
                 <div class="section-container">
 
-                    <!-- Publications Header -->
-                    <div class="pub-hero">
-                        <div class="pub-hero-text">
-                            <h2 class="section-title">Publications</h2>
-                            <p class="section-subtitle">Contributing to the advancement of AI and machine learning through peer-reviewed research and technical writing</p>
+                    <!-- Publications Hero Strip -->
+                    <div class="articles-hero-strip" style="margin-bottom: 1.5rem;">
+                        <div class="articles-hero-left">
+                            <h2 class="articles-hero-title">Publications & Research</h2>
+                            <p class="articles-hero-desc">Peer-reviewed papers, journal articles, and technical publications across IEEE, arXiv, ODSC, INFORMS, and leading technology venues.</p>
                         </div>
-                        <div class="pub-stats-row">
-                            <div class="pub-stat">
-                                <span class="pub-stat-num" id="pub-count">26</span>
-                                <span class="pub-stat-label">Publications</span>
+                        <div class="articles-hero-metrics">
+                            <div class="articles-metric">
+                                <span class="articles-metric-num" id="pub-count">26</span>
+                                <span class="articles-metric-label">Publications</span>
                             </div>
-                            <div class="pub-stat">
-                                <span class="pub-stat-num">8</span>
-                                <span class="pub-stat-label">Venues</span>
+                            <div class="articles-metric-divider"></div>
+                            <div class="articles-metric">
+                                <span class="articles-metric-num">1,112</span>
+                                <span class="articles-metric-label">Citations</span>
+                                <span class="articles-metric-trend">↑</span>
                             </div>
-                            <div class="pub-stat">
-                                <span class="pub-stat-num">8</span>
-                                <span class="pub-stat-label">AWS Blog</span>
-                            </div>
-                            <div class="pub-stat">
-                                <span class="pub-stat-num">5</span>
-                                <span class="pub-stat-label">IEEE</span>
+                            <div class="articles-metric-divider"></div>
+                            <div class="articles-metric">
+                                <span class="articles-metric-num">15</span>
+                                <span class="articles-metric-label">Intl. Venues</span>
                             </div>
                         </div>
                     </div>
@@ -5383,23 +5743,33 @@
             <section class="section">
                 <div class="section-container">
 
-                    <!-- Stats Bar -->
-                    <div class="articles-stats">
-                        <div class="stat-item stat-item-highlight">
-                            <span class="stat-number">50,000+</span>
-                            <span class="stat-label">Total Reads</span>
+                    <!-- Articles Hero Strip -->
+                    <div class="articles-hero-strip">
+                        <div class="articles-hero-left">
+                            <h2 class="articles-hero-title">Articles & Insights</h2>
+                            <p class="articles-hero-desc">A decade of writing on AI, machine learning, deep learning, and emerging technology — from foundational concepts to cutting-edge research.</p>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-number" id="articles-count">37</span>
-                            <span class="stat-label">Articles</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">24</span>
-                            <span class="stat-label">Topics</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">2015–2026</span>
-                            <span class="stat-label">Spanning</span>
+                        <div class="articles-hero-metrics">
+                            <div class="articles-metric">
+                                <span class="articles-metric-num">50K+</span>
+                                <span class="articles-metric-label">Reads</span>
+                                <span class="articles-metric-trend">↑</span>
+                            </div>
+                            <div class="articles-metric-divider"></div>
+                            <div class="articles-metric">
+                                <span class="articles-metric-num" id="articles-count">37</span>
+                                <span class="articles-metric-label">Articles</span>
+                            </div>
+                            <div class="articles-metric-divider"></div>
+                            <div class="articles-metric">
+                                <span class="articles-metric-num">24</span>
+                                <span class="articles-metric-label">Topics</span>
+                            </div>
+                            <div class="articles-metric-divider"></div>
+                            <div class="articles-metric">
+                                <span class="articles-metric-num">15yr</span>
+                                <span class="articles-metric-label">Span</span>
+                            </div>
                         </div>
                     </div>
 
@@ -6302,6 +6672,93 @@
             }
         })();
 
+
+        // Hero typing animation
+        (function() {
+            const phrases = [
+                'Innovator | Thought Leader | Bestselling Author',
+                'Technology Leader at Amazon',
+                'Chair, Technology & Innovation, IEEE',
+                'Pioneering Agentic AI & Generative AI Products & Solutions',
+                'Award-Winning Author | Product Leader'
+            ];
+            let phraseIdx = 0, charIdx = 0, deleting = false;
+            const el = document.getElementById('typing-text');
+            if (!el) return;
+            
+            function type() {
+                const phrase = phrases[phraseIdx];
+                if (!deleting) {
+                    el.textContent = phrase.substring(0, charIdx + 1);
+                    charIdx++;
+                    if (charIdx === phrase.length) {
+                        setTimeout(() => { deleting = true; type(); }, 2500);
+                        return;
+                    }
+                    setTimeout(type, 45);
+                } else {
+                    el.textContent = phrase.substring(0, charIdx - 1);
+                    charIdx--;
+                    if (charIdx === 0) {
+                        deleting = false;
+                        phraseIdx = (phraseIdx + 1) % phrases.length;
+                        setTimeout(type, 400);
+                        return;
+                    }
+                    setTimeout(type, 25);
+                }
+            }
+            type();
+        })();
+
     </script>
 </body>
-</html>
+</html
+            <!-- Connect -->
+            <section class="section" style="padding: 3rem 2rem 4rem;">
+                <div class="section-container">
+                    <div class="connect-modern">
+                        <div class="connect-left">
+                            <div class="connect-eyebrow">Get in Touch</div>
+                            <h3 class="connect-heading">Let's Shape What's Next</h3>
+                            <p class="connect-desc">Whether it's AI strategy for your enterprise, a research collaboration, a keynote, or a bold idea worth exploring — I'm always open to conversations that push boundaries.</p>
+                        </div>
+                        <div class="connect-right">
+                            <a href="https://www.linkedin.com/in/wrick-talukdar/" target="_blank" class="connect-card">
+                                <div class="connect-card-icon" style="color: #0a66c2;"><i class="fab fa-linkedin-in"></i></div>
+                                <div class="connect-card-info">
+                                    <div class="connect-card-name">LinkedIn</div>
+                                    <div class="connect-card-handle">in/wrick-talukdar</div>
+                                </div>
+                                <i class="fas fa-arrow-right connect-card-arrow"></i>
+                            </a>
+                            <a href="https://www.researchgate.net/profile/Wrick-Talukdar-2" target="_blank" class="connect-card">
+                                <div class="connect-card-icon" style="color: #00d0af;"><i class="fab fa-researchgate"></i></div>
+                                <div class="connect-card-info">
+                                    <div class="connect-card-name">ResearchGate</div>
+                                    <div class="connect-card-handle">592.1 Research Interest</div>
+                                </div>
+                                <i class="fas fa-arrow-right connect-card-arrow"></i>
+                            </a>
+                            <a href="https://scholar.google.com/scholar?q=author:wrick+talukdar" target="_blank" class="connect-card">
+                                <div class="connect-card-icon" style="color: #4285f4;"><i class="fas fa-graduation-cap"></i></div>
+                                <div class="connect-card-info">
+                                    <div class="connect-card-name">Google Scholar</div>
+                                    <div class="connect-card-handle">1,112+ citations</div>
+                                </div>
+                                <i class="fas fa-arrow-right connect-card-arrow"></i>
+                            </a>
+                            <a href="https://us.amazon.com/stores/author/B0F2J8S78Z" target="_blank" class="connect-card">
+                                <div class="connect-card-icon" style="color: #ff9900;"><i class="fab fa-amazon"></i></div>
+                                <div class="connect-card-info">
+                                    <div class="connect-card-name">Amazon Author</div>
+                                    <div class="connect-card-handle">3 books published</div>
+                                </div>
+                                <i class="fas fa-arrow-right connect-card-arrow"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+>
