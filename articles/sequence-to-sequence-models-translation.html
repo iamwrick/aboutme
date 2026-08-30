@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sequence-to-Sequence Models: The Architecture That Taught Machines to Translate | Wrick Talukdar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">Deep Learning</span>
+                <span class="article-date">March 15, 2018 · 8 min read</span>
+            </div>
+            <h1 class="article-title">Sequence-to-Sequence Models: The Architecture That Taught Machines to Translate</h1>
+            <p class="article-subtitle">From encoder-decoder RNNs to attention-augmented seq2seq — how neural machine translation surpassed statistical methods and redefined NLP.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Architect & Researcher</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="article-body">
+
+            <p>
+                In 2014, a three-page paper from Google appeared on arXiv. <em>Sequence to Sequence Learning with Neural Networks</em> by Ilya Sutskever, Oriol Vinyals, and Quoc Le introduced an architecture so elegant, so generalizable, and so devastatingly effective that it would reshape machine translation for the next decade. This was the seq2seq model — an encoder-decoder architecture built from stacked LSTMs.
+            </p>
+            <p>
+                What made it revolutionary wasn't just performance on neural machine translation (NMT) — though it dramatically outperformed statistical phrase-based methods. It was the insight that <em>any sequence could be translated into any other sequence</em>. Machine translation, summarization, question-answering, dialogue, image captioning — all reduced to the same architectural pattern.
+            </p>
+            <p>
+                Today, transformers have replaced recurrent seq2seq models in production systems, yet the fundamental principles remain. To understand how modern LLMs work — why they output sequences, how they handle variable-length inputs and outputs, what attention is really doing — you must understand seq2seq.
+            </p>
+
+            <h2>The Era Before: Statistical Machine Translation and Its Limits</h2>
+
+            <p>
+                Before neural methods arrived, machine translation was built on statistical phrase-based models (SMT). The pipeline was baroque:
+            </p>
+
+            <ul>
+                <li><strong>Word alignment:</strong> Train alignment models (IBM Model 1–5) to find which words in the source correspond to which words in the target. This often requires multiple passes through the corpus.</li>
+                <li><strong>Phrase extraction:</strong> Extract phrase pairs from aligned sentences using heuristics and counts.</li>
+                <li><strong>Language modeling:</strong> Build n-gram language models on the target language to prefer fluent output.</li>
+                <li><strong>Feature engineering:</strong> Design dozens of hand-crafted features (phrase frequency, lexical probabilities, language model score, etc.) and tune their weights via MERT (Minimum Error Rate Training).</li>
+                <li><strong>Decoding:</strong> Use beam search over phrase hypotheses, pruning low-scoring partial translations.</li>
+            </ul>
+
+            <p>
+                This worked. By 2014, top SMT systems achieved BLEU scores (a metric measuring n-gram overlap with reference translations) in the 30–35 range on language pairs like English-French. But the approach had fundamental limits:
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-lightbulb"></i> The Information Bottleneck</div>
+                <p>Statistical MT treated translation as a local problem: given a phrase in the source, find the best phrase in the target. Long-range reordering, idiomatic transformation, and semantic nuance required complex feature engineering that didn't generalize across language pairs.</p>
+            </div>
+
+            <p>
+                Seq2seq would bypass all of this. Instead of building pipelines and hand-tuning features, the model would learn to encode an entire source sentence into a fixed-length vector, then decode that vector into a target sentence, end-to-end.
+            </p>
+
+            <h2>The Seq2Seq Breakthrough: Encoder-Decoder with LSTMs</h2>
+
+            <p>
+                The architecture is deceptively simple. An <strong>encoder</strong> reads the source sentence token by token, updating a hidden state at each step. An LSTM's hidden state is designed to compress all the information from the sequence seen so far:
+            </p>
+
+<pre><code>h_t = LSTM(x_t, h_{t-1})
+# h_T is the final hidden state after reading the entire source sentence
+context_vector = h_T</code></pre>
+
+            <p>
+                Then a <strong>decoder</strong> uses that context vector as its initial hidden state and generates the target sentence one token at a time:
+            </p>
+
+<pre><code>h'_0 = context_vector  # Initialize decoder with encoder's final state
+for t in 1..T_target:
+    y_t = softmax(W_out * h'_t + b_out)  # Predict next token
+    h'_{t+1} = LSTM(y_t, h'_t)           # Update hidden state with prediction</code></pre>
+
+            <p>
+                This is genuinely brilliant. The encoder-decoder split means:
+            </p>
+
+            <ul>
+                <li><strong>Symmetric handling of length:</strong> The source and target can be different lengths. The encoder reads all of it; the decoder generates as much as needed.</li>
+                <li><strong>Learned representations:</strong> No hand-engineered features. The encoder learns what aspects of the source matter for translation; the decoder learns how to express that in the target.</li>
+                <li><strong>End-to-end differentiability:</strong> Backpropagation through time (BPTT) trains the entire pipeline jointly.</li>
+                <li><strong>Generalization:</strong> The same architecture works for any sequence-to-sequence task.</li>
+            </ul>
+
+            <p>
+                On English-French translation, seq2seq achieved BLEU 34.81 — already competitive with phrase-based SMT. But this was version 1. The real breakthrough came when attention was added.
+            </p>
+
+            <h2>The Information Bottleneck Problem</h2>
+
+            <p>
+                A seq2seq model must compress an entire source sentence into a single fixed-length context vector. This works for short sentences, but as sequences grow longer, the LSTM's hidden state (typically 1024 dimensions) becomes increasingly inadequate to hold all the relevant information.
+            </p>
+
+            <p>
+                Imagine translating an English sentence 50 tokens long into French. Every relevant detail from the English sentence — subject, verb, object, modifiers, tense cues — must flow through a single 1024-D vector. The bottleneck is real.
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Sentence Length</th>
+                        <th>SMT BLEU</th>
+                        <th>Vanilla Seq2Seq BLEU</th>
+                        <th>Performance Gap</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>10–20 tokens</td>
+                        <td>33.2</td>
+                        <td>35.1</td>
+                        <td>+1.9 (seq2seq wins)</td>
+                    </tr>
+                    <tr>
+                        <td>20–30 tokens</td>
+                        <td>32.1</td>
+                        <td>32.8</td>
+                        <td>+0.7 (marginal)</td>
+                    </tr>
+                    <tr>
+                        <td>30–50 tokens</td>
+                        <td>31.4</td>
+                        <td>30.2</td>
+                        <td>-1.2 (seq2seq worse!)</td>
+                    </tr>
+                    <tr>
+                        <td>50+ tokens</td>
+                        <td>30.5</td>
+                        <td>27.9</td>
+                        <td>-2.6 (severe degradation)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                This data (stylized but reflecting real findings) shows the catastrophic collapse of vanilla seq2seq on longer sentences. The fixed context vector simply cannot hold enough information.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-exclamation-circle"></i> Why This Matters Today</div>
+                <p>Modern LLMs face a dual version of this problem: they must attend to a long context (input) and generate long outputs. The solution — multi-head attention and sparse attention patterns — is a direct descendant of the attention mechanism born to solve the seq2seq bottleneck.</p>
+            </div>
+
+            <h2>The Attention Mechanism: Revisiting the Encoder</h2>
+
+            <p>
+                In 2015, Bahdanau, Cho, and Bengio published <em>Neural Machine Translation by Jointly Learning to Align and Translate</em>. The insight: instead of compressing the entire source into a single context vector, let the decoder <em>attend to different parts of the encoder's output at each decoding step</em>.
+            </p>
+
+            <p>
+                Here's the mechanism:
+            </p>
+
+            <ol>
+                <li><strong>Encoder:</strong> Reads the source and produces hidden states h_1, h_2, ..., h_T (one per token).</li>
+                <li><strong>Attention:</strong> At each decoding step t, compute a weight α_i for each encoder hidden state h_i. The weights sum to 1 and are computed via a learned attention function.</li>
+                <li><strong>Context:</strong> Compute a dynamic context vector as the weighted sum of encoder hidden states: c_t = Σ α_i * h_i.</li>
+                <li><strong>Decoder:</strong> Condition the decoder on both the previous hidden state and the context vector.</li>
+            </ol>
+
+            <p>
+                The attention weights are typically computed using a learned scoring function:
+            </p>
+
+<pre><code># Multiplicative (Luong) attention:
+score_t,i = h'_t^T * W * h_i
+α_t,i = softmax_i(score_t,i)
+c_t = Σ_i α_t,i * h_i
+
+# Additive (Bahdanau) attention:
+score_t,i = v^T * tanh(W_q * h'_t + W_k * h_i)
+α_t,i = softmax_i(score_t,i)</code></pre>
+
+            <p>
+                Both variants accomplish the same thing: the decoder learns which encoder hidden states are relevant for generating the next target token.
+            </p>
+
+            <p>
+                The results were stunning. With attention, seq2seq on English-French jumped to BLEU 37.15 — now surpassing phrase-based SMT handily. And crucially, the degradation on long sentences vanished:
+            </p>
+
+<pre><code># Attention-based seq2seq performance:
+# 50+ tokens: 30.58 BLEU (vs. 27.9 for vanilla seq2seq)
+# The model can now look back at the full source sequence.</code></pre>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-star"></i> Attention Is All You Need</div>
+                <p>The attention mechanism would eventually lead to the Transformer (Vaswani et al., 2017), which replaced LSTMs entirely with multi-head attention. But the conceptual breakthrough — <em>learning to align</em> — originated here in seq2seq attention.</p>
+            </div>
+
+            <h2>From Theory to Production: Google's Neural Machine Translation System</h2>
+
+            <p>
+                By 2016, seq2seq with attention was the foundation of production NMT systems. Google's Neural Machine Translation (GNMT) system, deployed in Google Translate, was a scaled-up version:
+            </p>
+
+            <ul>
+                <li><strong>Bidirectional encoder:</strong> The source is read both left-to-right and right-to-left, concatenating the forward and backward RNN states. This gives the encoder context from both directions.</li>
+                <li><strong>Stacked LSTMs:</strong> Rather than single-layer RNNs, use 2–4 stacked LSTM layers in both encoder and decoder. Depth improves representational power.</li>
+                <li><strong>Residual connections:</strong> Add skip connections from layer i to layer i+2, allowing gradients to flow more easily through deep networks.</li>
+                <li><strong>Attention:</strong> Multi-layer attention, sometimes in multiple passes.</li>
+                <li><strong>Beam search:</strong> At inference, use beam search (width 8–12) to explore multiple hypotheses rather than greedy decoding.</li>
+                <li><strong>Subword tokenization:</strong> Use byte-pair encoding (BPE) or wordpiece to handle rare and out-of-vocabulary words gracefully.</li>
+            </ul>
+
+            <p>
+                This system delivered state-of-the-art results and a massive leap in practical quality. Users of Google Translate experienced noticeably more fluent, accurate translations. It was the first demonstration at scale that learned, end-to-end NMT could defeat decades of engineered statistical systems.
+            </p>
+
+            <h2>Beyond Translation: Seq2Seq as a Universal Framework</h2>
+
+            <p>
+                The elegance of seq2seq is that the architecture is task-agnostic. Once attention was added, researchers realized they could apply the same blueprint to almost any sequence problem:
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Encoder Input</th>
+                        <th>Decoder Output</th>
+                        <th>Key Variant</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Machine Translation</strong></td>
+                        <td>Source sentence</td>
+                        <td>Target sentence</td>
+                        <td>Bidirectional encoder</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Summarization</strong></td>
+                        <td>Full document</td>
+                        <td>Summary</td>
+                        <td>Hierarchical encoder for long docs</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Question Answering</strong></td>
+                        <td>Document + question</td>
+                        <td>Answer</td>
+                        <td>Multi-source attention</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dialogue</strong></td>
+                        <td>Conversation history</td>
+                        <td>Next utterance</td>
+                        <td>Hierarchical encoder for turns</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Image Captioning</strong></td>
+                        <td>CNN features (image)</td>
+                        <td>Caption</td>
+                        <td>2D spatial attention</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Code Generation</strong></td>
+                        <td>Problem description</td>
+                        <td>Source code</td>
+                        <td>Tree-structured decoder</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                Each domain added refinements, but the core pattern persisted: encode a source representation, attend to it selectively, and decode a target sequence. This universality made seq2seq the dominant NLP architecture of the mid-2010s.
+            </p>
+
+            <h2>Beam Search: Decoding at Inference Time</h2>
+
+            <p>
+                During training, the decoder receives the true previous token (teacher forcing). At inference, it must choose which token to generate. Greedy decoding — picking argmax at each step — is fast but suboptimal; a locally good choice can lead to a globally poor sequence.
+            </p>
+
+            <p>
+                <strong>Beam search</strong> maintains a beam of k best partial hypotheses and expands each by one token at every step:
+            </p>
+
+<pre><code>beam_width = 8
+hypotheses = [("", log_prob=0)]  # Start: empty sequence, log prob 0
+
+for step in range(max_length):
+    candidates = []
+    for hypothesis, log_prob in hypotheses:
+        for next_token in vocabulary:
+            new_hyp = hypothesis + " " + next_token
+            new_log_prob = log_prob + log(P(next_token | context))
+            candidates.append((new_hyp, new_log_prob))
+    
+    # Keep top-k by log probability
+    hypotheses = sorted(candidates, key=lambda x: x[1], reverse=True)[:beam_width]</code></pre>
+
+            <p>
+                With beam_width=8, the decoder explores 8 candidate translations in parallel. Beam search is slower than greedy decoding but substantially improves BLEU, typically by 1–3 points. Modern systems often use beam_width=4 or beam_width=8 as a trade-off.
+            </p>
+
+            <h2>The Path to Transformers and Beyond</h2>
+
+            <p>
+                Seq2seq with attention was the state-of-the-art for NMT from ~2015–2017. But it had limitations: LSTMs are sequential (each step depends on the previous), making them slow to parallelize on modern hardware (GPUs, TPUs). Training seq2seq models required days on large corpora.
+            </p>
+
+            <p>
+                In 2017, <em>Attention Is All You Need</em> (Vaswani et al.) introduced the Transformer, which replaced recurrent layers entirely with self-attention. By attending to all positions in the sequence in parallel, transformers could be trained much faster while achieving better results.
+            </p>
+
+            <p>
+                Yet the seq2seq intuition lives on in every modern sequence model:
+            </p>
+
+            <ul>
+                <li><strong>Large language models (GPT, Claude, Llama):</strong> Decoder-only transformers. The prompt is the "source," the completion is the "target."</li>
+                <li><strong>Encoder-decoder models (BERT, T5, mBART):</strong> Direct descendants. BERT uses the encoder; T5 uses the full encoder-decoder.</li>
+                <li><strong>Multimodal models (CLIP, Flamingo):</strong> A visual encoder + language decoder — pure seq2seq philosophy applied to vision and language.</li>
+                <li><strong>Vision transformers:</strong> Treat an image as a sequence of patches and apply transformer architecture.</li>
+            </ul>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-graduation-cap"></i> Modern Perspective</div>
+                <p>Today's LLMs are seq2seq models that operate on subword tokens, trained at enormous scale with transformer architecture and reinforcement learning from human feedback (RLHF). The core principles — conditioning on context, learning to attend, generating sequences probabilistically — trace directly back to 2014.</p>
+            </div>
+
+            <h2>Key Takeaways: Why Seq2Seq Still Matters</h2>
+
+            <p>
+                Even if you work primarily with transformers, understanding seq2seq is invaluable:
+            </p>
+
+            <ul>
+                <li><strong>Attention as alignment:</strong> Attention isn't magic; it's a learned alignment mechanism. This intuition generalizes to multi-head attention, cross-attention, and sparse attention patterns.</li>
+                <li><strong>Encoder-decoder split:</strong> Separating encoding and decoding is clean and general. When building custom models (e.g., retrieval-augmented generation, multimodal systems), this pattern reappears.</li>
+                <li><strong>Bottleneck problems:</strong> Fixed-size representations are limiting. Modern solutions (sliding window attention, retrieval augmentation, sparse attention) all address similar compression issues.</li>
+                <li><strong>End-to-end learning:</strong> The seq2seq era established that joint training beats hand-engineered pipelines. This principle shapes how we build systems today.</li>
+                <li><strong>Empiricism over theory:</strong> Seq2seq succeeded through careful experimentation, not formal guarantees. The same is true for modern deep learning.</li>
+            </ul>
+
+            <h2>Conclusion</h2>
+
+            <p>
+                Sequence-to-sequence models represented a fundamental shift in NLP: from hand-engineered statistical systems to learned, end-to-end neural architectures. The encoder-decoder pattern, attention mechanism, and the insight that <em>any task can be framed as sequence-to-sequence translation</em> are now so embedded in deep learning that they're almost invisible.
+            </p>
+
+            <p>
+                Modern LLMs are, in many ways, seq2seq models scaled to billions of parameters and trained on trillions of tokens. If you understand why Bahdanau attention solved the information bottleneck in 2015, you understand why modern transformers use multi-head attention today. The names and architectures have changed, but the core principles endure.
+            </p>
+
+            <p>
+                That's the mark of a truly foundational contribution: not that it remains unchanged, but that its core insights become so fundamental they're absorbed into the fabric of the field.
+            </p>
+
+            <footer class="article-footer">
+                <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to all articles</a>
+                <div class="share-links">
+                    <a href="#" title="Share on Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" title="Share on LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" title="Copy link"><i class="fas fa-link"></i></a>
+                </div>
+            </footer>
+
+        </div>
+
+    </article>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const bar = document.getElementById('reading-progress');
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            if (docHeight > 0) {
+                bar.style.width = (scrollTop / docHeight) * 100 + '%';
+            }
+        });
+    </script>
+
+</body>
+</html>

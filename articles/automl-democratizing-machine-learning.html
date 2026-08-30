@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoML: Democratizing Machine Learning or Hiding the Hard Parts? | Wrick Talukdar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">Data Science</span>
+                <span class="article-date">August 20, 2018 · 7 min read</span>
+            </div>
+            <h1 class="article-title">AutoML: Democratizing Machine Learning or Hiding the Hard Parts?</h1>
+            <p class="article-subtitle">Google AutoML, Auto-sklearn, and H2O promised ML for everyone. What they actually delivered — and where human expertise remains irreplaceable.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">Data Science & ML Strategy</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="article-body">
+
+            <p>
+                In 2016, Google announced AutoML with a promise: machine learning for everyone. Not just researchers and engineers, but product managers, business analysts, and anyone with a problem and data. Three years later, Auto-sklearn won a Kaggle competition. H2O released its AutoML suite. Microsoft added AutoML to Azure. Suddenly, it seemed like the age of manual feature engineering, hyperparameter tuning, and model selection was over.
+            </p>
+            <p>
+                But walk into any production ML shop, and you'll find that AutoML is rarely the primary system. It's a prototyping tool. A starting point. Occasionally, a fallback when timelines are tight. The promise of democratization hasn't fully materialized — instead, AutoML has redistributed the work, not eliminated it.
+            </p>
+            <p>
+                This article examines what AutoML actually automates, what it doesn't touch, and where the real complexity in machine learning actually lies.
+            </p>
+
+            <h2>What AutoML Claims to Solve</h2>
+
+            <p>
+                AutoML systems typically claim to handle three tasks that humans traditionally do manually:
+            </p>
+
+            <ul>
+                <li><strong>Feature engineering:</strong> Extracting, transforming, and combining raw variables into predictive features</li>
+                <li><strong>Model selection:</strong> Choosing which algorithm (linear regression, random forest, XGBoost, neural networks) is best suited to the problem</li>
+                <li><strong>Hyperparameter optimization (HPO):</strong> Tuning the knobs on a chosen model (learning rate, tree depth, regularization strength, etc.)</li>
+            </ul>
+
+            <p>
+                On paper, this is the tedious part — the part that takes data scientists weeks and depends heavily on domain expertise. If AutoML could solve this, it would genuinely democratize ML. Let's examine each component.
+            </p>
+
+            <h2>Feature Engineering: Partially Automated</h2>
+
+            <p>
+                AutoML systems use a few standard techniques to handle features:
+            </p>
+
+            <ul>
+                <li><strong>Imputation:</strong> Filling missing values (mean, median, forward-fill, or learned strategies)</li>
+                <li><strong>Encoding:</strong> Converting categorical variables to numerical ones (one-hot encoding, target encoding, frequency encoding)</li>
+                <li><strong>Scaling:</strong> Normalizing numerical features to similar ranges</li>
+                <li><strong>Polynomial features:</strong> Generating interaction terms and powers of existing features</li>
+                <li><strong>Dimensionality reduction:</strong> Principal component analysis or similar techniques when feature count is high</li>
+            </ul>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-lightbulb"></i> The Feature Gap</div>
+                <p>AutoML handles mechanical transformations well but struggles with semantic feature creation. Does your e-commerce platform need a "customer lifetime value" feature? A "seasonality index" for time-series? A "sentiment score" from text? These require domain understanding that no algorithm can infer from raw data alone.</p>
+            </div>
+
+            <p>
+                AutoML shines on tabular data with numeric or categorical columns. When a dataset has text, images, time-series with complex seasonality, or domain-specific signals (like geological coordinates in climate modeling), AutoML systems typically fall back to simple defaults or require manual feature pipelines. The practitioner ends up doing 70% of the work anyway.
+            </p>
+
+            <h2>Model Selection: A False Simplicity</h2>
+
+            <p>
+                Most AutoML platforms try dozens of models in parallel: linear models, tree ensembles, neural networks, and occasionally exotic options like gradient boosting with categorical features. They rank models by cross-validation score and recommend the best one.
+            </p>
+
+            <p>
+                This works fine for Kaggle-style competitions where the goal is raw accuracy on a fixed test set. In production, model selection involves hidden trade-offs:
+            </p>
+
+            <ul>
+                <li><strong>Interpretability vs. accuracy:</strong> A neural network might score 3% higher, but stakeholders need to understand the model's decisions. Linear models are explainable; random forests less so; deep learning almost not at all.</li>
+                <li><strong>Latency:</strong> Does the model need to score millions of predictions per second? Neural networks take milliseconds; gradient boosting takes microseconds.</li>
+                <li><strong>Training time:</strong> Can you afford to retrain weekly? Deep learning on GPUs might take hours; logistic regression takes seconds.</li>
+                <li><strong>Data stability:</strong> If your data distribution shifts regularly, simpler models often degrade more gracefully than complex ensembles.</li>
+                <li><strong>Fairness constraints:</strong> Some models are harder to debug for demographic bias. Regulators may require certain model classes (e.g., in lending, some jurisdictions prefer interpretable models).</li>
+            </ul>
+
+            <p>
+                AutoML optimizes for one metric (usually accuracy or AUC). It doesn't optimize for the operational reality in which the model will live. A data scientist must then override AutoML's recommendation—defeating the entire purpose of automation.
+            </p>
+
+            <h2>Hyperparameter Optimization: The Genuinely Useful Part</h2>
+
+            <p>
+                This is where AutoML genuinely shines. Modern HPO techniques—Bayesian optimization, multi-fidelity optimization, and neural architecture search (NAS)—are superior to grid search or random search. AutoML systems automate this well.
+            </p>
+
+            <p>
+                A data scientist might spend a day tuning a random forest's depth, number of trees, and feature sampling rate manually. AutoML does this in hours, often finding better parameters than a human would. This is real productivity gain.
+            </p>
+
+<pre><code># Example: Bayesian optimization for XGBoost
+from hyperopt import hp, fmin, tpe
+
+space = {
+    'max_depth': hp.randint('max_depth', 2, 15),
+    'learning_rate': hp.loguniform('lr', -5, 0),
+    'subsample': hp.uniform('subsample', 0.5, 1)
+}
+
+best = fmin(
+    fn=objective,
+    space=space,
+    algo=tpe.suggest,
+    max_evals=100
+)</code></pre>
+
+            <p>
+                This works. AutoML platforms package this pattern and apply it systematically across multiple algorithms and datasets.
+            </p>
+
+            <h2>What AutoML Ignores: The Harder Problems</h2>
+
+            <p>
+                The three components AutoML addresses are perhaps the <em>easiest</em> parts of applied machine learning. The harder problems remain entirely manual:
+            </p>
+
+            <h3>1. Problem Framing</h3>
+
+            <p>
+                Should you build a classification model or a ranking model? Is this a supervised learning problem or a clustering problem? Should you optimize for precision or recall? Should the model alert humans for borderline cases?
+            </p>
+
+            <p>
+                These decisions determine whether the model is useful. AutoML assumes the problem is already formulated.
+            </p>
+
+            <h3>2. Data Quality</h3>
+
+            <p>
+                AutoML can't assess whether your features are biased, stale, or mislabeled at scale. It can't tell you that 30% of your training data has a data collection bug that only manifests in Q4. It can't detect that your labels were inconsistently annotated. A data scientist must spend weeks exploring, cleaning, and validating the dataset before AutoML even starts.
+            </p>
+
+            <h3>3. Label Quality</h3>
+
+            <p>
+                In supervised learning, the labels are often noisier than anyone admits. If you're training a model to detect fraud and your fraud team labels cases inconsistently, your model will learn noise instead of signal. AutoML doesn't discover label quality issues—practitioners do, through painful debugging in production.
+            </p>
+
+            <h3>4. Class Imbalance and Data Imbalance</h3>
+
+            <p>
+                AutoML rarely handles severe class imbalance well. If your dataset is 99% negative examples (e.g., fraud detection: 99% normal transactions), standard algorithms will achieve 99% accuracy by predicting "normal" for everything. AutoML may optimize for accuracy anyway, giving you a useless model.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-warning"></i> The Accuracy Trap</div>
+                <p>AutoML optimizes for the metric you specify. If you forget to weight classes or use F1 score instead of accuracy, AutoML will dutifully find a model that's confident and wrong. Garbage in, garbage out—automation just makes it faster.</p>
+            </div>
+
+            <h3>5. Fairness and Bias</h3>
+
+            <p>
+                AutoML doesn't ask whether your model treats demographic groups fairly. If your training data reflects historical discrimination (e.g., past hiring decisions), AutoML will learn to perpetuate that discrimination. It has no concept of fairness constraints unless explicitly programmed in.
+            </p>
+
+            <h3>6. Deployment and Operations</h3>
+
+            <p>
+                AutoML outputs a trained model. Getting it into production—serving it at scale, monitoring its performance, retraining when accuracy drifts, maintaining SLAs—is entirely outside AutoML's scope. This is often 80% of the work.
+            </p>
+
+            <h2>Comparison: AutoML Platforms in 2018</h2>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Platform</th>
+                        <th>Strength</th>
+                        <th>Limitation</th>
+                        <th>Best For</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Google AutoML Vision/NLP</strong></td>
+                        <td>Transfer learning on large-scale images/text; minimal data required</td>
+                        <td>Limited model customization; black-box; expensive</td>
+                        <td>Computer vision and NLP for small teams</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Auto-sklearn</strong></td>
+                        <td>Excellent on tabular data; handles feature preprocessing well</td>
+                        <td>Long runtimes; requires careful hyperparameter tuning of AutoML itself</td>
+                        <td>Tabular data competitions and research</td>
+                    </tr>
+                    <tr>
+                        <td><strong>H2O AutoML</strong></td>
+                        <td>Fast; distributed; integrates with H2O ecosystem</td>
+                        <td>Less sophisticated preprocessing; less transparent</td>
+                        <td>Enterprise tabular ML at scale</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TPOT</strong></td>
+                        <td>Generates code you can inspect and modify; uses genetic programming</td>
+                        <td>Slow; produces hard-to-understand scikit-learn pipelines</td>
+                        <td>Learning how AutoML works</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Auto-WEKA</strong></td>
+                        <td>Joint optimization of algorithm selection and hyperparameters</td>
+                        <td>Discontinued; Java-based; limited community</td>
+                        <td>Historical interest only</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Neural Architecture Search (NAS): The Next Frontier</h2>
+
+            <p>
+                If AutoML automates model selection and hyperparameter tuning for traditional algorithms, Neural Architecture Search automates both for deep learning. Instead of manually designing neural networks (how many layers? how many units per layer? which activation functions?), NAS generates architectures automatically.
+            </p>
+
+            <p>
+                This is powerful but computationally expensive. Google's NAS-Net required 40,000 GPU hours of search. Practical NAS systems now use multi-fidelity optimization (training networks on smaller subsets first to prune bad architectures early).
+            </p>
+
+            <p>
+                NAS is mostly a research tool today. In 2018, practitioners rarely used it in production. But the trend is clear: automation is moving up the ML pipeline, from hyperparameters to architecture search to, eventually, problem formulation.
+            </p>
+
+            <h2>The Real State of ML: Democratization vs. Redistribution</h2>
+
+            <p>
+                AutoML hasn't democratized machine learning—it's redistributed where expertise is required. Instead of needing a PhD to tune hyperparameters, you now need a PhD to frame the problem correctly, validate the data, ensure fairness, and deploy the model reliably.
+            </p>
+
+            <p>
+                AutoML is valuable. It eliminates the most repetitive, mechanical work. But it has created a false impression: that machine learning is now easy. In reality:
+            </p>
+
+            <ul>
+                <li>70% of applied ML projects fail because the problem was framed incorrectly or the data was bad, not because hyperparameter tuning was suboptimal.</li>
+                <li>Practitioners without domain expertise often misuse AutoML, achieving good CV scores on bad data and deploying models that fail silently.</li>
+                <li>AutoML's output—"use this model"—obscures all the decisions and trade-offs that underlie it.</li>
+            </ul>
+
+            <h2>The Modern Evolution: Foundation Models as AutoML</h2>
+
+            <p>
+                The landscape has shifted since 2018. Large language models (GPT, BERT, T5) and vision models (CLIP, Vision Transformer) are themselves a form of AutoML for their domains. Fine-tuning a pre-trained model on a downstream task is simpler than building a custom model from scratch.
+            </p>
+
+            <p>
+                This may be the future of AutoML: not algorithmic search within a fixed model class, but transfer learning from large, general-purpose models. The hard parts (learning from internet-scale data) are done once, centrally. Users then adapt the result to their specific problem.
+            </p>
+
+            <p>
+                This is genuinely closer to democratization—a non-expert can fine-tune a language model. But even then, prompt engineering, domain adaptation, and responsible deployment remain human work.
+            </p>
+
+            <h2>Key Takeaways</h2>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-check"></i> What to Remember</div>
+                <p>
+                    <strong>1. AutoML solves the wrong problems first.</strong> It automates hyperparameter tuning and model selection—important, but not the bottlenecks. Problem framing and data quality are harder and remain manual. <br><br>
+                    <strong>2. AutoML is a prototyping tool.</strong> Use it to establish a baseline quickly. Don't expect it to be your production model without significant manual work. <br><br>
+                    <strong>3. The metric you optimize determines everything.</strong> AutoML optimizes for what you tell it to. If you specify the wrong metric or forget to handle class imbalance, AutoML will dutifully find a model that optimizes your mistake. <br><br>
+                    <strong>4. Expertise hasn't disappeared; it's shifted.</strong> You need less skill in manual tuning, more skill in problem diagnosis, data validation, and responsible deployment. <br><br>
+                    <strong>5. Transfer learning may be AutoML's successor.</strong> Pre-trained models from large-scale learning may eventually make AutoML redundant, at least for domains where general-purpose models exist.
+                </p>
+            </div>
+
+            <p>
+                AutoML is a real tool, solving a real problem. But it's solving the third-order problem while the first and second-order problems—framing and data—remain entirely manual. Until AutoML can assess data quality, detect label errors, and recommend problem reformulations, it will remain a useful component of the ML pipeline, not a replacement for human expertise.
+            </p>
+
+        </div>
+
+        <footer class="article-footer">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to all articles</a>
+            <div class="share-links">
+                <a href="https://twitter.com/intent/tweet?text=AutoML:%20Democratizing%20Machine%20Learning%20or%20Hiding%20the%20Hard%20Parts?&url=" title="Share on X"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=" title="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </footer>
+
+    </article>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const bar = document.getElementById('reading-progress');
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            if (docHeight > 0) {
+                bar.style.width = (scrollTop / docHeight) * 100 + '%';
+            }
+        });
+    </script>
+
+</body>
+</html>
