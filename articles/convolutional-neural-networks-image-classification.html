@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNNs at Scale: Lessons from ImageNet to Production Deployment | Wrick Talukdar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">Computer Vision</span>
+                <span class="article-date">March 22, 2016 · 7 min read</span>
+            </div>
+            <h1 class="article-title">CNNs at Scale: Lessons from ImageNet to Production Deployment</h1>
+            <p class="article-subtitle">What ResNets, batch normalization, and data augmentation taught us about training deep networks — and how those lessons still apply to modern vision models.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Architect & Researcher</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="article-body">
+
+            <p>
+                The ImageNet competition did for computer vision what the Turing Test did for AI: it created a benchmark that forced the field to compete on concrete performance metrics. Between 2012 and 2016, top-5 error rates plummeted from 15.3% (AlexNet) to 3.6% (Ensembles of ResNets and SqueezeNets). This wasn't incremental progress—it was a regime shift driven by architectural innovations and rigorous understanding of training dynamics.
+            </p>
+            <p>
+                But here's what rarely makes it into conference papers: the real breakthroughs weren't just novel architectures. They were hard-won insights about <em>how to actually train deep networks at scale</em>. Batch normalization, skip connections, careful data augmentation, and deployment-specific optimizations like quantization and distillation solved problems that elegant math alone never could.
+            </p>
+            <p>
+                In this article, I'll trace the evolution from AlexNet through ResNets, explain the mechanisms that made depth work, and then zoom out to the production realities—ONNX conversion, inference optimization, edge deployment—that turn a trained model into a working system. These lessons didn't expire when Vision Transformers arrived; they've been absorbed into modern vision stacks.
+            </p>
+
+            <h2>From AlexNet to VGG: Depth as a Design Principle</h2>
+
+            <p>
+                AlexNet (2012) showed that deep convolutional networks could beat hand-crafted features on ImageNet. Its architecture was straightforward by today's standards:
+            </p>
+
+<pre><code>Input (224×224×3)
+  ↓
+Conv(96, 11×11, stride=4) + ReLU
+  ↓
+MaxPool(3×3, stride=2)
+  ↓
+Conv(256, 5×5, pad=2) + ReLU
+  ↓
+MaxPool(3×3, stride=2)
+  ↓
+Conv(384, 3×3, pad=1) + ReLU
+  ↓
+Conv(384, 3×3, pad=1) + ReLU
+  ↓
+Conv(256, 3×3, pad=1) + ReLU
+  ↓
+MaxPool(3×3, stride=2)
+  ↓
+Fully Connected (4096 → 4096 → 1000)</code></pre>
+
+            <p>
+                Eight layers. 60 million parameters. A GPU-trained model that achieved 63.3% top-1 accuracy—a 10% absolute improvement over the previous best hand-engineered approach.
+            </p>
+            <p>
+                VGGNet (2014) asked a simple question: <em>does more depth help?</em> By pushing to 16–19 layers of 3×3 convolutions, VGG achieved 72.4% top-1 accuracy. The answer was yes—but at a cost: 144 million parameters, and intense memory and compute requirements.
+            </p>
+
+            <h3>Why Depth Hits a Wall</h3>
+
+            <p>
+                Adding more layers should help: each additional layer provides more non-linearity and feature hierarchy. In practice, deeper networks (50+ layers) trained with standard backpropagation hit a plateau, then degrade. Training error—not just validation error—stops improving.
+            </p>
+
+            <p>
+                The culprit: <strong>vanishing gradients during backpropagation</strong>. Gradients flow backward through each layer's Jacobian, which often has small singular values. Chain multiple these together, and the gradient magnitude becomes negligible by the time it reaches early layers. Early layers barely learn.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-lightbulb"></i> The Core Problem</div>
+                <p>In a 50-layer network trained with standard backpropagation, the gradient can shrink by a factor of 10^-12 or more by the time it reaches layer 1. Early layers are stuck with random initializations—they never get meaningful gradient signal.</p>
+            </div>
+
+            <h2>ResNets and the Skip Connection Revolution</h2>
+
+            <p>
+                ResNet (He et al., 2015) solved this with a deceptively simple idea: <strong>skip connections</strong> (also called residual connections). Instead of learning the identity mapping directly, learn the <em>residual</em>—the difference from the input:
+            </p>
+
+<pre><code>y = F(x) + x</code></pre>
+
+            <p>
+                Where <code>F(x)</code> is a stack of layers (typically 2–3 convolutions). This tiny change has massive implications:
+            </p>
+
+            <ul>
+                <li><strong>Gradient flow:</strong> The shortcut provides a direct path for gradients. Even if <code>F'(x)</code> vanishes, the gradient of <code>x</code> flows directly backward via the skip connection.</li>
+                <li><strong>Effective depth:</strong> The model can now train 152 layers (ResNet-152) successfully. Earlier layers stay in the learning regime.</li>
+                <li><strong>Optimization landscape:</strong> Residual learning is easier to optimize than direct learning. The network learns a small perturbation rather than reconstructing the entire transformation from scratch.</li>
+            </ul>
+
+            <p>
+                The empirical results were stunning: ResNet-152 achieved 3.57% top-5 error on ImageNet validation set—besting all previous architectures, including the ensemble VGG models that held the previous record.
+            </p>
+
+            <h3>Why Skip Connections Work Mathematically</h3>
+
+            <p>
+                Consider the gradient flowing backward through a residual block:
+            </p>
+
+<pre><code>∂L/∂x = ∂L/∂y · ∂y/∂x
+       = ∂L/∂y · (∂F(x)/∂x + 1)
+       = ∂L/∂y · ∂F(x)/∂x + ∂L/∂y</code></pre>
+
+            <p>
+                The second term (<code>∂L/∂y</code>) flows backward directly through the skip connection, independent of <code>F</code>. Even if <code>∂F(x)/∂x</code> has small magnitude, the identity term ensures gradients don't vanish completely. This is why ResNets can train 100+ layers where standard networks plateau at 20–30.
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Architecture</th>
+                        <th>Depth</th>
+                        <th>Parameters</th>
+                        <th>Top-5 Error</th>
+                        <th>Key Innovation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>AlexNet</strong></td>
+                        <td>8</td>
+                        <td>60M</td>
+                        <td>16.4%</td>
+                        <td>GPU training, ReLU</td>
+                    </tr>
+                    <tr>
+                        <td><strong>VGGNet</strong></td>
+                        <td>16–19</td>
+                        <td>144M</td>
+                        <td>7.3%</td>
+                        <td>Smaller filters, more depth</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ResNet-50</strong></td>
+                        <td>50</td>
+                        <td>25.5M</td>
+                        <td>5.5%</td>
+                        <td>Skip connections, bottleneck blocks</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ResNet-152</strong></td>
+                        <td>152</td>
+                        <td>60.2M</td>
+                        <td>3.57%</td>
+                        <td>Deep residual learning</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Batch Normalization: Training Acceleration and Stability</h2>
+
+            <p>
+                Skip connections solved the gradient flow problem. But training remained slow and sensitive to learning rate, weight initialization, and the distribution shift of activations across layers. Batch normalization (Ioffe & Szegedy, 2015) addressed this by normalizing layer inputs.
+            </p>
+
+            <p>
+                The core idea: within a mini-batch, compute statistics (mean and variance) of activations for each feature channel, then normalize:
+            </p>
+
+<pre><code>x_norm = (x - μ_batch) / sqrt(σ²_batch + ε)
+y = γ * x_norm + β</code></pre>
+
+            <p>
+                Where <code>γ</code> and <code>β</code> are learned parameters (scale and shift). This keeps activation distributions stable, which has several effects:
+            </p>
+
+            <ul>
+                <li><strong>Gradient flow:</strong> Stable input distributions mean stable gradients. Batch norm allows higher learning rates.</li>
+                <li><strong>Reduced internal covariate shift:</strong> As earlier layers update, their output distribution changes—a phenomenon called internal covariate shift. Batch norm compensates for this, allowing each layer to adapt independently.</li>
+                <li><strong>Regularization effect:</strong> Normalizing within a mini-batch adds noise (the batch statistics vary). This acts as a regularizer, reducing overfitting.</li>
+            </ul>
+
+            <p>
+                In practice, combining ResNets + Batch Normalization cuts training time roughly in half and enables 2–3× higher learning rates without divergence. Modern vision models (ResNets, EfficientNets, Vision Transformers) all use variants of batch norm or layer norm.
+            </p>
+
+            <h2>Data Augmentation at Scale</h2>
+
+            <p>
+                ImageNet has ~1.2 million training images. That sounds like a lot, but it's not enough to saturate a 150-layer network's capacity—without data augmentation, the model overfits. Early work (and my own experiments) found that random crops, flips, and color jittering help, but systematic augmentation strategies do far better.
+            </p>
+
+            <h3>Standard Augmentation Pipeline</h3>
+
+            <ul>
+                <li><strong>Random crop:</strong> Extract random 224×224 patches from 256×256 input images. Forces the model to recognize objects at different spatial positions.</li>
+                <li><strong>Horizontal flip:</strong> 50% chance. Doubles the effective dataset size for most object categories.</li>
+                <li><strong>Color jittering:</strong> Randomly adjust brightness, contrast, saturation. Models become invariant to lighting conditions.</li>
+                <li><strong>Random rotation/shear:</strong> Small rotations (±20°) help with slight pose variations.</li>
+            </ul>
+
+            <p>
+                More recent approaches like MixUp, CutMix, and RandAugment push further by interpolating images or mixing labels, achieving 1–2% error improvements. The key insight: augmentation is not a regularizer—it's a form of synthetic data generation that your model needs to see.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-chart-line"></i> Augmentation Impact</div>
+                <p>On ImageNet, a ResNet-50 trained with standard augmentation achieves 76.2% top-1 accuracy. The same model trained with aggressive augmentation (MixUp + CutMix + RandAugment) reaches 80.3%—a 4% absolute improvement with no architecture change.</p>
+            </div>
+
+            <h2>From Training to Production: Deployment Realities</h2>
+
+            <p>
+                A high-accuracy model on a GPU doesn't equal a working product. Production deployments face hard constraints: latency, memory, power consumption, and cost. This is where training and deployment diverge.
+            </p>
+
+            <h3>ONNX and Model Conversion</h3>
+
+            <p>
+                ResNets train in PyTorch or TensorFlow, but deployment targets vary: mobile phones (TensorFlow Lite, Core ML), cloud (TensorRT, ONNX Runtime), edge devices (OpenVINO). Converting between frameworks is error-prone if done naively.
+            </p>
+
+            <p>
+                ONNX (Open Neural Network Exchange) solves this by defining a common intermediate representation:
+            </p>
+
+<pre><code>PyTorch Model
+    ↓
+model.onnx (standardized graph)
+    ↓
+├─ TensorRT (NVIDIA GPU inference)
+├─ TensorFlow Lite (mobile)
+├─ Core ML (Apple devices)
+├─ OpenVINO (Intel Edge)
+└─ ONNX Runtime (CPU/GPU)</code></pre>
+
+            <p>
+                The ONNX model captures the computational graph, operator definitions, and weights. Conversion is as simple as:
+            </p>
+
+<pre><code>import torch.onnx
+
+model = ResNet50()
+model.eval()
+
+torch.onnx.export(
+    model,
+    torch.randn(1, 3, 224, 224),
+    "resnet50.onnx",
+    opset_version=11,
+    input_names=['image'],
+    output_names=['logits']
+)</code></pre>
+
+            <p>
+                Most of the time this just works. When it doesn't (custom ops, control flow), you debug in the intermediate representation, not the original framework code.
+            </p>
+
+            <h3>Quantization: Trading Precision for Speed</h3>
+
+            <p>
+                ResNet-50 has 26 million parameters, mostly floats (32-bit). On a mobile phone, this means 100+ MB of model weight storage. Inference requires ~4.1 billion floating-point operations (FLOPs) per image. At 30 fps, that's 123 billion FLOPs/sec—more than most mobile chips can handle continuously without draining the battery in minutes.
+            </p>
+
+            <p>
+                Quantization reduces precision: store weights and activations as 8-bit integers instead of 32-bit floats. This shrinks model size by 4× and speeds up operations dramatically (integer arithmetic is faster than floating-point).
+            </p>
+
+<pre><code>FP32 (original):    26M params × 4 bytes = 104 MB
+INT8 (quantized):   26M params × 1 byte  = 26 MB
+
+FP32 accuracy on ImageNet: 76.1%
+INT8 accuracy (post-training quantization): 75.8%
+INT8 accuracy (quantization-aware training): 75.9%</code></pre>
+
+            <p>
+                Quantization-aware training (QAT) simulates quantization during training, allowing the model to learn weights that remain accurate when quantized. Post-training quantization is faster (no retraining) but loses slightly more accuracy.
+            </p>
+
+            <h3>Knowledge Distillation: Compressing into Smaller Models</h3>
+
+            <p>
+                Sometimes quantization alone isn't enough. On ultra-low-power devices (smartwatches, IoT sensors), even an INT8 ResNet-50 is too slow. Distillation trains a smaller model (MobileNet, SqueezeNet) to match the outputs of a large teacher model (ResNet-152):
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>Parameters</th>
+                        <th>FLOPs (per image)</th>
+                        <th>Accuracy</th>
+                        <th>Inference Time (iPhone 8)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>ResNet-152 (teacher)</strong></td>
+                        <td>60.2M</td>
+                        <td>11.3B</td>
+                        <td>77.0%</td>
+                        <td>~150ms</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ResNet-50</strong></td>
+                        <td>25.5M</td>
+                        <td>4.1B</td>
+                        <td>76.1%</td>
+                        <td>~50ms</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MobileNet-v2 (trained alone)</strong></td>
+                        <td>3.5M</td>
+                        <td>0.3B</td>
+                        <td>71.8%</td>
+                        <td>~10ms</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MobileNet-v2 (distilled from ResNet-152)</strong></td>
+                        <td>3.5M</td>
+                        <td>0.3B</td>
+                        <td>74.7%</td>
+                        <td>~10ms</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                The distilled MobileNet is 50× smaller than the teacher, 15× faster, but only 2.3% less accurate. This is where production vision systems live: a careful balance between model complexity, accuracy, and latency.
+            </p>
+
+            <h2>Modern Evolution: Vision Transformers and Lessons Carried Forward</h2>
+
+            <p>
+                Vision Transformers (ViTs, Dosovitskiy et al., 2020) replaced convolutions with self-attention. The architecture is radically different—no convolutions, no skip connections (in the traditional sense), no spatial inductive biases.
+            </p>
+
+            <p>
+                But almost every training technique from CNNs made the jump:
+            </p>
+
+            <ul>
+                <li><strong>Batch normalization → Layer normalization:</strong> ViTs use layer norm, which serves the same purpose—stable training dynamics.</li>
+                <li><strong>Data augmentation:</strong> ViTs still need RandAugment, MixUp, and CutMix. In fact, they need <em>more</em> augmentation than ResNets because they lack convolutional inductive bias.</li>
+                <li><strong>Skip connections:</strong> Modern ViTs include residual connections in the transformer blocks, just like ResNets.</li>
+                <li><strong>Knowledge distillation:</strong> Large ViT-22B models are distilled into smaller ViT-Base or ViT-Tiny models for deployment.</li>
+            </ul>
+
+            <p>
+                The lesson: architectural novelty matters, but the principles of optimization and deployment are timeless. What works for ResNets works for ViTs, DINOv2, and whatever comes next.
+            </p>
+
+            <h2>Key Takeaways</h2>
+
+            <ol>
+                <li><strong>Depth requires skip connections:</strong> Standard backpropagation can't train very deep networks. Residual learning solves the vanishing gradient problem elegantly.</li>
+                <li><strong>Batch normalization is not optional:</strong> It enables higher learning rates, faster convergence, and acts as a regularizer. Most modern architectures assume it's present.</li>
+                <li><strong>Data augmentation is synthetic data generation:</strong> It's not a regularization trick—it's part of the dataset. Aggressive augmentation (MixUp, CutMix) yields consistent 2–4% improvements.</li>
+                <li><strong>Production deployment is a separate problem:</strong> Accuracy on ImageNet matters, but latency, model size, and inference cost determine if a model ships. Use ONNX, quantization, and distillation.</li>
+                <li><strong>These principles transcend architectures:</strong> Skip connections, normalization, and augmentation work in ViTs, ConvNeXts, and hybrid architectures. The fundamentals are durable.</li>
+            </ol>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-book"></i> Further Reading</div>
+                <p>He et al. (2015). "Deep Residual Learning for Image Recognition." CVPR. Ioffe & Szegedy (2015). "Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift." ICML. Dosovitskiy et al. (2020). "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale." ICLR.</p>
+            </div>
+
+        </div>
+
+        <footer class="article-footer">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to all articles</a>
+            <div class="share-links">
+                <a href="https://twitter.com/intent/tweet?text=CNNs%20at%20Scale%3A%20Lessons%20from%20ImageNet%20to%20Production%20Deployment&url=" title="Share on X"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=" title="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </footer>
+
+    </article>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const bar = document.getElementById('reading-progress');
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            if (docHeight > 0) {
+                bar.style.width = (scrollTop / docHeight) * 100 + '%';
+            }
+        });
+    </script>
+
+</body>
+</html>

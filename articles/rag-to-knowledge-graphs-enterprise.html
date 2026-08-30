@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beyond RAG: Knowledge Graphs as the Enterprise Memory Layer | Wrick Talukdar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles'); return false;"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">Enterprise AI</span>
+                <span class="article-date">May 15, 2025 · 9 min read</span>
+            </div>
+            <h1 class="article-title">Beyond RAG: Knowledge Graphs as the Enterprise Memory Layer</h1>
+            <p class="article-subtitle">RAG retrieves chunks; knowledge graphs understand relationships. How enterprises are combining both for grounded, context-aware AI that actually knows the org.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Architect & Researcher</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="article-body">
+
+            <p>
+                Retrieval Augmented Generation (RAG) has become the default way enterprises ground LLMs in their own data. You build a vector database, chunk documents, embed them, and retrieve chunks by semantic similarity. It works remarkably well for narrow use cases: "Find policy XYZ" or "What does our SLA say about uptime?" But RAG hits a wall when your question requires understanding relationships, context hierarchies, or reasoning across multiple documents.
+            </p>
+            <p>
+                A customer asks, "Who is responsible for my account, and what other accounts do they manage?" Your RAG system retrieves a chunk mentioning the account manager's name. But it can't trace: manager → team → other accounts → contract terms → renewal dates. The knowledge is there, scattered across chunks, but RAG doesn't know how to connect it.
+            </p>
+            <p>
+                This is where <em>knowledge graphs</em> (KGs) step in. A knowledge graph is a semantic network of entities (Customer, Manager, Contract) and relationships (manages, owns, signed). Instead of searching for similar text, you traverse edges. Instead of hoping a retrieval query captures all relevant context, you explicitly model what matters and how things relate.
+            </p>
+            <p>
+                The most sophisticated enterprises aren't choosing between RAG and knowledge graphs. They're combining both: <strong>RAG for initial retrieval and grounding in unstructured data; knowledge graphs for relationship reasoning and context assembly.</strong> Call it GraphRAG, or just smart enterprise architecture.
+            </p>
+            <p>
+                This article walks through why RAG alone is insufficient, what knowledge graphs enable that RAG cannot, how to combine them, and the practical tools and patterns emerging in production systems.
+            </p>
+
+            <h2>Why RAG Hits Its Limits</h2>
+
+            <p>
+                RAG's fundamental limitation is that it treats documents as independent bags of chunks. You embed the text, compute similarity to a query, and return the top-k results. This approach works when:
+            </p>
+
+            <ul>
+                <li>A single query can be satisfied by a single (or small number of) similar chunks.</li>
+                <li>The query itself encodes all necessary context; no reasoning across multiple chunk types is required.</li>
+                <li>Relationships between documents and entities don't matter.</li>
+                <li>Temporal relationships (before/after, causes/follows) aren't critical.</li>
+            </ul>
+
+            <p>
+                In practice, enterprise questions violate all of these. Consider these realistic questions:
+            </p>
+
+            <ul>
+                <li><strong>"Show me all contracts expiring in Q4, and for each one, list the account manager and their other active deals."</strong> This requires: contract retrieval → parse expiration dates → map to account managers → retrieve all deals for each manager → filter active status. RAG retrieves contracts, but assembling the full context requires traversing entity relationships.</li>
+                <li><strong>"What policy applies to this customer's situation, and have any similar incidents happened before that set precedent?"</strong> You need to retrieve policies, classify the situation, find similar past incidents, and reason about precedent. Chunk similarity won't do it.</li>
+                <li><strong>"Why was this customer churned, and what retention strategies have worked for similar customers?"</strong> You must map customer attributes → segment → look up past churn reasons for the segment → find retention strategies. This is graph traversal, not retrieval.</li>
+            </ul>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-lightbulb"></i> The Core Problem</div>
+                <p>RAG assumes the query encodes enough context to find relevant chunks. But enterprise systems operate in deep context: who you are, your history, your relationships, your obligations. That context is a <em>graph</em>, not a set of independent documents.</p>
+            </div>
+
+            <h3>RAG's Blind Spots</h3>
+
+            <p>
+                <strong>No relationship awareness.</strong> A chunk about "Manager Alice manages Customer B" and another chunk about "Manager Alice manages Customer C" look identical to semantic search. But they're related: both mention Manager Alice. RAG doesn't link them; you get both chunks at full length, padding your context window uselessly.
+            </p>
+
+            <p>
+                <strong>No temporal reasoning.</strong> If a document says "We implemented fix X on Jan 5" and another says "Incidents dropped after Jan 10", a human sees causality. RAG sees two similar-ish chunks, both about incidents. It can't reason about before/after.
+            </p>
+
+            <p>
+                <strong>Chunk boundary problems.</strong> Chunking is an art. Overlap chunks by 10% to preserve context, and you waste tokens. Chunk by hard boundaries (page breaks), and crucial relationships split across boundaries. RAG's quality depends heavily on this hyperparameter, which is brittle.
+            </p>
+
+            <p>
+                <strong>Noisy deduplication.</strong> When you retrieve top-k chunks, you often get duplicates or near-duplicates: same entity mentioned in different documents, same fact stated twice. RAG returns both; you waste context. A graph deduplicates by design: one edge from Manager to Customer, regardless of how many documents state it.
+            </p>
+
+            <h2>What Knowledge Graphs Enable</h2>
+
+            <p>
+                A knowledge graph models the world as entities and edges. Entities are objects: Customer, Manager, Contract, Product, Incident. Edges are relationships: manages, owns, resolved, similar_to. Crucially, edges can have properties: a Contract edge has expiration_date, renewal_status, terms.
+            </p>
+
+            <p>
+                With a graph, you can:
+            </p>
+
+            <ul>
+                <li><strong>Traverse relationships.</strong> Find all deals managed by a specific person, all customers in a specific segment, all incidents similar to a current one. No chunking artifacts; pure relationship queries.</li>
+                <li><strong>Reason about causality and time.</strong> Define edges like triggered_on (timestamp), caused_by, followed_by. Query: "Which incidents were preceded by system changes?" The graph encodes the temporal relationship.</li>
+                <li><strong>Aggregate context efficiently.</strong> Instead of passing 20 chunks to an LLM, traverse the graph, collect relevant entities and edges, and synthesize a concise context summary.</li>
+                <li><strong>Enable recommendations.</strong> "Customers similar to X who have Y contract type tend to adopt product Z." Query the graph for similar customers, their contract types, their products, and use the pattern to recommend.</li>
+                <li><strong>Enforce consistency.</strong> A customer's email appears in a chunk as "alice@company.com" and in another as "alice@co.com". In a graph, they're the same entity; you deduplicate once. In RAG, they're separate chunks, and the LLM has to figure out they're the same person.</li>
+                <li><strong>Model complex hierarchies.</strong> Organizations, teams, reporting structures, product taxonomies. Graphs represent these naturally; RAG needs workarounds.</li>
+            </ul>
+
+            <h3>Entity Resolution and Deduplication</h3>
+
+            <p>
+                One of the most underrated benefits of knowledge graphs is automatic deduplication. If your enterprise documents refer to a customer as "Acme Corp", "ACME Corporation", and "acme_corp" (their ID), RAG might treat these as three separate mentions, each triggering a retrieval. A graph resolves them to one entity with three aliases, and you query once.
+            </p>
+
+            <p>
+                This is called <strong>entity resolution</strong>: taking raw mentions of entities from text and resolving them to canonical entities in a graph. Modern approaches use LLMs: given a mention and context, does it refer to an existing entity or a new one? This is surprisingly accurate (especially with context) and becomes a core part of knowledge graph construction.
+            </p>
+
+            <h2>Building Knowledge Graphs from Unstructured Data</h2>
+
+            <p>
+                The chicken-and-egg problem: knowledge graphs require structured data (entities and edges), but enterprises have unstructured data (documents, emails, chat). The solution is <strong>LLM-powered extraction</strong>.
+            </p>
+
+            <p>
+                The pipeline:
+            </p>
+
+            <ol>
+                <li><strong>Extract entities.</strong> Given a document, extract all entities: "Acme Corp" (Customer), "Alice Johnson" (Manager), "Contract 12345" (Contract). Use an LLM with a prompt like: "Extract all [Customer, Manager, Contract] entities from this text."</li>
+                <li><strong>Extract relationships.</strong> Given entities, extract edges: "Alice manages Acme", "Contract 12345 is owned by Acme". Prompt: "For each entity pair, if they have a relationship, state it with type [manages, owns, etc.]."</li>
+                <li><strong>Resolve entities.</strong> Map "Acme Corp" to a canonical Acme entity (maybe it's already in the graph). Do the same for all mentions.</li>
+                <li><strong>Insert into graph.</strong> Upsert entities and edges, deduplicating by identity and updating properties where relevant.</li>
+            </ol>
+
+            <p>
+                This is fast (LLM extraction at scale using batch APIs or local models) and surprisingly accurate. Errors are usually missed extractions (false negatives), not false relationships. And errors are recoverable: future extractions from other documents can fill gaps or correct contradictions.
+            </p>
+
+            <h3>Handling Extraction Quality</h3>
+
+            <p>
+                LLM extraction is good but imperfect. A customer might be extracted as three different entities, or a relationship might be stated backwards. To improve quality:
+            </p>
+
+            <ul>
+                <li><strong>Multi-extraction with voting.</strong> Extract from the same document using different prompts or models, then consolidate results. If 2/3 models agree a relationship exists, keep it.</li>
+                <li><strong>Validation loops.</strong> After insertion, run quality checks: "If A manages B and B is a division of C, do we have edge A manages C?" If not, consider inferring it.</li>
+                <li><strong>Human-in-the-loop curation.</strong> Flag low-confidence extractions for human review, especially for high-value entities (key customers, critical processes).</li>
+                <li><strong>Iterative refinement.</strong> As you use the graph and find errors, update extraction prompts to avoid those errors in future documents.</li>
+            </ul>
+
+            <h2>GraphRAG: Combining Both Worlds</h2>
+
+            <p>
+                The full architecture is neither pure RAG nor pure knowledge graph. It's a hybrid:
+            </p>
+
+            <ol>
+                <li><strong>Index phase.</strong> Ingest documents. Extract entities and relationships. Build a knowledge graph. Also maintain a vector index of raw documents for fallback retrieval.</li>
+                <li><strong>Query phase.</strong> User asks a question. Classify the query: is it an entity lookup (graph), a relationship query (graph), or a document retrieval (vector search)? Often it's mixed: "Find contracts with these terms (entity search) for customers in this region (graph traversal) and summarize their renewal dates (aggregation)".</li>
+                <li><strong>Retrieval phase.</strong> Execute graph queries and vector searches. Collect entities, edges, and raw text snippets. Assemble context efficiently.</li>
+                <li><strong>Grounding phase.</strong> LLM generates a response grounded in the retrieved context: entities, relationship facts, and raw text. Include citation to source entities/documents.</li>
+            </ol>
+
+            <p>
+                The payoff: you get relationship reasoning (graph) + language understanding (vector search) + grounding in real text (both).
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-lightbulb"></i> Query Classification</div>
+                <p>A simple heuristic classifier can route queries. Does it mention entity types (customer, contract, manager)? Use graphs. Does it ask for synthesis or open-ended analysis? Use vector search first, then graph for relationships. As you gather query logs, you can learn from mistakes and refine the router.</p>
+            </div>
+
+            <h2>Enterprise Use Cases</h2>
+
+            <p>
+                Where does GraphRAG shine in practice?
+            </p>
+
+            <h3>Organizational Knowledge</h3>
+
+            <p>
+                Enterprise wikis, runbooks, decision logs. Model the org as a graph: People → Teams → Services → Incidents. "Who handles on-call for the payments service?" Graph traversal. "What incidents have we had related to this service, and how were they resolved?" Traversal + retrieval. "What's the protocol for major incidents?" Retrieval, grounded in documentation.
+            </p>
+
+            <h3>Customer 360</h3>
+
+            <p>
+                CRM data, contract data, support tickets. Build a graph: Customers → Accounts → Contracts → Incidents → People. "Show me this customer's account manager, their contract terms, and the last 3 support cases." One graph query. "Recommend an upsell based on similar customers' adoption patterns." Relationship analysis + recommendations.
+            </p>
+
+            <h3>Compliance and Auditing</h3>
+
+            <p>
+                Policies, regulations, approvals, exceptions. Model as: Policies → Controls → Business Processes → Exceptions. "Is this action compliant with our policies?" Retrieve relevant policies (graph), check against action (LLM reasoning), retrieve precedent (graph). "Show me all exceptions to Policy X and who approved them." Direct graph query.
+            </p>
+
+            <h3>Supply Chain and Logistics</h3>
+
+            <p>
+                Suppliers → Products → Orders → Shipments → Invoices. "Which suppliers provide Product X, what's the lead time, and who are their alternates if primary is down?" Graph traversal. "Forecast shipment delays based on current disruptions." Combine graph traversal (find related shipments) with LLM forecasting.
+            </p>
+
+            <h2>Tools and Platforms</h2>
+
+            <p>
+                The knowledge graph space is rapidly maturing. Several platforms dominate:
+            </p>
+
+            <p>
+                <strong>Neo4j</strong> is the most mature graph database, with strong query language (Cypher) and LLM integration. Use Neo4j with LangChain or llama-index for RAG + graph queries.
+            </p>
+
+            <p>
+                <strong>Amazon Neptune</strong> is a managed graph service on AWS, supporting both property graphs and RDF. If you're already on AWS, it integrates well with Bedrock (AWS's LLM service) for RAG pipelines.
+            </p>
+
+            <p>
+                <strong>LlamaIndex (formerly GPT Index)</strong> has strong graph-building capabilities. It can extract entities and relationships from documents automatically and build a graph index. Simple API for querying graphs + retrieval combined.
+            </p>
+
+            <p>
+                <strong>Custom solutions</strong> using PostgreSQL's JSON capabilities or specialized graph libraries (NetworkX in Python) are viable for simpler use cases. Start here if you're prototyping.
+            </p>
+
+            <h3>Implementation Choices</h3>
+
+            <p>
+                <strong>Extraction method:</strong> LLM extraction (flexible, handles unstructured data well) vs. rule-based extraction (faster, needs more engineering). For enterprises, hybrid is common: LLMs for exploratory extraction, rules for high-volume, schema-stable data.
+            </p>
+
+            <p>
+                <strong>Graph size and refresh:</strong> If your graph is small (< 10K entities), you can reconstruct it daily. At scale (millions of entities), you'll batch updates. Plan for incremental updates, not full rebuilds.
+            </p>
+
+            <p>
+                <strong>Querying strategy:</strong> Simple queries (find neighbors of an entity) are fast. Complex queries (multi-hop reasoning) can explode combinatorially. Set depth limits and use sampling to keep latency reasonable.
+            </p>
+
+            <h2>Evaluation and Maintenance</h2>
+
+            <p>
+                A knowledge graph isn't "done" once built. It needs constant care:
+            </p>
+
+            <ul>
+                <li><strong>Quality metrics.</strong> Track extraction accuracy on a sample of documents (human-labeled). Monitor query latency and coverage. If users frequently ask questions the graph can't answer, it's a signal to add more entity types or relationships.</li>
+                <li><strong>Update strategy.</strong> Schedule regular re-extraction of documents to catch new information and correct errors. For high-churn data (support tickets, incidents), update continuously.</li>
+                <li><strong>Deduplication and reconciliation.</strong> Periodically review entities marked as duplicates and reconcile their properties. A customer might have been extracted with three different email addresses; reconcile them once.</li>
+                <li><strong>Schema evolution.</strong> As the business changes, you may need new entity types or relationships. Plan for schema versioning and gradual migrations.</li>
+            </ul>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-lightbulb"></i> Start Small, Scale Thoughtfully</div>
+                <p>Don't try to model your entire enterprise in a graph overnight. Start with one domain (e.g., customers and contracts) and get it right. Invest in extraction quality, validation, and curation. Once you have a gold-standard subgraph, expand to adjacent domains and federate if needed.</p>
+            </div>
+
+            <h2>The Future: Reasoning Over Graphs</h2>
+
+            <p>
+                The frontier is AI systems that reason over graphs directly. Instead of an LLM that takes context as text, imagine an agent that: (1) breaks your question into sub-queries, (2) traverses the graph to answer each, (3) combines results into a final answer, (4) cites the graph path for transparency.
+            </p>
+
+            <p>
+                This is already happening at research labs (Microsoft's Copilot for Graphs, OpenAI's approach to multimodal reasoning). Production systems are not far behind.
+            </p>
+
+            <p>
+                The enterprises that build robust, well-maintained knowledge graphs now will have a massive advantage when reasoning-over-graphs becomes standard. Those still chunking documents into vectors will be left behind.
+            </p>
+
+            <h2>Conclusion</h2>
+
+            <p>
+                RAG revolutionized how enterprises ground LLMs. But it's a beginning, not an ending. As AI systems become more complex and as enterprises demand deeper reasoning, knowledge graphs are essential. Combine them with RAG, invest in extraction quality, and start modeling your domain as a graph.
+            </p>
+
+            <p>
+                The future of enterprise AI isn't retrieval; it's reasoning. And reasoning requires a map.
+            </p>
+
+        </div>
+
+        <footer class="article-footer">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles'); return false;"><i class="fas fa-arrow-left"></i> Back to all articles</a>
+            <div class="share-links">
+                <a href="https://twitter.com/intent/tweet?url=https://wricktalukdar.com&text=Beyond%20RAG:%20Knowledge%20Graphs%20as%20Enterprise%20Memory%20by%20@wricktalukdar" target="_blank" title="Share on X"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://wricktalukdar.com" target="_blank" title="Share on LinkedIn"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </footer>
+
+    </article>
+
+    <script>
+        // Reading progress
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            document.getElementById('reading-progress').style.width = scrollPercent + '%';
+        });
+    </script>
+
+</body>
+</html>

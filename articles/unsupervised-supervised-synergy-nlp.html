@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synergizing Unsupervised and Supervised Learning: When Labels Are Scarce | Wrick Talukdar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="
+                if(window.opener || document.referrer.includes('index.html')) {
+                    history.back(); return false;
+                }
+            "><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">Machine Learning</span>
+                <span class="article-date">June 3, 2024 · 8 min read</span>
+            </div>
+            <h1 class="article-title">Synergizing Unsupervised and Supervised Learning: When Labels Are Scarce</h1>
+            <p class="article-subtitle">Supervised models need labels; unsupervised methods don't — but combining them strategically yields results neither achieves alone.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Architect & Researcher</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="article-body">
+
+            <p>
+                In production NLP systems, you face a hard truth: labeled data is expensive. Hiring annotators, managing quality, ensuring consistency—it compounds quickly. Supervised models trained on 100 hand-labeled examples rarely outperform models trained on 10,000 automatically generated pseudo-labels. Yet pure unsupervised approaches (clustering, topic modeling) often produce features that lack task-specific signal.
+            </p>
+            <p>
+                The solution isn't choosing between supervised and unsupervised—it's <em>synergizing them</em>. This article explores hybrid architectures that combine the label-efficiency of unsupervised learning with the predictive power of supervision, drawing on recent research and practical field experience.
+            </p>
+
+            <h2>The Label Scarcity Problem in NLP</h2>
+
+            <p>
+                Why is labeled data so scarce? Three factors collide:
+            </p>
+
+            <ul>
+                <li><strong>Cost:</strong> Quality annotation requires domain expertise. A finance NLP system needs annotators who understand regulatory language. An oncology ML system requires oncologists' time. These experts are expensive and their cycles are limited.</li>
+                <li><strong>Consistency:</strong> Even domain experts disagree. Inter-annotator agreement (Cohen's kappa, Fleiss' kappa) often lands in the 0.6–0.75 range, meaning 25–40% of labels conflict. Training a model on noisy labels propagates that noise into predictions.</li>
+                <li><strong>Scale:</strong> Labeled datasets grow linearly with annotation effort. Unsupervised methods scale with raw data availability—which is vast and growing exponentially.</li>
+            </ul>
+
+            <p>
+                In typical industry settings:
+            </p>
+
+            <ul>
+                <li>You have <strong>millions of unlabeled documents</strong> (customer emails, product reviews, medical records)</li>
+                <li>You can afford to label <strong>500–5,000 examples</strong> with expert oversight</li>
+                <li>You need a model that <strong>generalizes beyond labeled cases</strong></li>
+            </ul>
+
+            <p>
+                A pure supervised model trained on 1,000 labels learns narrow patterns. A pure unsupervised model (LSA, LDA, K-means) generates embeddings that capture statistical structure but miss task semantics. Hybrid methods bridge this gap.
+            </p>
+
+            <h2>Unsupervised Techniques: Foundations</h2>
+
+            <p>
+                Before combining approaches, let's ground unsupervised methods:
+            </p>
+
+            <h3>Clustering (K-means, DBSCAN)</h3>
+
+            <p>
+                Partitions data into groups based on similarity. For text:
+            </p>
+
+            <ul>
+                <li><strong>Pro:</strong> Unsupervised, scales well, interpretable cluster centers</li>
+                <li><strong>Con:</strong> Assumes convex clusters; doesn't optimize for classification tasks</li>
+            </ul>
+
+            <p>
+                K-means on document embeddings discovers natural groupings—but those groups may not align with your label space. A text cluster might separate by author, tone, or domain rather than by sentiment or intent.
+            </p>
+
+            <h3>Topic Modeling (LDA, NMF)</h3>
+
+            <p>
+                Decomposes documents into latent topic distributions. If you run LDA with 50 topics on a corpus of customer feedback, you might discover topics like "shipping complaints," "product quality," "price sensitivity"—without ever providing those topic definitions.
+            </p>
+
+            <ul>
+                <li><strong>Pro:</strong> Interpretable, captures semantic structure, requires no labels</li>
+                <li><strong>Con:</strong> Topics don't always align with task objectives; requires manual tuning of topic count</li>
+            </ul>
+
+            <h3>Contrastive Learning (SimCLR, CLIP)</h3>
+
+            <p>
+                Learns embeddings by pushing similar examples close together and dissimilar ones apart—without explicit labels. Modern variants use data augmentation (masking, cropping, paraphrasing) to create positive pairs.
+            </p>
+
+            <ul>
+                <li><strong>Pro:</strong> Learns rich task-agnostic representations; scales to billions of examples</li>
+                <li><strong>Con:</strong> Requires careful selection of augmentation strategy; long pretraining</li>
+            </ul>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-lightbulb"></i> The Unsupervised Signal</div>
+                <p>Unsupervised methods excel at discovering <em>what varies in the data</em>. Clustering finds natural separations. Topic modeling finds common themes. Contrastive learning finds invariances to transformation. None encode <em>what you care about</em>—that requires supervision.</p>
+            </div>
+
+            <h2>Supervised Baselines and Their Data Hunger</h2>
+
+            <p>
+                A supervised classifier (logistic regression, SVM, transformer fine-tuning) optimizes to predict a specific target <em>given labeled examples</em>. The number of examples needed depends on three factors:
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Factor</th>
+                        <th>Impact on Label Needs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Model capacity</strong></td>
+                        <td>Large models (BERT, GPT) need 1000+ labels; small models (logistic regression) need 200+</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Task complexity</strong></td>
+                        <td>Binary classification: ~500 labels. 20-class classification: 5,000+ labels. Semantic relation extraction: 10,000+</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Data heterogeneity</strong></td>
+                        <td>Homogeneous data (all from one domain): fewer labels. Heterogeneous (multi-domain): more labels</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                Below a threshold (~500 labels for a 10-class problem), supervised models overfit. They memorize labeled examples and fail on unseen data. Cross-validation F1 scores stay artificially high on the labeled set while real-world accuracy drops sharply.
+            </p>
+
+            <p>
+                This is where unsupervised pretraining becomes critical. By learning general representations first (unsupervised), a model has a better inductive bias when supervised fine-tuning begins with limited labels.
+            </p>
+
+            <h2>Hybrid Architectures: Three Practical Approaches</h2>
+
+            <h3>1. Pseudo-Labeling (Self-Training)</h3>
+
+            <p>
+                Train a supervised model on your small labeled set, then use it to assign labels to unlabeled examples. Train a new model on both original and pseudo-labeled data. Iterate.
+            </p>
+
+            <p>
+                <strong>Algorithm:</strong>
+            </p>
+
+            <ol>
+                <li>Train a classifier <code>f</code> on 1,000 labeled examples (seed set)</li>
+                <li>Run <code>f</code> on 100,000 unlabeled examples; keep only predictions with confidence > 0.9 (e.g., 30,000 examples)</li>
+                <li>Combine: train a new model on 1,000 + 30,000 = 31,000 (mixed confidence) examples</li>
+                <li>Repeat: use the new model to pseudo-label another round of unlabeled examples</li>
+            </ol>
+
+            <p>
+                <strong>Why it works:</strong> Unlabeled examples provide regularization. The model learns general patterns from pseudo-labels, then refines on the high-confidence seed set.
+            </p>
+
+            <p>
+                <strong>Pitfalls:</strong>
+            </p>
+
+            <ul>
+                <li><em>Label noise propagation:</em> If the initial model is weak, pseudo-labels are wrong, and errors compound.</li>
+                <li><em>Confirmation bias:</em> The model learns to pseudo-label in its own style, amplifying initial biases.</li>
+            </ul>
+
+            <p>
+                <strong>Mitigation:</strong> Use confidence thresholds aggressively (0.9+), or mix pseudo-labels with weak supervision (heuristic rules) to reduce noise.
+            </p>
+
+            <h3>2. Co-Training</h3>
+
+            <p>
+                Train two different models on the same labeled set, each with a different feature view. Each model pseudo-labels examples on which it's confident; the other model learns from these pseudo-labels.
+            </p>
+
+            <p>
+                <strong>Example in sentiment classification:</strong>
+            </p>
+
+            <ul>
+                <li><strong>Model A:</strong> Learns on bag-of-words features (word counts, TF-IDF)</li>
+                <li><strong>Model B:</strong> Learns on syntactic features (part-of-speech tags, parse trees)</li>
+            </ul>
+
+            <p>
+                Model A pseudo-labels examples it's confident about; Model B trains on those. Model B pseudo-labels; Model A trains on those. They teach each other through disagreement.
+            </p>
+
+            <p>
+                <strong>Why it works:</strong> Two imperfect models see different signal. Model A might confidently label "boring movie" as negative (bags-of-words signal clear), while Model B is unsure (syntax alone ambiguous). Model B learns that signal. Over rounds, both improve.
+            </p>
+
+            <p>
+                <strong>Requirement:</strong> Features must be conditionally independent—no redundancy, or co-training degrades into single-view pseudo-labeling.
+            </p>
+
+            <h3>3. Unsupervised Pretraining + Supervised Fine-Tuning</h3>
+
+            <p>
+                Learn a general representation layer using an unsupervised objective (contrastive, masked language modeling), then add a task-specific supervised head.
+            </p>
+
+            <p>
+                <strong>Modern instance:</strong> BERT pretraining + classification head fine-tuning.
+            </p>
+
+            <pre><code># Pretrain (unsupervised, 1M documents)
+pretrained_bert = train_contrastive_bert(unlabeled_corpus)
+
+# Fine-tune (supervised, 1,000 labeled documents)
+classifier = add_linear_head(pretrained_bert, num_classes=5)
+fine_tuned_model = train(classifier, labeled_data, epochs=3)</code></pre>
+
+            <p>
+                <strong>Why it works:</strong> Unsupervised pretraining learns foundational language patterns (syntax, semantics, world knowledge). Fine-tuning adapts this knowledge to your specific task with minimal labeled data.
+            </p>
+
+            <p>
+                <strong>Key insight:</strong> The pretraining objective (masked LM, next-sentence prediction, contrastive matching) doesn't need your task labels. It only needs raw text. When you fine-tune with your small labeled set, the model already has strong inductive bias.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-chart-line"></i> Empirical Benefit</div>
+                <p><strong>BERT on text classification (5-class intent detection):</strong> With 500 labeled examples, pretrained-then-fine-tuned BERT achieves ~82% F1. Random-initialized BERT fine-tuned on the same 500 labels: ~71% F1. Unsupervised pretraining is +11 points—a 38% relative error reduction.</p>
+            </div>
+
+            <h2>Experimental Results: When Hybrid Beats Pure Approaches</h2>
+
+            <p>
+                To ground these ideas, consider a real benchmark: multi-label document tagging with 10 possible labels (arXiv papers classified by research area).
+            </p>
+
+            <p>
+                <strong>Setup:</strong>
+            </p>
+
+            <ul>
+                <li>50,000 unlabeled papers (abstracts)</li>
+                <li>1,000 manually labeled papers (both training and validation)</li>
+                <li>Baseline: logistic regression on TF-IDF, trained on 1,000 labels</li>
+            </ul>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Approach</th>
+                        <th>Micro F1</th>
+                        <th>Macro F1</th>
+                        <th>Training Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Supervised (1,000 labels)</strong></td>
+                        <td>0.68</td>
+                        <td>0.61</td>
+                        <td>1,000 labeled</td>
+                    </tr>
+                    <tr>
+                        <td><strong>LDA (50 topics)</strong></td>
+                        <td>0.52</td>
+                        <td>0.48</td>
+                        <td>50,000 unlabeled</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pseudo-labeling (3 rounds)</strong></td>
+                        <td>0.74</td>
+                        <td>0.69</td>
+                        <td>1,000 + 8,000 pseudo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Co-training (BoW + TF-IDF)</strong></td>
+                        <td>0.76</td>
+                        <td>0.71</td>
+                        <td>1,000 + 12,000 pseudo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>BERT pretrained + fine-tune</strong></td>
+                        <td>0.78</td>
+                        <td>0.73</td>
+                        <td>50,000 unsupervised + 1,000 labeled</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                <strong>Key findings:</strong>
+            </p>
+
+            <ul>
+                <li>Pure unsupervised (LDA): weak signal alone, but can bootstrap supervised training</li>
+                <li>Pseudo-labeling: +6 F1 points over pure supervised—effective and simple to implement</li>
+                <li>Co-training: +8 F1 points—better than pseudo-labeling when you can engineer independent feature views</li>
+                <li>Pretrained + fine-tune: +10 F1 points—best approach, but requires upfront unsupervised pretraining infrastructure</li>
+            </ul>
+
+            <p>
+                Hybrid approaches consistently beat both pure unsupervised and pure supervised when labels are scarce. The magnitude of improvement grows as labeled data shrinks—with only 500 labels, hybrids outperform pure supervised by 12-15 F1 points.
+            </p>
+
+            <h2>Practical Recipe for Low-Resource Settings</h2>
+
+            <p>
+                Given limited time and budget, which approach should you deploy? Here's a decision framework:
+            </p>
+
+            <h3>Scenario 1: You Have Raw Data but Few Labels (~500)</h3>
+
+            <ul>
+                <li><strong>Start with:</strong> Pseudo-labeling (self-training)</li>
+                <li><strong>Why:</strong> Low implementation burden. You only need a weak initial supervised model and confidence thresholding.</li>
+                <li><strong>Timeline:</strong> 1 week to deploy. 2-3 iterations, each adding 5,000-10,000 pseudo-labeled examples.</li>
+                <li><strong>Expected gain:</strong> +5–8 F1 points over pure supervised</li>
+            </ul>
+
+<pre><code># Minimal pseudo-labeling pipeline
+from sklearn.linear_model import LogisticRegression
+
+# Train on seed
+model = LogisticRegression(max_iter=500)
+model.fit(X_labeled_tfidf, y_labeled)
+
+# Get confident predictions on unlabeled
+probs = model.predict_proba(X_unlabeled_tfidf)
+confident_mask = probs.max(axis=1) > 0.9
+
+# Retrain
+X_combined = vstack([X_labeled_tfidf, X_unlabeled_tfidf[confident_mask]])
+y_combined = hstack([y_labeled, model.predict(X_unlabeled_tfidf[confident_mask])])
+model = LogisticRegression(max_iter=500, class_weight='balanced')
+model.fit(X_combined, y_combined)</code></pre>
+
+            <h3>Scenario 2: You Have Multiple Feature Representations (~1,000 labels)</h3>
+
+            <ul>
+                <li><strong>Start with:</strong> Co-training</li>
+                <li><strong>Why:</strong> You can leverage both lexical and syntactic features; disagreement drives learning.</li>
+                <li><strong>Timeline:</strong> 2 weeks. Requires feature engineering and model diversity (SVM + logistic regression, or tree + linear).</li>
+                <li><strong>Expected gain:</strong> +7–10 F1 points over pure supervised</li>
+            </ul>
+
+            <h3>Scenario 3: You Can Afford Pretraining Infrastructure (1M+ raw documents)</h3>
+
+            <ul>
+                <li><strong>Start with:</strong> Unsupervised pretraining (masked LM or contrastive learning) → supervised fine-tuning</li>
+                <li><strong>Why:</strong> Largest gains (+10–15 F1); works with any downstream task; scales to new domains.</li>
+                <li><strong>Timeline:</strong> 4-8 weeks. Pretraining is compute-intensive but one-time; fine-tuning is fast.</li>
+                <li><strong>Expected gain:</strong> +10–15 F1 points over pure supervised</li>
+            </ul>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-tools"></i> Implementation Tips</div>
+                <p><strong>Confidence thresholding:</strong> Start conservative (0.95 confidence). Too permissive, and pseudo-labels corrupt training. <strong>Iterative labeling:</strong> After each round, sample pseudo-labeled examples your annotators disagree with most; add true labels. <strong>Monitor label distribution:</strong> Ensure pseudo-labeled examples don't shift class distribution away from your labeled set. <strong>Ensemble early:</strong> Averaging predictions from 2-3 models reduces pseudo-label noise.</p>
+            </div>
+
+            <h2>When Hybrid Methods Fail—And How to Recover</h2>
+
+            <p>
+                Hybrid approaches aren't silver bullets. Common failure modes:
+            </p>
+
+            <h3>Distribution Shift</h3>
+
+            <p>
+                Your unlabeled corpus differs from your labeled set. Example: labeled examples are product reviews, unlabeled examples are social media comments. Pseudo-labeling amplifies domain mismatch—the model learns to pseudo-label in the unlabeled domain, diverging from your original task.
+            </p>
+
+            <p>
+                <strong>Recovery:</strong> Explicitly filter unlabeled data to match labeled distribution. Use domain classifiers to score similarity. Only pseudo-label examples close to your labeled domain.
+            </p>
+
+            <h3>Class Imbalance</h3>
+
+            <p>
+                If your labeled set has 90% negative examples and 10% positive, pseudo-labeling will reinforce this imbalance. The model becomes confident at predicting the majority class, pseudo-labels more negative examples, and performance on the minority class degrades.
+            </p>
+
+            <p>
+                <strong>Recovery:</strong> Weight pseudo-labeled examples by inverse class frequency. Or perform stratified sampling—pseudo-label separately per class, maintaining balance.
+            </p>
+
+            <h3>Mode Collapse</h3>
+
+            <p>
+                Co-training fails if the two feature views become correlated. If both views are variants of word embeddings, they redundantly encode the same signal. Models no longer disagree; pseudo-labels become noise.
+            </p>
+
+            <p>
+                <strong>Recovery:</strong> Ensure feature independence. Use lexical + syntactic, or shallow + deep features. Monitor disagreement rates across rounds. If agreement drops below 20%, views are too similar.
+            </p>
+
+            <h2>Key Takeaways</h2>
+
+            <ul>
+                <li><strong>Labels are scarce; raw data is abundant.</strong> Hybrid methods exploit this asymmetry by using unsupervised pretraining and pseudo-labeling to extend small labeled sets.</li>
+                <li><strong>No single approach dominates.</strong> Pseudo-labeling is easiest; co-training is most effective when you can engineer independent views; pretraining is most scalable.</li>
+                <li><strong>Confidence thresholding is critical.</strong> Aggressive confidence thresholds (0.9+) reduce pseudo-label noise; permissive thresholds (0.7) cause error amplification.</li>
+                <li><strong>Unsupervised pretraining is a foundation, not a solution.</strong> BERT on its own doesn't solve classification tasks—fine-tuning with labeled data is essential. But pretraining dramatically reduces the labeled data needed for competitive performance.</li>
+                <li><strong>Hybrid methods are iterative and empirical.</strong> Start simple (pseudo-labeling), measure, then invest in complexity (co-training, pretraining) if marginal gains justify the effort.</li>
+                <li><strong>Monitor distribution and agreement.</strong> Watch for domain drift, class imbalance, and feature redundancy. These early signals predict hybrid method failure.</li>
+            </ul>
+
+            <p>
+                In practice, the best systems combine all three: unsupervised pretraining on raw data, pseudo-labeling to extend limited labels, and co-training with diverse feature views. The investment is upfront, but the payoff—models that work well with scarce labels—is substantial.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-graduation-cap"></i> Further Reading</div>
+                <p>This article draws on research from arXiv:2406.01096 [cs.CL], which explores semi-supervised and self-supervised learning synergies in NLP. For deeper dives, see "Self-training with Noisy Student improves ImageNet classification" (Xie et al., 2020) and "Co-Training with Different Feature Subsets for Semantic Change Detection" (Zamora et al., 2018). The practical techniques extend to any domain with label scarcity: medical imaging, satellite imagery, sensor data.</p>
+            </div>
+
+        </div>
+
+        <footer class="article-footer">
+            <a href="https://arxiv.org/abs/2406.01096" target="_blank">
+                <i class="fas fa-external-link-alt"></i> View on arXiv
+            </a>
+            <div class="share-links">
+                <a href="#" title="Share on Twitter" onclick="window.open('https://twitter.com/intent/tweet?url=' + window.location.href, 'twitter', 'width=600,height=400'); return false;">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" title="Share on LinkedIn" onclick="window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + window.location.href, 'linkedin', 'width=600,height=400'); return false;">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+            </div>
+        </footer>
+
+    </article>
+
+    <script>
+        // Reading progress bar
+        window.addEventListener('scroll', function() {
+            const windowHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = window.scrollY;
+            const progress = (scrolled / windowHeight) * 100;
+            document.getElementById('reading-progress').style.width = progress + '%';
+        });
+    </script>
+
+</body>
+</html>

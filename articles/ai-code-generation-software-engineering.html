@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Code Generation: Rewriting Software Engineering From the Inside | Wrick Talukdar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">AI Engineering</span>
+                <span class="article-date">August 10, 2025 · 8 min read</span>
+            </div>
+            <h1 class="article-title">AI Code Generation: Rewriting Software Engineering From the Inside</h1>
+            <p class="article-subtitle">Copilot, Cursor, Devin — how AI coding assistants evolved from autocomplete to autonomous software engineers, and what it means for the profession.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Architect & Researcher</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="article-body">
+
+            <p>
+                The journey from GitHub Copilot's launch in 2021 to Devin's autonomous software engineering in 2024 marks a fundamental inflection point: we've moved from autocomplete-on-steroids to agentic systems that can plan, code, test, debug, and iterate with minimal human direction. But between the hype and the reality lies a technical story worth understanding—one about model capabilities, benchmark results, and what the profession actually looks like when AI is genuinely competent at code.
+            </p>
+
+            <h2>The Lineage: From Codex to Agents</h2>
+
+            <p>
+                The shift didn't happen overnight. It followed a predictable arc:
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Era</th>
+                        <th>Tool</th>
+                        <th>Model</th>
+                        <th>Capability</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>2021–2022: Autocomplete</strong></td>
+                        <td>GitHub Copilot (GPT-3/Codex)</td>
+                        <td>Codex (code-tuned GPT-3)</td>
+                        <td>Predictive code completion at the token/line level; useful for patterns, boilerplate</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2023–2024: Chat + Context</strong></td>
+                        <td>Cursor, Copilot Chat, Claude Code</td>
+                        <td>GPT-4, Claude 3, o1</td>
+                        <td>Multi-turn conversation; can reason about code changes across files; understand intent</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2024+: Autonomous Agents</strong></td>
+                        <td>Devin, Amazon Q Developer, Claude Code (agentic)</td>
+                        <td>Frontier models + planning</td>
+                        <td>End-to-end task execution: plan architecture → write code → run tests → fix failures → iterate</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                Each step represented a qualitative jump: from completing what a human started, to understanding what a human wanted, to autonomously deciding <em>what needs to happen</em> and making it happen.
+            </p>
+
+            <h2>The Three Layers: Autocomplete vs. Chat vs. Autonomous</h2>
+
+            <p>
+                It's critical to distinguish these because they operate under entirely different constraints:
+            </p>
+
+            <h3>Autocomplete: The Prediction Game</h3>
+
+            <p>
+                Copilot 2021 was a language model predicting the next 50–200 tokens given context (preceding code + open file). Strengths: blazingly fast, knows common patterns, useful for repetitive boilerplate. Weaknesses: <em>no reasoning</em>. It generates plausible continuations, not correct continuations. You'd accept ~70% of suggestions; the rest needed editing.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-lightbulb"></i> Why This Matters</div>
+                <p>Autocomplete accelerates developers who already know what they're doing. It doesn't help with architecture, testing strategy, or debugging. It's a productivity multiplier for experienced devs (~20–30% faster on routine code), not a skill lever.</p>
+            </div>
+
+            <h3>Chat: The Reasoning Layer</h3>
+
+            <p>
+                Cursor and GPT-4-powered Copilot Chat introduced multi-turn dialogue and explicit reasoning. You ask "refactor this function to handle streaming" or "write tests for this module," and the AI understands context, intent, and trade-offs. The model can propose multiple approaches and explain why one is better.
+            </p>
+
+            <p>
+                Crucially: chat systems still require human judgment. You prompt, it suggests, you review. The human remains in the decision loop. But the quality jumped: GPT-4 can navigate codebases, suggest architectural changes, and explain refactorings. Acceptance rates on suggestions climbed to 85–90%.
+            </p>
+
+            <p>
+                This is where most AI code tools <em>still are</em> in 2025. It's powerful—developers using Cursor or Amazon Q report 30–50% faster feature delivery—but it's still fundamentally copilot-shaped: the human is the pilot.
+            </p>
+
+            <h3>Autonomous: The Agent Architecture</h3>
+
+            <p>
+                Devin (Cognition, 2024) and emerging agentic features in Amazon Q and Claude Code introduce genuine autonomy: the AI has agency over tools (shell, editor, test runner, debugger) and a planning loop. The prompt is typically a high-level task: "Implement OAuth2 support" or "Fix the failing e2e tests." The agent then:
+            </p>
+
+            <ol>
+                <li>Analyzes the codebase and requirements</li>
+                <li>Plans the implementation (architecture, file layout, dependencies)</li>
+                <li>Generates code in batches</li>
+                <li>Runs tests and parsers</li>
+                <li>Observes failures and iterates (without asking the human)</li>
+                <li>Repeat until success or manual intervention is needed</li>
+            </ol>
+
+            <p>
+                The human's role shifts: instead of reviewing every suggestion, you review every high-level task. You say "build this feature," the agent ships it or tells you why it can't. This is fundamentally different from chat-based assistance.
+            </p>
+
+            <h2>The Benchmark Reality: SWE-bench and What It Tells Us</h2>
+
+            <p>
+                The most useful metric for autonomous coding agents is <strong>SWE-bench</strong>—a benchmark of 2,294 real GitHub issues from popular Python projects. The task: given an issue description and codebase, fix the bug or implement the feature, passing all existing tests and new tests that describe the desired behavior.
+            </p>
+
+            <p>
+                Results (as of early 2025):
+            </p>
+
+            <ul>
+                <li><strong>Devin:</strong> ~13% pass rate (297 issues)</li>
+                <li><strong>Claude 3.5 Sonnet (agentic):</strong> ~16–18% pass rate (via external research)</li>
+                <li><strong>GPT-4 + ReAct agent:</strong> ~10% pass rate</li>
+                <li><strong>Human expert developers:</strong> ~55–60% on the same issues (given the same time budget)</li>
+            </ul>
+
+            <p>
+                That 13% sounds low until you remember: <em>these are production bugs in real codebases</em>. No human would solve 13% of Kubernetes issues blind. The benchmark is harder than it looks. And the trajectory is steep: a year ago, the top score was 3%.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-chart-line"></i> The Trend</div>
+                <p>SWE-bench scores are doubling roughly every 6–8 months. Extrapolating that curve, we hit 50% (parity with experienced human developers on this benchmark) around 2026–2027.</p>
+            </div>
+
+            <h2>Agentic Patterns: The Loop That Matters</h2>
+
+            <p>
+                What makes autonomous agents work is not the size of the model (Claude 3 beats some GPT-4 variants despite being smaller) but the <em>planning loop</em>. The canonical pattern:
+            </p>
+
+<pre><code>PLAN (analyze codebase, break task into steps)
+    ↓
+CODE (implement each step)
+    ↓
+TEST (run tests, gather failures)
+    ↓
+OBSERVE (parse test output, identify gaps)
+    ↓
+ITERATE (if failures detected, go back to PLAN or CODE)
+    ↓
+DONE (when all tests pass)</code></pre>
+
+            <p>
+                This loop is <strong>not</strong> encoded in the model's weights. It's imposed by the system architecture. The agent has:
+            </p>
+
+            <ul>
+                <li>Access to the file system (read/write code)</li>
+                <li>Shell access (run tests, git, build tools)</li>
+                <li>A persistent memory of what it's tried</li>
+                <li>A planning layer that schedules next steps based on observed failures</li>
+            </ul>
+
+            <p>
+                The model is the reasoner; the architecture is the disciplinarian. This is why frontier model size alone doesn't determine success—the system design does.
+            </p>
+
+            <h2>What AI Can Do Right Now (and What It Can't)</h2>
+
+            <h3>Strong in 2025</h3>
+
+            <ul>
+                <li><strong>Bug fixes in well-tested codebases:</strong> AI can read test failures, locate root causes, and patch them. The tests are the contract; AI navigates toward satisfying the contract.</li>
+                <li><strong>Feature implementation from specs:</strong> "Add pagination to the user list API" works if the codebase has consistent patterns. AI learns the patterns and applies them.</li>
+                <li><strong>Boilerplate and scaffolding:</strong> New API endpoints, database migrations, CRUD operations—AI excels here. Low ambiguity, high repetition.</li>
+                <li><strong>Refactoring:</strong> Rename variables across a codebase, extract functions, optimize queries. AI can see and reason about these structural changes.</li>
+                <li><strong>Code review scanning:</strong> Security flaws, performance anti-patterns, missing error handling. AI catches these faster than humans.</li>
+            </ul>
+
+            <h3>Weak or Absent in 2025</h3>
+
+            <ul>
+                <li><strong>Architecture from scratch:</strong> "Design a scalable payment system" requires judgment about trade-offs (consistency vs. availability, costs, team expertise). AI can execute a design but struggles to <em>choose</em> one without heavy direction.</li>
+                <li><strong>Ambiguous requirements:</strong> If the spec is unclear, AI guesses. Humans ask clarifying questions; AI often commits to the first interpretation.</li>
+                <li><strong>Integrating new paradigms:</strong> If your codebase has never used WebSockets or reactive streams, AI has a harder time. It reasons from common patterns; uncommon patterns are rare in training data.</li>
+                <li><strong>Cross-cutting concerns:</strong> Security hardening across 50 services, migration from one framework to another—these require top-down thinking that agents haven't mastered.</li>
+                <li><strong>Performance tuning:</strong> "Make this function 10x faster" requires profiling intuition and domain knowledge. AI can try common optimizations but often misses the insight that matters.</li>
+            </ul>
+
+            <h2>The Impact on the Profession: Honest Assessment</h2>
+
+            <p>
+                Let's cut through the hype. What <em>actually</em> changes for software engineers?
+            </p>
+
+            <h3>Near-term (2025–2026)</h3>
+
+            <ul>
+                <li><strong>Velocity spike in routine work:</strong> Bug fixes, feature scaffolding, boilerplate—these move 3–5x faster. Developers using agents report shipping features in weeks that would have taken months.</li>
+                <li><strong>Quality improves:</strong> AI suggests tests, catches edge cases humans miss, applies best practices consistently. Code reviews get faster (AI pre-screens for obvious issues).</li>
+                <li><strong>Skills polarization:</strong> Developers who learn to prompt, verify, and integrate agent output become far more productive. Those who resist or can't adapt fall behind. The gap widens.</li>
+                <li><strong>Different hiring:</strong> Less emphasis on "can you FizzBuzz" and raw coding speed; more on architecture, judgment, and integration skills. Junior developers can prototype faster but need more mentorship on design.</li>
+            </ul>
+
+            <h3>Medium-term (2027–2029)</h3>
+
+            <ul>
+                <li><strong>Commoditization of certain roles:</strong> Maintenance programmers, routine API builders, CRUD engineers—some of this work disappears or consolidates into smaller teams.</li>
+                <li><strong>Migration of value to leverage points:</strong> Architecture, requirements, testing strategy, and systems thinking become the irreplaceable human skills. Anyone can generate code; few can decide what code to generate.</li>
+                <li><strong>New tools and practices emerge:</strong> Prompt engineering, agent orchestration, multi-agent workflows, trustworthy AI integration patterns—these become the new technical depth.</li>
+            </ul>
+
+            <h3>Honest uncertainties</h3>
+
+            <p>
+                We don't know:
+            </p>
+
+            <ul>
+                <li>If the SWE-bench curve continues to double every 6–8 months (it might plateau)</li>
+                <li>How well autonomous agents handle truly novel problems (issues on SWE-bench are variations of patterns the model has seen)</li>
+                <li>What the human attention cost actually is (reviewing agent output takes time; it might not be as low-friction as demos suggest)</li>
+                <li>Whether regulatory/liability pressures slow adoption for high-stakes domains (financial, healthcare, autonomous systems)</li>
+            </ul>
+
+            <h2>What This Means for Your Code Today</h2>
+
+            <p>
+                If you're a developer in 2025, here's the pragmatic playbook:
+            </p>
+
+            <ul>
+                <li><strong>Invest in prompt engineering:</strong> Learning to describe what you want clearly (for AI and humans) is a core skill now.</li>
+                <li><strong>Prioritize testability:</strong> The better your tests, the better agents (and your own code review) work. Tests are contracts; AI understands contracts.</li>
+                <li><strong>Adopt consistent patterns:</strong> Boring code is good code for AI. Weird abstractions slow agents down. This actually makes maintenance easier for humans too.</li>
+                <li><strong>Learn the tools:</strong> Cursor, Claude Code, Amazon Q, Devin. They're different. Understanding their strengths (and boundaries) is table stakes.</li>
+                <li><strong>Build scaffolds and reviews:</strong> Let AI handle the low-level execution; reserve your energy for architecture, validation, and judgment.</li>
+            </ul>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-book"></i> From the Book</div>
+                <p>The code patterns and agentic workflows for integrating AI into your development process are covered in depth in <em>Building Agentic AI Systems</em>. The practical examples show how to structure your code, prompts, and testing to work <em>with</em> agents rather than around them.</p>
+            </div>
+
+            <h2>The Bottom Line</h2>
+
+            <p>
+                AI code generation has evolved from a neat parlor trick (autocomplete) to a force that materially changes software engineering. We're not yet at the point where AI builds enterprise systems autonomously, but we're close enough that ignoring these tools is a strategic mistake.
+            </p>
+
+            <p>
+                The profession isn't disappearing. It's shifting. More code will be written by fewer people, but the code will be more ambitious, and the people writing it will need to be better at reasoning, integration, and judgment. It's an upgrade, not a replacement—if you adapt.
+            </p>
+
+            <p>
+                The key takeaway: <strong>AI coding assistants are not here to replace you. They're here to amplify you</strong>. The question is whether you'll learn to use them, or whether someone else will and ends up amplified instead.
+            </p>
+
+        </div>
+
+        <footer class="article-footer">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to all articles</a>
+            <div class="share-links">
+                <a href="https://twitter.com/intent/tweet?text=AI%20Code%20Generation%3A%20Rewriting%20Software%20Engineering%20From%20the%20Inside&url=" title="Share on X"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=" title="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </footer>
+
+    </article>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const bar = document.getElementById('reading-progress');
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            if (docHeight > 0) {
+                bar.style.width = (scrollTop / docHeight) * 100 + '%';
+            }
+        });
+    </script>
+
+</body>
+</html>

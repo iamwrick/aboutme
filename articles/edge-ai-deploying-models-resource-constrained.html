@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edge AI: Deploying Deep Learning on Resource-Constrained Devices | Wrick Talukdar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">Edge Computing</span>
+                <span class="article-date">May 10, 2023 · 7 min read</span>
+            </div>
+            <h1 class="article-title">Edge AI: Deploying Deep Learning on Resource-Constrained Devices</h1>
+            <p class="article-subtitle">Model pruning, quantization, knowledge distillation, and TinyML — the techniques that shrink billion-parameter models to run on microcontrollers and phones.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Architect & Researcher</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="article-body">
+
+            <p>
+                For a decade, deep learning lived in the cloud. Models grew larger, training required distributed GPUs, and inference meant round-tripping requests to a remote server. Today, that model is cracking. A ResNet-50 trained on a GPU cluster can now run <em>on your phone</em>. An object detector fits inside a microcontroller. A language model runs on a Raspberry Pi.
+            </p>
+            <p>
+                This shift—from centralized to edge—is not incremental. It fundamentally changes how we think about latency, privacy, connectivity, and the economics of AI deployment. And it's only possible because of four mature compression techniques: <strong>pruning</strong>, <strong>quantization</strong>, <strong>knowledge distillation</strong>, and <strong>architecture-aware design</strong>.
+            </p>
+            <p>
+                In this article, I'll walk through each technique, show why they work, present real benchmark data, and cover the modern frameworks and hardware that make edge AI production-ready.
+            </p>
+
+            <h2>Why Edge AI Matters</h2>
+
+            <p>
+                Before diving into compression, it's worth asking: why deploy at the edge at all? Three reasons stand out.
+            </p>
+
+            <h3>Latency</h3>
+            <p>
+                Cloud inference adds network round-trip time—typically 50–500ms depending on geography and connection quality. For a smartphone camera app that must detect faces in real-time, or an autonomous robot that needs sub-100ms decisions, that latency is unacceptable. Edge inference is <em>local</em>, eliminating the network hop.
+            </p>
+
+            <h3>Privacy</h3>
+            <p>
+                Not all data should leave the device. Health sensors on a wearable, biometric inputs on a phone, or proprietary sensor feeds from an industrial robot—these can be processed locally without ever transmitting raw data to a cloud server. The model runs on-device; only the inference result leaves.
+            </p>
+
+            <h3>Connectivity</h3>
+            <p>
+                A connected edge device cannot always reach the internet. Agricultural sensors in remote fields, underwater monitoring equipment, or devices in areas with poor cellular coverage still need intelligence. Edge models make that possible.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-lightbulb"></i> The Edge Paradox</div>
+                <p>Edge devices are the most resource-constrained—tiny CPU cores, limited RAM, minimal battery budget. Yet they're where the highest-latency, lowest-privacy use cases live. This tension drives the innovation in model compression.</p>
+            </div>
+
+            <h2>Technique 1: Pruning</h2>
+
+            <p>
+                Neural networks are <em>overparameterized</em>. A ResNet-50 has 25 million parameters, but empirical studies show 70–90% of them are redundant. <strong>Pruning</strong> systematically removes these redundant parameters.
+            </p>
+
+            <h3>Structured vs. Unstructured</h3>
+            <p>
+                There are two forms of pruning. <strong>Unstructured pruning</strong> removes individual weights—setting them to zero. This is mathematically simple but creates sparse matrices that modern hardware doesn't accelerate well. General-purpose GPUs and CPUs see little speedup.
+            </p>
+            <p>
+                <strong>Structured pruning</strong> removes entire channels, filters, or layers. This maintains the dense matrix structure that hardware can exploit. A pruned ResNet-18 (removing 40% of channels) runs ~1.5× faster on real devices—not just in theory, but in wall-clock time.
+            </p>
+
+<pre><code># Structured pruning with PyTorch
+import torch.nn.utils.prune as prune
+
+# Remove 30% of channels from all conv layers
+for module in model.modules():
+    if isinstance(module, nn.Conv2d):
+        prune.ln_structured(
+            module, 
+            name='weight', 
+            amount=0.3, 
+            dim=0  # Remove filters
+        )</code></pre>
+
+            <p>
+                The catch: pruning degrades accuracy unless done carefully. You must either (1) prune gradually during training, or (2) fine-tune on the original task after pruning. Most practitioners combine pruning with the techniques below for maximum compression.
+            </p>
+
+            <h2>Technique 2: Quantization</h2>
+
+            <p>
+                Neural networks typically use 32-bit floating-point (FP32) for weights and activations. Each parameter occupies 4 bytes. For a 50M-parameter model, that's 200 MB just for weights. <strong>Quantization</strong> uses lower precision—8-bit integers (INT8), 4-bit integers (INT4), or even 1-bit (binary networks).
+            </p>
+
+            <h3>INT8 Quantization</h3>
+            <p>
+                INT8 reduces memory by 4×. A 200 MB model becomes 50 MB. More importantly, integer arithmetic is faster than floating-point on embedded processors. ARM's integer multiply-accumulate (MAC) units can execute INT8 operations 2–3× faster than FP32.
+            </p>
+
+            <p>
+                The challenge: <strong>quantization error</strong>. Mapping the continuous range of FP32 weights to 256 discrete INT8 values requires careful calibration. The standard approach is <strong>affine quantization</strong>:
+            </p>
+
+<pre><code>q = round((x - min) / (max - min) * 255)
+x_reconstructed = (q / 255) * (max - min) + min</code></pre>
+
+            <p>
+                For most models, INT8 quantization causes negligible accuracy loss (&lt;1%). TensorFlow Lite and ONNX Runtime handle this automatically via post-training quantization (PTQ).
+            </p>
+
+            <h3>INT4 & Binary Quantization</h3>
+            <p>
+                For ultra-constrained devices (IoT sensors, microcontrollers), even INT8 is expensive. INT4 uses 4 bits per weight—8× compression vs. FP32, but requires a <strong>learned quantization scheme</strong> trained during model development. Accuracy loss is typically 2–5%.
+            </p>
+            <p>
+                <strong>Binary networks</strong> (1-bit weights: ±1) achieve extreme compression but are primarily research territory; deployment maturity varies.
+            </p>
+
+<pre><code># INT8 quantization with TensorFlow Lite
+converter = tf.lite.TFLiteConverter.from_keras_model(model)
+converter.optimizations = [tf.lite.Optimize.DEFAULT]
+converter.target_spec.supported_ops = [
+    tf.lite.OpsSet.TFLITE_BUILTINS_INT8
+]
+tflite_model = converter.convert()</code></pre>
+
+            <h2>Technique 3: Knowledge Distillation</h2>
+
+            <p>
+                Pruning and quantization compress an existing model. Knowledge distillation takes a different approach: train a <em>small</em> model to mimic the behavior of a <em>large</em> model (the "teacher").
+            </p>
+
+            <p>
+                Why does this work? Large models learn rich internal representations. A student model trained only on the original data may never discover those representations. But by learning to predict the soft probabilities (logits) of the teacher, the student absorbs that knowledge in compressed form.
+            </p>
+
+<pre><code># Knowledge distillation
+def distillation_loss(student_logits, teacher_logits, true_labels, T=4):
+    # Soft loss: KL divergence between student and teacher
+    soft_loss = nn.KLDivLoss()(
+        F.log_softmax(student_logits / T, dim=1),
+        F.softmax(teacher_logits / T, dim=1)
+    )
+    # Hard loss: cross-entropy on true labels
+    hard_loss = nn.CrossEntropyLoss()(student_logits, true_labels)
+    
+    # Total: blend soft and hard
+    return 0.9 * soft_loss + 0.1 * hard_loss
+
+# Train student to match teacher
+for images, labels in train_loader:
+    student_out = student(images)
+    teacher_out = teacher(images).detach()
+    
+    loss = distillation_loss(student_out, teacher_out, labels)
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()</code></pre>
+
+            <p>
+                Distillation is <em>orthogonal</em> to quantization and pruning. You can:
+            </p>
+
+            <ul>
+                <li>Distill a large model into a medium student, then quantize the student</li>
+                <li>Distill into a small student, then prune it, then quantize</li>
+                <li>Chain multiple teachers (student of a student) for extreme compression</li>
+            </ul>
+
+            <p>
+                The downside: you need access to a high-quality teacher model and unlabeled data for training the student. But the accuracy gains are often worth it—a MobileNet student distilled from ResNet-50 can match the teacher's ImageNet accuracy with 1/20th the parameters.
+            </p>
+
+            <h2>Technique 4: TinyML & Architecture-Aware Design</h2>
+
+            <p>
+                The above techniques optimize existing architectures. But what if you design from scratch for edge devices?
+            </p>
+
+            <p>
+                <strong>TinyML</strong> refers to machine learning models optimized for resource-constrained microcontrollers: 1–10 MHz processors, 256 KB–1 MB of RAM, minimal power budgets. At this scale, even INT8 quantization may not be enough. The model itself must be rethought.
+            </p>
+
+            <h3>Efficient Architectures</h3>
+            <p>
+                Over the past 5 years, researchers designed architectures specifically for mobile and edge devices:
+            </p>
+
+            <ul>
+                <li><strong>MobileNet</strong>: Uses depthwise separable convolutions to reduce MACs by 8–9×</li>
+                <li><strong>ShuffleNet</strong>: Adds channel shuffle operations for better feature mixing with fewer parameters</li>
+                <li><strong>EfficientNet</strong>: Scales depth, width, and resolution uniformly for optimal efficiency</li>
+                <li><strong>SqueezeNet</strong>: Achieves AlexNet-level accuracy with 50× fewer parameters</li>
+            </ul>
+
+            <p>
+                These are not hacks—they're principled designs backed by extensive benchmarking. A MobileNetV3 Small is 50 MB unquantized and 12 MB after INT8 quantization, running object detection on a smartphone in 5–10 ms.
+            </p>
+
+            <h3>Microcontroller Optimization</h3>
+            <p>
+                For true microcontrollers (ARM Cortex-M class), even MobileNet is too large. Specialized techniques emerge:
+            </p>
+
+            <ul>
+                <li><strong>Binarized Neural Networks</strong>: Weights and activations are ±1, enabling popcount-based operations</li>
+                <li><strong>Learned Step Functions</strong>: Replace ReLU with step functions that can use bit shifts instead of floating-point comparisons</li>
+                <li><strong>Fixed-point arithmetic</strong>: Avoid floating-point entirely; use integer simulation during training</li>
+                <li><strong>Weight sharing</strong>: Multiple weights share the same learned value, reducing model size further</li>
+            </ul>
+
+            <h2>Hardware Landscape</h2>
+
+            <p>
+                Software compression only goes so far. Modern edge devices ship with <em>specialized silicon</em> for neural networks.
+            </p>
+
+            <h3>Processors & Accelerators</h3>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Hardware</th>
+                        <th>Device Class</th>
+                        <th>Peak Performance</th>
+                        <th>Power</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Edge TPU</strong></td>
+                        <td>Development boards, gateways</td>
+                        <td>4 TOPS (INT8)</td>
+                        <td>2–3 W</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Qualcomm Hexagon NPU</strong></td>
+                        <td>Snapdragon phones</td>
+                        <td>14+ TOPS (varies)</td>
+                        <td>~100 mW (task)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Apple Neural Engine</strong></td>
+                        <td>iPhone, iPad</td>
+                        <td>16 TOPS (A16 Bionic)</td>
+                        <td>~50 mW (task)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Arm Ethos-U</strong></td>
+                        <td>Microcontrollers, IoT</td>
+                        <td>0.5 TOPS (INT8)</td>
+                        <td>&lt;5 mW</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RISC-V P-ext (proposed)</strong></td>
+                        <td>Next-gen microcontrollers</td>
+                        <td>0.05–0.5 TOPS (projected)</td>
+                        <td>&lt;1 mW</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                These accelerators execute INT8 dot products in parallel, dramatically speeding inference. An optimized MobileNet on an Edge TPU runs 200–300 images/second. On a CPU-only device, the same model struggles to reach 10 images/second.
+            </p>
+
+            <h2>Frameworks & Deployment</h2>
+
+            <p>
+                Multiple frameworks now handle edge deployment end-to-end:
+            </p>
+
+            <h3>TensorFlow Lite</h3>
+            <p>
+                The de facto standard for mobile and embedded. Supports iOS, Android, Raspberry Pi, microcontrollers (Arduino, embedded Linux). Built-in quantization, pruning support via TensorFlow Model Optimization Toolkit.
+            </p>
+
+<pre><code># Export TensorFlow model to TFLite with quantization
+converter = tf.lite.TFLiteConverter.from_keras_model(model)
+converter.optimizations = [tf.lite.Optimize.DEFAULT]
+
+# PTQ (post-training quantization)
+converter.representative_dataset = representative_data_gen
+converter.target_spec.supported_ops = [
+    tf.lite.OpsSet.TFLITE_BUILTINS_INT8
+]
+
+tflite_model = converter.convert()
+
+# Deploy on Android
+# Load .tflite file in app via Android Neural Networks API (NNAPI)</code></pre>
+
+            <h3>ONNX Runtime Mobile</h3>
+            <p>
+                Open format agnostic to the training framework. Build in PyTorch or TensorFlow, export to ONNX, deploy via ONNX Runtime Mobile on iOS/Android/embedded. Growing ecosystem of quantization and pruning tools.
+            </p>
+
+            <h3>Core ML (Apple)</h3>
+            <p>
+                Proprietary but deeply integrated with Apple hardware. Core ML models automatically offload to Neural Engine on iPhone/iPad. Excellent documentation and tooling for pruning/quantization. Fast inference, but vendor lock-in.
+            </p>
+
+            <h3>TinyML (TensorFlow Lite for Microcontrollers)</h3>
+            <p>
+                Compiles models to C/C++ for bare-metal microcontrollers. Fully static allocation, no dynamic memory. Enables deployment on STM32, nRF52, and other ultra-constrained platforms.
+            </p>
+
+            <h2>Real-World Applications</h2>
+
+            <h3>Smart Cameras & Visual Inspection</h3>
+            <p>
+                A factory camera that detects defects in real-time, running locally without sending video to the cloud. MobileNet + INT8 quantization achieves &gt;95% accuracy on typical defect datasets. Inference: 10–20 ms, enabling sub-100ms end-to-end detection loops.
+            </p>
+
+            <h3>Wearables & Health Monitoring</h3>
+            <p>
+                Smartwatches with on-device activity recognition. A 100 KB LSTM (8-bit) model runs continuous inference on IMU data without draining battery in hours. User motion classification (walking, running, cycling) happens without uploading sensor streams.
+            </p>
+
+            <h3>Predictive Maintenance</h3>
+            <p>
+                Industrial sensors continuously collect vibration and temperature data. A small neural network runs on the edge device, detecting early failure patterns. When anomalies are detected, the device alerts (or transmits an anomaly summary, not raw data). Reduces false alerts and latency vs. cloud-based pipelines.
+            </p>
+
+            <h3>Autonomous Robots</h3>
+            <p>
+                Mobile robots need low-latency vision. A robot arm performing pick-and-place tasks uses on-device object detection (YOLO-Tiny, ~2 MB) for 100 ms response time. Round-tripping to cloud is 500+ ms. Edge inference is non-negotiable for safety-critical control loops.
+            </p>
+
+            <h2>Modern Evolution: On-Device LLMs & Apple Intelligence</h2>
+
+            <p>
+                As of 2023, even language models are moving to edge. Apple's announcement of on-device LLMs running on iPhones (via their Neural Engine) represents a sea change.
+            </p>
+
+            <p>
+                A 7B parameter model distilled from GPT-3.5, quantized to INT4, and optimized for Apple's hardware footprint can fit in iPhone memory. Inference latency: ~500 ms for the first token, then ~100 ms per subsequent token. Not fast like cloud, but usable—and entirely private.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-rocket"></i> The LLM Compression Challenge</div>
+                <p>Large language models pose unique challenges. Unlike CNNs, LLMs are memory-bandwidth-bound, not compute-bound. You can quantize weights to INT4, but activations during generation are harder to compress. Techniques like continuous batching, paged attention, and speculative decoding are emerging, but the space is still rapidly evolving.</p>
+            </div>
+
+            <h2>Takeaways</h2>
+
+            <p>
+                Deploying deep learning on edge devices is no longer a research problem—it's a mature engineering discipline. The four core techniques (pruning, quantization, distillation, architecture-aware design) have strong theoretical foundations and proven track records.
+            </p>
+
+            <ul>
+                <li><strong>Start with efficient architectures</strong> (MobileNet, EfficientNet, SqueezeNet) rather than trying to compress ResNet-50.</li>
+                <li><strong>Quantization is your friend</strong>—INT8 PTQ often works out-of-the-box and provides massive speedups on edge hardware.</li>
+                <li><strong>Distillation pays off</strong> when you have access to a large teacher model and can afford training time.</li>
+                <li><strong>Profile on real hardware</strong>. Wall-clock latency and power consumption on your target device (not just model size) are what matter.</li>
+                <li><strong>Frameworks matter</strong>. TensorFlow Lite is mature and well-supported; ONNX Runtime is growing; Core ML is excellent on Apple platforms.</li>
+            </ul>
+
+            <p>
+                The convergence of efficient software techniques and specialized edge hardware has made AI deployment ubiquitous—no longer confined to data centers. The next wave of intelligent applications will live entirely at the edge, latency-free and privacy-preserving by default.
+            </p>
+
+        </div>
+
+        <footer class="article-footer">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to all articles</a>
+            <div class="share-links">
+                <a href="https://twitter.com/intent/tweet?text=Edge AI: Deploying Deep Learning on Resource-Constrained Devices by @wricktal" target="_blank" title="Share on X"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://wricktalukdar.com/articles/edge-ai-deploying-models-resource-constrained.html" target="_blank" title="Share on LinkedIn"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </footer>
+
+    </article>
+
+    <script>
+        // Reading progress indicator
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            document.getElementById('reading-progress').style.width = scrollPercent + '%';
+        });
+    </script>
+
+</body>
+</html>

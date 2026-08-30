@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic Design Patterns for Production Systems | Wrick Talukdar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="
+                if(window.opener || document.referrer.includes('index.html')) {
+                    history.back(); return false;
+                }
+            "><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">Agentic AI</span>
+                <span class="article-date">January 20, 2026 · 10 min read</span>
+            </div>
+            <h1 class="article-title">Agentic Design Patterns for Production Systems</h1>
+            <p class="article-subtitle">From ReAct loops to multi-agent orchestration — the design patterns that separate demo agents from production-grade autonomous systems.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Architect & Researcher</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="article-body">
+
+            <p>
+                Thousands of teams have built LLM-powered agents that work flawlessly in notebooks and demos. Fewer teams have shipped them to production. The difference isn't talent or effort — it's <em>design patterns</em>. A pattern that feels like a minor optimization in isolation becomes the difference between an agent that handles edge cases gracefully and one that crashes silently under load.
+            </p>
+            <p>
+                This article distills five architectural patterns from production deployments and research: ReAct (the thinking loop), planning agents (task decomposition), tool-augmented reasoning, multi-agent orchestration, and human-in-the-loop feedback. For each pattern, I'll walk through the failure modes that motivate it, the implementation tradeoffs, and when to apply it. These patterns form the foundation of <em>Building Agentic AI Systems</em>, my Packt book on production agentic architecture.
+            </p>
+
+            <h2>Why Agent Demos Fail in Production</h2>
+
+            <p>
+                The typical agent demo follows a happy path: (1) user asks a question, (2) agent reasons about the question, (3) agent calls a tool, (4) tool returns a clean result, (5) agent formulates a confident answer. The failure modes don't appear until production:
+            </p>
+
+            <ul>
+                <li><strong>Hallucinated tool calls.</strong> The agent invents a tool that doesn't exist or calls a tool with parameters it doesn't accept. In the demo, the tool always exists and always succeeds.</li>
+                <li><strong>Infinite loops.</strong> The agent calls the same tool repeatedly without making progress, or cycles between two states. The demo never runs long enough to exhibit this.</li>
+                <li><strong>Noisy tool output.</strong> Real APIs return errors, timeouts, inconsistent formats, and partial failures. The demo tool returns perfect JSON.</li>
+                <li><strong>Context explosion.</strong> As the agent's reasoning and tool-call history grow, the context window fills and token costs explode. The demo runs a single 5-step loop; production runs 50-step loops.</li>
+                <li><strong>Unrecoverable failures.</strong> When a tool fails, the agent has no recovery strategy. It either hallucinates a workaround or repeats the failed call forever.</li>
+                <li><strong>Lack of interpretability.</strong> When the agent produces a wrong answer, there's no audit trail to understand why. The reasoning is embedded in LLM tokens, not in code you can inspect.</li>
+            </ul>
+
+            <p>
+                The five patterns address these failure modes head-on. They're not theoretical — they're battle-tested solutions to problems you will encounter at scale.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-lightbulb"></i> Core Insight</div>
+                <p>Production agents don't think harder; they think differently. They decompose problems into smaller, bounded tasks. They enforce tool-use contracts. They hand off work to specialized agents. And critically, they give humans a way to intervene before damage is done.</p>
+            </div>
+
+            <h2>Pattern 1: ReAct — The Foundation</h2>
+
+            <p>
+                <strong>ReAct</strong> stands for Reasoning + Acting. It's the simplest production pattern and the foundation that all others build on. The idea: instead of asking an LLM to produce a single response, ask it to interleave reasoning steps with tool calls, with observations from those calls informing the next reasoning step.
+            </p>
+
+            <p>
+                The loop looks like this:
+            </p>
+
+<pre><code>Thought: I need to find the user's account balance.
+Action: get_account_balance(user_id=12345)
+Observation: Balance is $4,230.50
+Thought: The user has sufficient funds. I should process the withdrawal.
+Action: process_withdrawal(user_id=12345, amount=1000)
+Observation: Withdrawal successful. New balance: $3,230.50
+Thought: The withdrawal is complete. I can now report to the user.</code></pre>
+
+            <p>
+                Why does this work better than a single end-to-end LLM call? Three reasons:
+            </p>
+
+            <ol>
+                <li><strong>Observability.</strong> You can see exactly what the agent thought and what it did at each step. When something goes wrong, the trace is legible.</li>
+                <li><strong>Grounding.</strong> Each thought is immediately validated against real data from tool observations. The agent can't hallucinate — it must reason about data it actually received.</li>
+                <li><strong>Recoverable errors.</strong> If a tool call fails, the agent sees the failure as an observation and can reason about how to retry or work around it.</li>
+            </ol>
+
+            <h3>Implementation: Structured Tool Use</h3>
+
+            <p>
+                The naive ReAct implementation asks the LLM to output free text like <code>Action: get_balance(12345)</code> and then parses it with regex. This is brittle — the model might output variants like <code>I'll use the get_balance function with 12345</code>, and your parser breaks.
+            </p>
+
+            <p>
+                Modern LLM APIs solve this with structured tool declarations. You define your tools as JSON schemas:
+            </p>
+
+<pre><code>{
+  "name": "get_account_balance",
+  "description": "Retrieve the current account balance",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "user_id": { "type": "integer" }
+    },
+    "required": ["user_id"]
+  }
+}</code></pre>
+
+            <p>
+                You pass this schema to the API along with your prompt. The model's response is guaranteed to include a structured tool-call object, not text you have to parse:
+            </p>
+
+<pre><code>{
+  "type": "tool_use",
+  "id": "call_abc123",
+  "name": "get_account_balance",
+  "input": { "user_id": 12345 }
+}</code></pre>
+
+            <p>
+                This eliminates parsing errors entirely. Your code is also simpler: no regex, no ambiguity, no silent failures. (I cover the gory details of function calling APIs in Chapter 3 of <em>Building Agentic AI Systems</em>.)
+            </p>
+
+            <h3>When ReAct Is Enough</h3>
+
+            <p>
+                ReAct handles single-goal queries: "What's the balance on account 12345?", "Send a message to alice@example.com", "Get the current stock price of AAPL". One observation loop gets the job done. ReAct fails when the problem requires multiple steps, prioritization, or backtracking — which brings us to the next pattern.
+            </p>
+
+            <h2>Pattern 2: Planning Agents — Task Decomposition</h2>
+
+            <p>
+                ReAct assumes a linear sequence of thoughts and actions. But real-world problems are branching. "Migrate all my emails to a new folder and notify my team" requires: (1) list all emails matching a filter, (2) move each email, (3) post to Slack, (4) send a follow-up email. Some of these steps are independent and could run in parallel. Others depend on earlier steps.
+            </p>
+
+            <p>
+                A planning agent explicitly decomposes the goal into a task graph, tracks dependencies, and executes in the right order.
+            </p>
+
+            <h3>The Plan-Then-Execute Model</h3>
+
+            <p>
+                The architecture has two phases:
+            </p>
+
+            <ol>
+                <li><strong>Planning.</strong> The agent receives the user's goal and generates a structured plan: a list of tasks, their dependencies, and success criteria. This plan is visible to the user and can be modified before execution begins.</li>
+                <li><strong>Execution.</strong> The agent runs each task in dependency order, updating the plan with results. If a task fails, the agent can replan or escalate.</li>
+            </ol>
+
+            <p>
+                Here's a concrete example: User asks "Prepare my weekly report". The planning phase produces:
+            </p>
+
+<pre><code>Task 1: Retrieve last week's sales data (from CRM)
+  - Depends on: nothing
+  - Success criteria: JSON array with at least 5 records
+  
+Task 2: Summarize the data into 5 key insights
+  - Depends on: Task 1
+  - Success criteria: 5 bullet points, each < 100 words
+  
+Task 3: Create a document with the summary
+  - Depends on: Task 2
+  - Success criteria: Document is saved and has title + summary section
+  
+Task 4: Email the document to manager@company.com
+  - Depends on: Task 3
+  - Success criteria: Email delivery confirmed</code></pre>
+
+            <p>
+                The user sees this plan before anything runs. They can delete Task 4 if they want to review first, or reorder tasks. Then execution begins.
+            </p>
+
+            <h3>Advantages Over Flat ReAct</h3>
+
+            <ul>
+                <li><strong>Parallelization.</strong> Independent tasks (like fetching data from multiple sources) can run concurrently.</li>
+                <li><strong>User control.</strong> The plan is legible and editable before execution. No surprises.</li>
+                <li><strong>Replanability.</strong> If Task 2 fails, the agent can replan the downstream tasks without redoing Task 1.</li>
+                <li><strong>Bounded execution.</strong> You can set a max number of tasks and timeout per task, preventing infinite loops.</li>
+            </ul>
+
+            <p>
+                The downside: planning adds latency. You're making at least two LLM calls (one to plan, one per task). But for high-stakes operations (financial transfers, report generation), the extra round-trip is worth the visibility and auditability.
+            </p>
+
+            <h2>Pattern 3: Tool-Augmented Agents — The Contract Approach</h2>
+
+            <p>
+                Even with structured tool calling, agents hallucinate. They invoke tools with the wrong parameters, call tools in the wrong order, or misinterpret tool output. This pattern enforces a <em>contract</em> between the agent and the tool layer: each tool declares what it requires, what it guarantees, and how it fails.
+            </p>
+
+            <p>
+                The contract is encoded in the tool schema and in how you handle tool errors.
+            </p>
+
+            <h3>Example: The Database Query Tool</h3>
+
+            <p>
+                Naive tool definition: "I have a tool called <code>query_database(sql_string)</code>. The agent can pass any SQL." The agent will write <code>DELETE FROM users</code>, and you've just wiped your database.
+            </p>
+
+            <p>
+                Contract-based approach:
+            </p>
+
+<pre><code>{
+  "name": "query_database",
+  "description": "Execute a read-only SQL SELECT query",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "pattern": "^SELECT\\s+.*$",
+        "description": "Must start with SELECT (read-only)"
+      },
+      "timeout_seconds": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 30,
+        "description": "Query timeout, max 30 seconds"
+      }
+    },
+    "required": ["query"]
+  },
+  "error_codes": {
+    "SYNTAX_ERROR": "The query has invalid SQL syntax",
+    "TIMEOUT": "Query exceeded timeout",
+    "COLUMN_NOT_FOUND": "Requested column does not exist",
+    "PERMISSION_DENIED": "You don't have access to this table"
+  }
+}
+</code></pre>
+
+            <p>
+                Now when the agent tries to call this tool:
+            </p>
+
+            <ul>
+                <li>It <em>knows</em> the query must be SELECT-only (schema documentation).</li>
+                <li>If it submits a non-SELECT query, the schema validator rejects it before execution, and the agent gets structured feedback about why.</li>
+                <li>If the query times out, it gets error code <code>TIMEOUT</code>, not a raw exception. It can reason about retry strategy.</li>
+                <li>If it tries to access a table it shouldn't, it gets <code>PERMISSION_DENIED</code>, which it can acknowledge instead of hallucinating a workaround.</li>
+            </ul>
+
+            <p>
+                This pattern is critical for safety. By constraining what tools can do and how they fail, you prevent whole categories of bugs.
+            </p>
+
+            <h3>Error Recovery as a First-Class Pattern</h3>
+
+            <p>
+                Most agent frameworks treat tool errors as exceptions and crash or retry blindly. In production, errors are data. When a tool returns an error, the agent should reason about it:
+            </p>
+
+            <blockquote>
+                "The query timed out. The user asked for the top 10,000 transactions. Maybe I should limit it to the top 1,000 instead and try again."
+            </blockquote>
+
+            <p>
+                This requires wrapping tool calls in error-handling logic that passes structured error information back to the LLM's reasoning loop, not just to an exception handler.
+            </p>
+
+            <h2>Pattern 4: Multi-Agent Orchestration</h2>
+
+            <p>
+                At a certain scale of complexity, a single agent isn't enough. Consider a customer support system that needs to: (1) classify the incoming ticket, (2) fetch customer history and product info, (3) draft a response, and (4) route to a human if escalation is needed. One agent trying to do all four will be generalist and slow. Four specialized agents, each expert at their task, will be faster and more reliable.
+            </p>
+
+            <p>
+                Multi-agent orchestration splits work across specialized agents and coordinates their execution. There are three main orchestration patterns:
+            </p>
+
+            <h3>Pattern 4a: Supervisor Pattern</h3>
+
+            <p>
+                A supervisor agent receives the task and decides which worker agents to invoke and in what order. The supervisor doesn't execute work; it orchestrates.
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Supervisor Responsibility</th>
+                        <th>Worker Responsibility</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Classify incoming request</td>
+                        <td>Execute specialized task</td>
+                    </tr>
+                    <tr>
+                        <td>Determine which workers to call</td>
+                        <td>Call domain-specific tools</td>
+                    </tr>
+                    <tr>
+                        <td>Sequence and coordinate work</td>
+                        <td>Handle errors in their domain</td>
+                    </tr>
+                    <tr>
+                        <td>Aggregate results for user</td>
+                        <td>Return structured results</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                Example flow: User asks "What's my balance and recent transactions?" Supervisor recognizes this needs two workers. It invokes AccountWorker (get_balance) and TransactionWorker (get_recent_transactions) in parallel, then aggregates their results.
+            </p>
+
+            <h3>Pattern 4b: Pipeline Pattern</h3>
+
+            <p>
+                Agents pass work sequentially, each transforming the input for the next agent. There's no supervisor; instead, each agent knows its successor.
+            </p>
+
+            <p>
+                Example: Email arrives. RetrievalAgent fetches customer history. ClassificationAgent analyzes the email and history to determine category. DraftAgent writes a response. ReviewAgent checks the response for tone and accuracy. The output is the final response ready to send.
+            </p>
+
+            <p>
+                Pipeline is simpler to implement (each agent has one responsibility) but less flexible than supervisor (you need to know the order in advance).
+            </p>
+
+            <h3>Pattern 4c: Debate Pattern</h3>
+
+            <p>
+                For high-stakes decisions, multiple agents propose different solutions and debate the merits. A judge agent or human picks the best.
+            </p>
+
+            <p>
+                Example: Should this transaction be flagged as fraud? ProAgent argues yes (unusual amount, new merchant). ConAgent argues no (customer is traveling, they texted about this purchase). JudgeAgent or human reviews both arguments and makes the call.
+            </p>
+
+            <p>
+                This pattern is slower (you're running multiple agents) but higher quality for decisions where error is costly.
+            </p>
+
+            <h3>Coordination Trade-offs</h3>
+
+            <p>
+                Supervisor is flexible (dynamic task selection) but adds latency (supervisor must decide before workers start). Pipeline is efficient (agents work in parallel) but rigid. Debate is most reliable but slowest. Choose based on your error tolerance and latency budget.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-network-wired"></i> Orchestration Principle</div>
+                <p>The best orchestration pattern is the simplest one that meets your latency and reliability constraints. Don't add agents unless you have a specific failure mode they solve.</p>
+            </div>
+
+            <h2>Pattern 5: Human-in-the-Loop — Approval Gates and Escalation</h2>
+
+            <p>
+                No matter how well you design your agent, it will eventually need to ask for permission. Transfer $50,000? Delete a document? Post to public social media? These are moments where the agent should pause and get human approval before proceeding.
+            </p>
+
+            <p>
+                Human-in-the-loop isn't a weakness; it's a feature that makes autonomous systems trustworthy.
+            </p>
+
+            <h3>Approval Gates</h3>
+
+            <p>
+                An approval gate is a decision point where the agent generates a proposed action and waits for human confirmation before executing it. The architecture looks like:
+            </p>
+
+<pre><code>Agent planning: I should transfer $50,000 to account 123456.
+System: PAUSE - High-value transfer detected
+Human review: [sees: amount, source, destination, reason]
+Human decision: Approve / Reject / Modify
+System: Resume or abort</code></pre>
+
+            <p>
+                The key is that the human sees structured information, not raw LLM output. They see the exact action that will be taken, the context, and alternatives.
+            </p>
+
+            <h3>Escalation Paths</h3>
+
+            <p>
+                Not every human interaction is an approval gate. Sometimes the agent gets stuck and needs help. Escalation paths let the agent ask a human for guidance without halting execution of other tasks.
+            </p>
+
+            <p>
+                Example escalation flow:
+            </p>
+
+            <ul>
+                <li>Agent tries to resolve a customer complaint but can't find a solution within 3 attempts.</li>
+                <li>Agent escalates to human: "Customer says invoice is missing. I checked three systems and found no invoice record. What should I do?"</li>
+                <li>Human responds: "Check the archived invoices system. If it's there, restore it. If not, ask the customer for their email."</li>
+                <li>Agent continues with human guidance.</li>
+            </ul>
+
+            <p>
+                This requires a human queue system and latency tolerance (the agent can't proceed instantly), but it's far more capable than hard-coded fallbacks.
+            </p>
+
+            <h3>Feedback Loops</h3>
+
+            <p>
+                The deepest level of human-in-the-loop is feedback: the agent produces a result, the human corrects it, and the agent learns. This isn't about pausing execution; it's about improving the agent over time.
+            </p>
+
+            <p>
+                Example: Agent drafts an email. Human sends it and later gets a reply that says "You didn't address my main concern." The human marks this as negative feedback. The agent's next draft for similar issues incorporates this lesson.
+            </p>
+
+            <p>
+                Implementing feedback requires capturing what the agent did, what the human did, and storing the pair for fine-tuning or in-context learning.
+            </p>
+
+            <h2>Pattern Selection Guide</h2>
+
+            <p>
+                You now have five patterns. When should you use each?
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Pattern</th>
+                        <th>Best For</th>
+                        <th>Cost (Latency)</th>
+                        <th>Cost (Tokens)</th>
+                        <th>Risk If Deployed Alone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>ReAct</strong></td>
+                        <td>Single-goal queries with <5 steps</td>
+                        <td>Low (1-3 rounds)</td>
+                        <td>Low</td>
+                        <td>Infinite loops, hallucinated tools</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Planning</strong></td>
+                        <td>Multi-step tasks, high stakes</td>
+                        <td>Medium (plan + execute)</td>
+                        <td>Medium</td>
+                        <td>Over-planning, brittle to changes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tool Contract</strong></td>
+                        <td>Safety-critical tool calls</td>
+                        <td>Low</td>
+                        <td>Low (better validation)</td>
+                        <td>Misuse of unconstrained tools</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Multi-Agent</strong></td>
+                        <td>Complex domains, parallelizable work</td>
+                        <td>Medium-High (coordination overhead)</td>
+                        <td>High (multiple agents)</td>
+                        <td>Agents work at cross-purposes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Human-in-Loop</strong></td>
+                        <td>High-stakes decisions, learning</td>
+                        <td>High (wait for human)</td>
+                        <td>Medium</td>
+                        <td>Decisions made without oversight</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Recommended Combinations</h3>
+
+            <p>
+                You rarely use a single pattern in isolation. Here are proven combinations:
+            </p>
+
+            <ul>
+                <li><strong>Simple automation:</strong> ReAct + Tool Contract (fast, safe)</li>
+                <li><strong>Complex automation:</strong> Planning + Multi-Agent + Tool Contract (slower but more reliable)</li>
+                <li><strong>High-stakes operations:</strong> Planning + Human-in-Loop (explicit approval)</li>
+                <li><strong>Learning systems:</strong> ReAct + Human-in-Loop feedback loop (improves over time)</li>
+                <li><strong>Risk mitigation:</strong> Multi-Agent Debate + Human-in-Loop (multiple perspectives before decision)</li>
+            </ul>
+
+            <h2>Key Takeaways</h2>
+
+            <p>
+                Production agentic systems don't emerge from better prompting. They emerge from deliberate architectural choices:
+            </p>
+
+            <ol>
+                <li><strong>Start with ReAct.</strong> It's the simplest pattern and works for 70% of use cases. Don't over-engineer.</li>
+                <li><strong>Enforce contracts on tools.</strong> Schema validation, error codes, and structured output eliminate silent failures.</li>
+                <li><strong>Make work visible before execution.</strong> Planning agents let humans see and modify the task graph. This is non-negotiable for high-stakes work.</li>
+                <li><strong>Specialize when complexity demands it.</strong> Multi-agent orchestration adds overhead. Use it only when single agents are too slow or unreliable.</li>
+                <li><strong>Build escalation paths.</strong> Agents will get stuck. Make it easy and fast for them to ask for help without crashing.</li>
+                <li><strong>Instrument everything.</strong> You can't improve what you can't measure. Log reasoning traces, tool calls, errors, and human decisions. Use these to debug and fine-tune.</li>
+            </ol>
+
+            <p>
+                These patterns are the content of <em>Building Agentic AI Systems</em> (Packt, 2026), with production code examples for each. The book goes deeper into implementation details: how to build resilient multi-agent orchestration, how to design approval workflows, and how to handle the real-world failures that textbook examples skip.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-book"></i> Learn More</div>
+                <p>For comprehensive coverage of these patterns with production code, read <em>Building Agentic AI Systems</em> (Packt Publishing, 2026). The book includes full implementations of ReAct loops, planning agents, tool contracts, multi-agent orchestration frameworks, and human-in-the-loop systems. <a href="https://www.amazon.com/dp/1803238755" target="_blank">Available now</a>.</p>
+            </div>
+
+        </div>
+
+        <footer class="article-footer">
+            <a href="https://www.amazon.com/dp/1803238755" target="_blank"><i class="fas fa-book"></i> Building Agentic AI Systems</a>
+            <div class="share-links">
+                <a href="https://twitter.com/intent/tweet?text=Agentic%20Design%20Patterns%20for%20Production%20Systems%20by%20@wricktalukdar" target="_blank" title="Share on Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=YOUR_ARTICLE_URL" target="_blank" title="Share on LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="mailto:?subject=Agentic%20Design%20Patterns%20for%20Production%20Systems&body=Check%20this%20out" title="Share via Email"><i class="fas fa-envelope"></i></a>
+            </div>
+        </footer>
+
+    </article>
+
+    <script>
+        // Reading progress indicator
+        window.addEventListener('scroll', () => {
+            const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = window.scrollY;
+            const progress = (scrolled / scrollHeight) * 100;
+            document.getElementById('reading-progress').style.width = progress + '%';
+        });
+    </script>
+
+</body>
+</html>

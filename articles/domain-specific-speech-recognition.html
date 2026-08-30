@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain-Specific Speech Recognition: When Whisper Isn't Enough | Wrick Talukdar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">Speech AI</span>
+                <span class="article-date">March 10, 2025 · 8 min read</span>
+            </div>
+            <h1 class="article-title">Domain-Specific Speech Recognition: When Whisper Isn't Enough</h1>
+            <p class="article-subtitle">Medical dictation, legal transcription, financial earnings calls — why general-purpose ASR fails in specialized domains and how to fix it.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Architect & Researcher</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="article-body">
+
+            <p>
+                OpenAI's Whisper changed speech recognition expectations overnight. A single model trained on 680,000 hours of multilingual audio, deployed via a simple API call. It works <em>remarkably well</em> for general English: podcasts, interviews, YouTube videos. Word error rate (WER) in the 3-5% range across diverse acoustic conditions.
+            </p>
+            <p>
+                Then you try transcribing a cardiologist's clinical dictation. Or a patent attorney's deposition. Or a financial analyst discussing Q3 earnings. Suddenly Whisper's WER climbs to 15-20%, producing nonsensical terminology substitutions and mangled proper nouns.
+            </p>
+            <p>
+                This article explores <em>why</em> general-purpose ASR systems fail in specialized domains, the technical strategies for fixing it (fine-tuning, language model fusion, custom vocabularies), the tradeoffs between commercial solutions like Amazon Transcribe Medical and building your own, and the data and deployment challenges you'll face in production.
+            </p>
+
+            <h2>The General-Purpose ASR Problem</h2>
+
+            <p>
+                Whisper and similar large-scale models achieve their performance through sheer scale: massive data diversity, transformer architecture, and pretraining on internet-sourced audio. This breadth is also their weakness in narrow domains.
+            </p>
+
+            <h3>Medical Terminology Crashes</h3>
+
+            <p>
+                A physician dictating: <em>"Left ventricular hypertrophy with systolic dysfunction, EF 35%, diagnosed with restrictive cardiomyopathy."</em>
+            </p>
+
+            <p>
+                Whisper might transcribe: <em>"Left ventricular hypertrophy with systolic dysfunction, EF 35%, diagnosed with 'rest restrictive cardio-myo-pathy.'"</em> (Note the segmentation error and phonetic distortion.)
+            </p>
+
+            <p>
+                The model has never seen "restrictive cardiomyopathy" together in its training distribution. It falls back to phonetic decomposition, which fails because medical terminology is highly structured (Greek/Latin roots, predictable suffixes) but rare in general English text and audio.
+            </p>
+
+            <h3>Legal Jargon and Proper Nouns</h3>
+
+            <p>
+                An attorney: <em>"The plaintiff invoked the Dodd-Frank Act, citing section 1036(a)(2)(B) and precedent from Chisolm v. Illinois, 2015."</em>
+            </p>
+
+            <p>
+                Whisper transcribes: <em>"...Dodd Frank Act, citing section 10-36-A-2-B..."</em> (Numbers serialized instead of parsed as statute citations, proper case names misspelled or phonetically confused.)
+            </p>
+
+            <h3>Acronyms and Financial Terminology</h3>
+
+            <p>
+                An analyst on an earnings call: <em>"EBITDA grew 12% YoY, bolstered by capex reduction and supply-chain normalization."</em>
+            </p>
+
+            <p>
+                Whisper's WER on this sentence: 22-30%, depending on the speaker's accent. Acronyms are spelled out in speech but require semantic awareness to transcribe correctly. "EBITDA" can sound like "E bit duh" — and Whisper might output "ee, bit, duh" or "a bit duh."
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-lightbulb"></i> The Core Issue</div>
+                <p>General ASR systems optimize for overall WER across large datasets. Rare but domain-critical terms — terminology that appears in <1% of training data — get lower model capacity allocated to them. When those terms dominate your use case, accuracy collapses catastrophically on the metrics that matter.</p>
+            </div>
+
+            <h2>Domain Adaptation Techniques</h2>
+
+            <h3>1. Fine-Tuning on Domain Audio</h3>
+
+            <p>
+                If you have labeled audio from your domain, fine-tuning Whisper (or another base model) can recover 40-60% of the accuracy gap.
+            </p>
+
+            <p>
+                The mechanics: Whisper's encoder learns acoustic features from the base model. During fine-tuning, you freeze the encoder and retrain the decoder on domain examples. This takes 100-500 hours of labeled audio to see significant gains, depending on domain similarity to the base training set.
+            </p>
+
+            <p>
+                <strong>Challenge:</strong> You need transcription ground truth. Medical and legal audio is restricted (HIPAA, confidentiality agreements). Synthetic data or painstaking manual transcription becomes the bottleneck.
+            </p>
+
+            <p>
+                <strong>Result:</strong> WER typically drops from 18-22% to 8-12% on held-out test sets. Significant, but not production-grade for critical applications (medicine, law).
+            </p>
+
+            <h3>2. Language Model Fusion (Second-Pass Decoding)</h3>
+
+            <p>
+                Whisper's decoder is a small transformer optimized for speed, not linguistic sophistication. You can boost accuracy by rescoring its output with a domain-specific language model (LM).
+            </p>
+
+            <p>
+                Workflow:
+            </p>
+
+            <ul>
+                <li><strong>Step 1:</strong> Whisper generates an initial transcription or beam-search hypotheses (top-K alternatives).</li>
+                <li><strong>Step 2:</strong> Rescore hypotheses using a domain LM (e.g., a transformer trained on medical documentation, legal briefs, earnings-call transcripts).</li>
+                <li><strong>Step 3:</strong> Pick the highest-scoring hypothesis from the combined score (acoustic confidence + LM likelihood).</li>
+            </ul>
+
+            <p>
+                This is computationally expensive (re-scoring 10-100 hypotheses per utterance) but can reduce WER by 15-25% <em>without retraining the acoustic model</em>.
+            </p>
+
+            <p>
+                <strong>Advantage:</strong> You only need domain text (no audio). Medical journals, legal databases, investor relations transcripts are abundant and often public.
+            </p>
+
+            <h3>3. Custom Vocabulary and Biasing</h3>
+
+            <p>
+                Many commercial ASR systems (Google Cloud Speech-to-Text, Amazon Transcribe) let you supply a custom vocabulary or phrase hints. The model upweights these terms during decoding.
+            </p>
+
+            <p>
+                For medical ASR: Supply a vocabulary of 5,000-10,000 medical terms. For legal: statute names, case names, attorney names. For finance: ticker symbols, financial metrics, regulatory acronyms.
+            </p>
+
+            <p>
+                <strong>Effectiveness:</strong> 5-15% WER reduction on vocabulary-heavy domains, particularly for rare terms (proper nouns, acronyms, product names).
+            </p>
+
+            <p>
+                <strong>Limitation:</strong> Doesn't help with context-dependent errors. If the model confuses "systolic" and "diastolic," a vocabulary won't fix it — it just tells the model "systolic exists," not when to use it.
+            </p>
+
+            <h2>Amazon Transcribe Medical vs. Custom Solutions</h2>
+
+            <p>
+                Amazon Transcribe Medical is a specialized service trained specifically on medical audio and clinical documentation. It includes:
+            </p>
+
+            <ul>
+                <li>Medical terminology vocabulary (100,000+ terms)</li>
+                <li>Clinical speech patterns (physician dictation, patient interviews)</li>
+                <li>HIPAA compliance and encryption</li>
+                <li>Confidence scores and speaker identification</li>
+            </ul>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Dimension</th>
+                        <th>Amazon Transcribe Medical</th>
+                        <th>Fine-Tuned Whisper + LM Fusion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>WER (medical)</strong></td>
+                        <td>8-12%</td>
+                        <td>10-15% (depending on training data)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Setup time</strong></td>
+                        <td>Hours (API integration)</td>
+                        <td>Weeks to months (data collection, fine-tuning)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cost per hour</strong></td>
+                        <td>$1.50-$2.00 (higher API costs)</td>
+                        <td>$0.01-$0.05 (once deployed; GPU amortized)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Latency</strong></td>
+                        <td>Real-time batch processing</td>
+                        <td>Real-time (if GPU deployed)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Customization</strong></td>
+                        <td>Limited (vocabulary hints only)</td>
+                        <td>Full fine-tuning and custom LM</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Data privacy</strong></td>
+                        <td>Encrypted transit + AWS compliance</td>
+                        <td>Full local deployment (on-premises option)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                <strong>Recommendation:</strong> Start with Amazon Transcribe Medical if you need production-grade accuracy quickly and can tolerate per-minute costs. Invest in custom fine-tuning if volume is high (>1000 hours/month) or compliance requirements mandate on-premises deployment.
+            </p>
+
+            <h2>Evaluation Methodology: WER by Domain</h2>
+
+            <p>
+                Raw WER (word error rate) masks the real story. A Whisper WER of 15% might be fine for transcribing podcast snippets but unacceptable for legal contracts.
+            </p>
+
+            <p>
+                Evaluate using:
+            </p>
+
+            <ul>
+                <li><strong>Overall WER:</strong> Standard metric (edit distance / total words).</li>
+                <li><strong>Domain-specific accuracy:</strong> WER on medical/legal/finance terms only. Often 2-3x higher than overall WER.</li>
+                <li><strong>Named entity accuracy:</strong> How many proper nouns (doctor names, case law citations, ticker symbols) are transcribed correctly? For contracts, a misread party name is catastrophic.</li>
+                <li><strong>Confidence calibration:</strong> Are high-confidence predictions actually correct? False confidence is worse than honest uncertainty.</li>
+                <li><strong>Downstream task accuracy:</strong> What matters isn't WER — it's whether the transcription enables the next step. Can a medical records system extract diagnoses? Can legal software parse plaintiff/defendant names?</li>
+            </ul>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-chart-bar"></i> Practical Metric</div>
+                <p>Track <strong>critical-error rate</strong>: the fraction of transcriptions where a single error makes the output unusable (e.g., medication name misspelled, dollar amount off by an order of magnitude, party name wrong). This single number often matters more than WER for business impact.</p>
+            </div>
+
+            <h2>Data Challenges: Privacy, Labeling, and Scale</h2>
+
+            <h3>HIPAA and Regulated Audio</h3>
+
+            <p>
+                Medical audio is among the most restricted data types. De-identification is complex: you can't just strip patient names — voice characteristics alone can re-identify. Many healthcare organizations won't release audio for model training, period.
+            </p>
+
+            <p>
+                <strong>Workarounds:</strong> Synthetic data (TTS + controlled noise), data augmentation on small labeled sets, transfer learning from non-medical close-domain audio (podcasts, lectures).
+            </p>
+
+            <h3>Labeling Bottleneck</h3>
+
+            <p>
+                Whisper fine-tuning requires <em>accurate transcriptions</em> as ground truth. Crowdworkers can transcribe general audio; they can't transcribe medical dictation without domain expertise. You need domain professionals, which is expensive and slow.
+            </p>
+
+            <p>
+                A typical medical transcription service charges $0.50-$1.50 per minute of audio. For 1000 hours of training data, that's $30,000-$90,000 in labeling costs alone.
+            </p>
+
+            <h3>Distribution Shift</h3>
+
+            <p>
+                Audio recorded in a clinic (echo, background noise, multiple speakers) differs vastly from studio conditions or phone calls. A model trained on clean clinic recordings might fail on call-center captured audio, even if the medical terminology is identical.
+            </p>
+
+            <p>
+                <strong>Solution:</strong> Collect training data across realistic conditions: phone, in-person, telehealth video calls, ambient noise.
+            </p>
+
+            <h2>Real-Time vs. Batch Tradeoffs</h2>
+
+            <p>
+                ASR deployment mode shapes architecture:
+            </p>
+
+            <ul>
+                <li><strong>Batch processing (overnight transcription):</strong> Whisper fine-tuned + LM rescoring. Higher latency (minutes), lower cost, better accuracy (can afford 10-beam search + complex LM).</li>
+                <li><strong>Real-time (interactive transcription):</strong> Streaming Whisper or streaming commercial API. Must decode as audio arrives (low latency), simpler LM (no rescoring), slightly lower accuracy.</li>
+                <li><strong>Hybrid (video call transcription):</strong> Stream audio, collect for N seconds, then rescore and correct. Balances real-time user experience with batch accuracy gains.</li>
+            </ul>
+
+            <p>
+                <strong>Cost implication:</strong> Real-time deployment requires constant GPU/CPU provisioning (expensive). Batch processing batches requests (cheaper). For many domains (medical records, legal discovery), batch is acceptable; for live patient-physician communication, real-time is required.
+            </p>
+
+            <h2>Production Deployment Patterns</h2>
+
+            <h3>Pattern 1: API Gateway + Language Model Rescoring</h3>
+
+            <p>
+                Submit audio to Whisper API (or fine-tuned model). Collect top-10 beam hypotheses. Rescore with domain LM in post-processing layer. Return top result.
+            </p>
+
+            <p>
+                <strong>Pros:</strong> Modular, scales horizontally, leverages pre-built ASR.
+                <br><strong>Cons:</strong> Latency added by LM rescoring (seconds for long utterances).
+            </p>
+
+            <h3>Pattern 2: Embedded On-Premise Model</h3>
+
+            <p>
+                Deploy fine-tuned Whisper on-premise or in a private cloud (e.g., AWS HealthLake for HIPAA compliance). No data leaves your infrastructure.
+            </p>
+
+            <p>
+                <strong>Pros:</strong> Full data privacy, no per-minute costs, fully customizable.
+                <br><strong>Cons:</strong> Maintenance burden, GPU procurement, model updates require retraining.
+            </p>
+
+            <h3>Pattern 3: Hybrid Human-in-the-Loop</h3>
+
+            <p>
+                For high-stakes domains (medical records, legal documents): Use ASR for a first pass, flag low-confidence segments, route to human review. Human transcribers correct and approve.
+            </p>
+
+            <p>
+                <strong>Pros:</strong> Catches critical errors, builds labeled data for model improvement.
+                <br><strong>Cons:</strong> Expensive, requires domain expertise in review team, not real-time.
+            </p>
+
+            <h2>Comparison: ASR Solutions by Domain</h2>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Domain</th>
+                        <th>Best Solution</th>
+                        <th>Estimated WER</th>
+                        <th>Cost/Hour</th>
+                        <th>Deployment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Medical Dictation</strong></td>
+                        <td>Amazon Transcribe Medical or fine-tuned Whisper</td>
+                        <td>8-12%</td>
+                        <td>$0.50-$2.00</td>
+                        <td>Cloud or on-prem</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Legal Deposition</strong></td>
+                        <td>Custom Whisper + legal LM + human review</td>
+                        <td>6-10%</td>
+                        <td>$2.00-$5.00 (with QA)</td>
+                        <td>Hybrid</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Financial Earnings Calls</strong></td>
+                        <td>Fine-tuned Whisper + finance LM + ticker vocabulary</td>
+                        <td>7-11%</td>
+                        <td>$0.05-$0.20</td>
+                        <td>Cloud (high volume)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Customer Support Calls</strong></td>
+                        <td>Amazon Transcribe + context-specific vocabulary hints</td>
+                        <td>4-8%</td>
+                        <td>$0.01-$0.05</td>
+                        <td>Cloud</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Patent Office Filings</strong></td>
+                        <td>Domain LM over base Whisper (no fine-tuning)</td>
+                        <td>9-13%</td>
+                        <td>$0.02-$0.10</td>
+                        <td>Cloud or on-prem</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Getting Started</h2>
+
+            <p>
+                If you're building ASR for a specific domain:
+            </p>
+
+            <ol>
+                <li><strong>Establish baseline:</strong> Run 10-50 hours of your domain audio through Whisper (or Amazon Transcribe generic). Measure WER on critical terms.</li>
+                <li><strong>Build vocabulary:</strong> Collect 1,000-5,000 domain-specific terms (medical, legal, finance-related). Create a custom vocabulary file.</li>
+                <li><strong>Evaluate with vocabulary hints:</strong> If using a commercial API, enable vocabulary hints. Measure improvement. If <5% WER reduction, skip to step 4.</li>
+                <li><strong>Collect training data:</strong> Prioritize 100-500 hours of representative audio from your domain. Transcribe accurately.</li>
+                <li><strong>Fine-tune:</strong> Fine-tune Whisper (or another open model like Wav2Vec2) on your domain data. Evaluate on held-out test set.</li>
+                <li><strong>Add LM rescoring:</strong> Build or fine-tune a language model on domain text. Integrate rescoring into your pipeline.</li>
+                <li><strong>Deploy and monitor:</strong> Track WER, critical-error rate, and downstream task accuracy in production. Iterate on labeling and retraining as data accumulates.</li>
+            </ol>
+
+            <h2>Conclusion</h2>
+
+            <p>
+                General-purpose ASR like Whisper is extraordinary — for general-purpose audio. But specialized domains (medicine, law, finance) have terminology density, acoustic patterns, and quality bars that generic models can't meet without adaptation.
+            </p>
+
+            <p>
+                The good news: modern techniques (fine-tuning, language model fusion, vocabulary biasing) are well-understood and achievable with 100-500 hours of domain audio. The bad news: labeling that audio, handling privacy constraints, and maintaining production systems adds complexity.
+            </p>
+
+            <p>
+                For most organizations, the right answer is <em>start with a commercial domain-specific solution</em> (like Amazon Transcribe Medical for healthcare) while building internal domain data and fine-tuning expertise in parallel. By the time volume justifies deployment, you'll have both: accurate production ASR and the option to migrate to custom models if economics shift.
+            </p>
+
+        </div>
+
+        <footer class="article-footer">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to all articles</a>
+            <div class="share-links">
+                <a href="https://twitter.com/intent/tweet?text=Domain-Specific%20Speech%20Recognition&url=" title="Share on X"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=" title="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </footer>
+
+    </article>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const bar = document.getElementById('reading-progress');
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            if (docHeight > 0) {
+                bar.style.width = (scrollTop / docHeight) * 100 + '%';
+            }
+        });
+    </script>
+
+</body>
+</html>

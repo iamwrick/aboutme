@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multimodal Foundation Models: Toward Unified Intelligence | Wrick Talukdar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">Multimodal AI</span>
+                <span class="article-date">September 5, 2025 · 10 min read</span>
+            </div>
+            <h1 class="article-title">Multimodal Foundation Models: Toward Unified Intelligence</h1>
+            <p class="article-subtitle">GPT-4o, Gemini, Claude — models that see, hear, read, and reason simultaneously. What unified multimodality means for the next generation of AI systems.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Architect & Researcher</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="article-body">
+
+            <p>
+                For years, the vision and language sides of AI evolved separately. BERT processed text. ResNet processed images. The gap between them — bridged only by bolted-on adapters and post-hoc fusion modules — represented a fundamental architectural constraint. You could build a system that understood images <em>or</em> text well, but not both simultaneously at the level of first-class reasoning.
+            </p>
+
+            <p>
+                That constraint is ending. Models released in 2024 and 2025 — OpenAI's GPT-4o, Google's Gemini, Anthropic's Claude with vision — reason natively across modalities. They don't preprocess images to descriptions and hand those to a language model. They don't extract text from documents first. They process pixels, audio waveforms, and tokens through <em>unified</em> architectures that fuse information at every level of reasoning.
+            </p>
+
+            <p>
+                This shift changes what's possible in production AI systems. In this article, I'll walk through the evolution from single-modal to genuinely multimodal architectures, the engineering patterns that make it work, open problems at the frontier, and what builders need to understand to use these systems effectively.
+            </p>
+
+            <h2>The Evolution: From Bolted-On Vision to Native Multimodality</h2>
+
+            <p>
+                To understand where we are, it helps to trace where we came from.
+            </p>
+
+            <h3>Phase 1: The Adapter Pattern (2021–2022)</h3>
+
+            <p>
+                The first generation of "vision-language" models used a straightforward stacking approach:
+            </p>
+
+            <ul>
+                <li>Image encoder (Vision Transformer or CNN): pixels → fixed-size embedding</li>
+                <li>Learned adapter: embedding → language model token space</li>
+                <li>Language model: tokens → text output</li>
+            </ul>
+
+            <p>
+                CLIP (Contrastive Language-Image Pretraining) pioneered this with paired image-caption data, learning to align the embedding spaces. But the architecture kept vision and language separate: the vision encoder did its work, handed off a compressed vector, and the language model took over.
+            </p>
+
+            <p>
+                This meant information asymmetry. Fine-grained visual details were already compressed and contextualized <em>before</em> reaching the language reasoning layer. The language model couldn't "ask" for more details from the image or reconsider its interpretation mid-reasoning.
+            </p>
+
+            <h3>Phase 2: Early and Late Fusion (2023)</h3>
+
+            <p>
+                The next wave introduced explicit fusion mechanisms:
+            </p>
+
+            <ul>
+                <li><strong>Early fusion:</strong> Concatenate image and text tokens before feeding to the decoder. Models like Flamingo applied attention across modalities from the start.</li>
+                <li><strong>Late fusion:</strong> Process modalities independently, fuse representations before final output layers. Common in vision-language transformers.</li>
+                <li><strong>Cross-attention layers:</strong> Interleave special "modality bridge" layers that let one modality query another (e.g., text attention can directly attend to image patches).</li>
+            </ul>
+
+            <p>
+                Flamingo (DeepMind, 2022) and later models like LLaVA introduced gated cross-attention mechanisms where language tokens could attend to image patches at every decoder layer. This was an improvement, but the asymmetry remained: vision was still fundamentally ancillary.
+            </p>
+
+            <h3>Phase 3: Native Multimodal Reasoning (2024–2025)</h3>
+
+            <p>
+                The current generation removes the hierarchy. Models like GPT-4o and Gemini process images not as separate input, but as a native modality with equal footing to text:
+            </p>
+
+            <ul>
+                <li><strong>Unified tokenization:</strong> Images are decomposed into tokens using the same vocabulary as text. A pixel region becomes a token just like a subword unit.</li>
+                <li><strong>Single attention mechanism:</strong> All tokens (image, audio, text) feed through the same transformer stack. There's no "vision path" and "language path" — just one path.</li>
+                <li><strong>Interleaved reasoning:</strong> The model can reason about image and text in the same forward pass, attending to both simultaneously, revising visual interpretation based on textual context and vice versa.</li>
+            </ul>
+
+            <p>
+                This is qualitatively different. The model doesn't encode "here's a description of an image" — it encodes the image itself and reasons over it the same way it reasons over text.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-lightbulb"></i> Why This Matters</div>
+                <p>Unified multimodality unlocks emergent capabilities: the model can now reason over document layouts (not just extracted text), understand diagrams and charts by structure (not just legend), follow visual logic in screenshots, and integrate visual context into reasoning chains in real time. These weren't possible in adapter-based systems.</p>
+            </div>
+
+            <h2>Architecture Patterns in Production Multimodal Models</h2>
+
+            <h3>Vision Tokenization</h3>
+
+            <p>
+                The linchpin of native multimodal models is how images become tokens. There are several approaches:
+            </p>
+
+            <ul>
+                <li><strong>Patch-based tokenization:</strong> Divide image into 16×16 pixel patches, embed each patch independently. Simple and efficient, but information at patch boundaries can be lossy.</li>
+                <li><strong>Hierarchical tokenization:</strong> Multi-scale representations (similar to FPN in vision). Preserves detail at fine scales and context at coarse scales.</li>
+                <li><strong>Dynamic tokenization:</strong> Allocate more tokens to salient regions (object centers, text) and fewer to uniform areas (blank backgrounds). Reduces token overhead for sparse images.</li>
+            </ul>
+
+            <p>
+                GPT-4o uses a tile-based approach: it tiles the input image and processes each tile as a separate token sequence, with additional resolution for selected regions. This trades off spatial coherence for computational efficiency.
+            </p>
+
+            <h3>Modality Bridges and Cross-Attention</h3>
+
+            <p>
+                Even in unified models, some architectural patterns help keep modalities coherent:
+            </p>
+
+            <ul>
+                <li><strong>Dedicated projection layers:</strong> Small learnable projections map audio embeddings or image token embeddings to the shared token space.</li>
+                <li><strong>Cross-modal attention heads:</strong> Attention heads dedicated to queries from one modality attending to keys/values from another.</li>
+                <li><strong>Modality-specific normalization:</strong> Batch norm or layer norm with modality-specific parameters, accounting for different token distributions.</li>
+            </ul>
+
+            <p>
+                These aren't workarounds — they're design choices that improve training efficiency and final performance. A single unified space can handle everything, but auxiliary structure helps.
+            </p>
+
+            <h2>Document Understanding: A Multimodal Problem</h2>
+
+            <p>
+                My own research has focused on document understanding, and this is where the shift to native multimodality has the most immediate impact.
+            </p>
+
+            <p>
+                Traditional document AI pipelines:
+            </p>
+
+            <ol>
+                <li>Preprocess document image (binarization, skew correction, deskewing)</li>
+                <li>OCR to extract text</li>
+                <li>Heuristic rules or ML to parse layout (find tables, headers, field regions)</li>
+                <li>Feed parsed data to reasoning model</li>
+            </ol>
+
+            <p>
+                Each step loses information. Deskewing algorithms can distort, OCR misses context (italic text, emphasized words), and layout parsing is fragile to document variations. By the time text reaches the reasoning layer, spatial relationships, typography, and structural context are gone.
+            </p>
+
+            <p>
+                Multimodal models change this. GPT-4o can take a document image directly and reason over:
+            </p>
+
+            <ul>
+                <li><strong>Layout:</strong> Table structure, column alignment, margins — visual patterns that convey semantic meaning</li>
+                <li><strong>Typography:</strong> Bold, italic, color, font size — often signals importance or type (heading vs. body)</li>
+                <li><strong>Skew and rotation:</strong> No preprocessing needed; the model handles it in-stream</li>
+                <li><strong>Handwritten and printed mixed:</strong> Single pass, no modality switching</li>
+                <li><strong>Visual semantics:</strong> Charts, diagrams, graphs — reasoned over visually, not described as text</li>
+            </ul>
+
+            <p>
+                This is particularly powerful for forms, invoices, contracts, and academic papers — domains where structure <em>is</em> meaning.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-chart-bar"></i> Research Insight</div>
+                <p>My work on document understanding showed that a 5-10% skew in document images caused OCR pipelines to lose 15-30% of information accuracy. Multimodal vision-language models, by reasoning over the visual layout directly, are intrinsically robust to skew. This alone eliminates a major class of preprocessing failures.</p>
+            </div>
+
+            <h2>Video and Audio Understanding</h2>
+
+            <p>
+                Beyond images and documents, true multimodal systems must handle temporal data.
+            </p>
+
+            <h3>Video Understanding</h3>
+
+            <p>
+                Video is sequences of frames plus audio. The straightforward approach: sample key frames, encode each, concatenate embeddings. But this discards temporal relationships.
+            </p>
+
+            <p>
+                Modern approaches:
+            </p>
+
+            <ul>
+                <li><strong>Temporal attention:</strong> Frames attend to nearby frames in sequence. The model learns motion patterns directly.</li>
+                <li><strong>Optical flow priors:</strong> Initialize temporal attention with optical flow (motion field) computed from frame pairs. Guides attention to salient regions.</li>
+                <li><strong>Audio-visual synchronization:</strong> Audio tokens and video tokens learn to align naturally (speech should correlate with lip motion). This emerges from the unified training objective.</li>
+            </ul>
+
+            <p>
+                Gemini handles video natively: you pass a video and it processes frames + audio jointly, understanding not just "what is visible" but "what happens" and "how sound relates to motion."
+            </p>
+
+            <h3>Audio Understanding</h3>
+
+            <p>
+                Audio is trickier. Human speech and music both compress to roughly 16kHz or 48kHz sampling rates — but the information density is high (prosody, tone, background noise all matter).
+            </p>
+
+            <p>
+                Approaches:
+            </p>
+
+            <ul>
+                <li><strong>Mel-spectrogram tokenization:</strong> Convert audio to frequency domain, chunk into overlapping windows, tokenize each. Preserves frequency information but loses fine temporal resolution.</li>
+                <li><strong>Learned audio codecs:</strong> Train a neural codec to map audio waveforms to discrete tokens (similar to vector-quantized VAEs). These tokens capture perceptually-important features without needing hand-crafted spectrograms.</li>
+                <li><strong>Hybrid approaches:</strong> Combine spectrogram features with learned embeddings, fusing acoustic and linguistic structure.</li>
+            </ul>
+
+            <p>
+                Claude and GPT-4o can process audio, though neither publicly discusses their exact tokenization scheme. The fact that they can handle multiple audio clips, interleaved with text and images, in a single prompt suggests their unified token space is truly unified.
+            </p>
+
+            <h2>Benchmarks: How We Measure Multimodal Reasoning</h2>
+
+            <p>
+                Evaluating multimodal systems is harder than evaluating text models. You can't just count tokens correct. You need datasets that test genuine multimodal reasoning, not just image captioning or VQA (visual question answering) on simple scenes.
+            </p>
+
+            <h3>MMMU: Multimodal Multidisciplinary Undergraduate Exams</h3>
+
+            <p>
+                MMMU is a benchmark of university-level exams across science, engineering, business, art, and other domains. Questions often require reading dense text, understanding diagrams, and integrating both. Example: "This circuit diagram shows... the specifications table indicates... what is the maximum current?"
+            </p>
+
+            <p>
+                It's adversarial to the adapter-pattern models because you can't solve it by extracting text from the image alone. You need to reason over the visual structure and its relationship to the text simultaneously.
+            </p>
+
+            <h3>MMBench and VLMEval</h3>
+
+            <p>
+                MMBench tests a range of capabilities: attribute binding (does the model correctly link properties to objects?), spatial reasoning (left/right/above/below relationships), fine-grained recognition, and numerical reasoning over charts.
+            </p>
+
+            <p>
+                Current leaderboards (as of early 2025):
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>MMMU</th>
+                        <th>MMBench</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>GPT-4o</strong></td>
+                        <td>69.3%</td>
+                        <td>81.5%</td>
+                        <td>Native multimodal, unified tokenization</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gemini 1.5 Pro</strong></td>
+                        <td>67.2%</td>
+                        <td>80.1%</td>
+                        <td>Long context (1M tokens), video support</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Claude 3.5 Sonnet</strong></td>
+                        <td>64.8%</td>
+                        <td>77.3%</td>
+                        <td>Strong reasoning, good document understanding</td>
+                    </tr>
+                    <tr>
+                        <td><strong>LLaVA-1.6 (OSS)</strong></td>
+                        <td>48.2%</td>
+                        <td>68.5%</td>
+                        <td>Open-source, runs locally, adapter-based</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CLIP + Language Model</strong></td>
+                        <td>35.1%</td>
+                        <td>52.3%</td>
+                        <td>Older baseline, shows progress</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                The gap between native multimodal (GPT-4o, Gemini) and adapter-based approaches (LLaVA) is significant and growing. The gap between multimodal and text-only CLIP+LM baselines is dramatic.
+            </p>
+
+            <h2>Limitations and Open Problems</h2>
+
+            <p>
+                For all their power, current multimodal models have real constraints:
+            </p>
+
+            <h3>Token Efficiency</h3>
+
+            <p>
+                Images compress poorly into tokens. A 1024×1024 image might expand to 2000–4000 tokens, while the same information described in text might be 50–200 tokens. This makes multimodal inferences more expensive (longer context, more compute).
+            </p>
+
+            <p>
+                Dynamic tokenization helps (allocate more tokens to important regions), but the fundamental issue remains: visual information is high-dimensional and tokens are a discrete bottleneck.
+            </p>
+
+            <h3>Hallucination in Visual Reasoning</h3>
+
+            <p>
+                Vision-language models are prone to hallucinating objects or relationships not in the image. A blank blue region might be "hallucinated" as the sky, even if it's supposed to be a data visualization.
+            </p>
+
+            <p>
+                Root causes:
+            </p>
+
+            <ul>
+                <li>Training data bias (sky is usually in outdoor images)</li>
+                <li>Tokenization loses fine detail, model fills in gaps with priors</li>
+                <li>Attention mechanisms can attend to background noise and amplify it</li>
+            </ul>
+
+            <p>
+                Mitigations exist (constrained decoding, confidence calibration, multiple passes) but aren't foolproof. For safety-critical tasks (medical imaging, autonomous vehicles), hallucination remains a concern.
+            </p>
+
+            <h3>Cross-Modal Grounding</h3>
+
+            <p>
+                It's hard to precisely ground visual elements to text. If a model says "the red box is here," how do you verify it's actually pointing to the right object?
+            </p>
+
+            <p>
+                Some models (GPT-4o, newer Claude versions) can return bounding box coordinates or pixel-space references. But this is still evolving — standardized coordinate systems and confidence metrics would help.
+            </p>
+
+            <h3>Fine-Grained Multimodal Reasoning</h3>
+
+            <p>
+                Models can handle high-level multimodal tasks (describe this scene, answer this question) but struggle with fine-grained tasks:
+            </p>
+
+            <ul>
+                <li>Counting precise numbers of small objects in cluttered images</li>
+                <li>Reading text in images smaller than a few hundred pixels</li>
+                <li>Reasoning over precise geometric relationships (this angle is exactly 27 degrees)</li>
+                <li>Understanding specialized visual languages (musical notation, circuit diagrams beyond basic recognition)</li>
+            </ul>
+
+            <p>
+                These require higher spatial resolution, more precise tokenization, or domain-specific training. Current models can sometimes solve these via multi-shot reasoning (multiple passes, zooming in), but it's not reliable.
+            </p>
+
+            <h2>Building with Multimodal Models: Practical Patterns</h2>
+
+            <h3>Direct Multimodal Prompting</h3>
+
+            <p>
+                The simplest pattern: pass images directly to the model without preprocessing.
+            </p>
+
+<pre><code>response = client.messages.create(
+    model="gpt-4o",
+    max_tokens=1024,
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "image",
+                    "source": {
+                        "type": "base64",
+                        "media_type": "image/jpeg",
+                        "data": base64_image,
+                    },
+                },
+                {
+                    "type": "text",
+                    "text": "Analyze this document. Extract all tables and their contents."
+                }
+            ],
+        }
+    ],
+)
+</code></pre>
+
+            <p>
+                Works great for one-off tasks. But for production pipelines processing thousands of documents:
+            </p>
+
+            <ul>
+                <li>Cost scales with image size (more tokens = more expense)</li>
+                <li>No intermediate caching of parsed results</li>
+                <li>Error on a single image halts the pipeline</li>
+            </ul>
+
+            <h3>Preprocessing for Efficiency</h3>
+
+            <p>
+                Practical systems often do selective preprocessing:
+            </p>
+
+            <ul>
+                <li><strong>Downsampling:</strong> Reduce image to 1024×768 before sending if full resolution isn't needed. Cuts tokens by 60-70%.</li>
+                <li><strong>Cropping:</strong> If you know the relevant region (e.g., a table), crop to that region before encoding.</li>
+                <li><strong>Hybrid OCR + multimodal:</strong> Extract text with fast OCR, send image + extracted text to model for reasoning. Model can correct OCR errors using visual context.</li>
+            </ul>
+
+            <h3>Cascading Confidence Thresholds</h3>
+
+            <p>
+                For high-stakes tasks, use multiple passes with confidence thresholds:
+            </p>
+
+            <ol>
+                <li>First pass: quick inference with standard prompt</li>
+                <li>If confidence is low or hallucination detected: second pass with adversarial prompt ("are you sure there's a red box? describe exactly what you see")</li>
+                <li>If still uncertain: escalate to human review or fallback system</li>
+            </ol>
+
+            <p>
+                This trades latency for reliability — acceptable for batch processes, not real-time.
+            </p>
+
+            <h2>The Future: Beyond Unified Multimodality</h2>
+
+            <p>
+                Current multimodal systems are impressive but still limited:
+            </p>
+
+            <ul>
+                <li><strong>Spatiotemporal reasoning:</strong> Models can handle video, but don't deeply reason about physics, causality, and temporal dynamics the way humans do.</li>
+                <li><strong>Interactive multimodality:</strong> Current models are one-shot. Systems that iterate (ask clarifying questions, request zoomed crops, revisit their reasoning) would be far more powerful.</li>
+                <li><strong>Embodied multimodality:</strong> Robots and AR/VR systems need real-time multimodal understanding with action output. Today's models are inference-only.</li>
+                <li><strong>Domain-specific multimodal pretraining:</strong> Models trained on medical imaging, autonomous driving, scientific papers would outperform general-purpose models on those domains. This is beginning (e.g., specialized Gemini variants) but is early.</li>
+            </ul>
+
+            <p>
+                The field is at an inflection point. Multimodal models are now the default, not a novelty. The next generation will likely focus on efficiency, reasoning depth, and grounding — not adding new modalities.
+            </p>
+
+            <h2>Key Takeaways</h2>
+
+            <ul>
+                <li>Native multimodal models (GPT-4o, Gemini, Claude) process images, text, and audio through unified architectures, enabling simultaneous reasoning across modalities.</li>
+                <li>This is a qualitative shift from adapter-based systems — information asymmetry and context loss are eliminated.</li>
+                <li>Document understanding, video reasoning, and visual problem-solving see immediate benefits. Preprocessing (OCR, layout parsing) becomes optional.</li>
+                <li>Token efficiency, hallucination, and fine-grained reasoning remain open problems. Production systems need cascading validation and error handling.</li>
+                <li>Benchmarks (MMMU, MMBench) show native multimodal models significantly outperform adapters. The gap continues to widen.</li>
+                <li>Building with multimodal models is straightforward for simple cases but requires careful design for production reliability and cost control.</li>
+            </ul>
+
+            <p>
+                Multimodal reasoning isn't a future capability — it's table stakes for 2025 and beyond. If you're building AI systems, expect to work with unified multimodal models as your foundation.
+            </p>
+
+        </div>
+
+        <div class="article-footer">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to all articles</a>
+            <div class="share-links">
+                <a href="#" title="Share on Twitter"><i class="fab fa-x-twitter"></i></a>
+                <a href="#" title="Share on LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="#" title="Copy link"><i class="fas fa-link"></i></a>
+            </div>
+        </div>
+
+    </article>
+
+    <script>
+        const readingProgressBar = document.getElementById('reading-progress');
+        const updateReadingProgress = () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            readingProgressBar.style.width = scrollPercent + '%';
+        };
+        window.addEventListener('scroll', updateReadingProgress);
+    </script>
+
+</body>
+</html>

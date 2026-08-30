@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GANs and the Dawn of Creative AI | Wrick Talukdar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">Generative AI</span>
+                <span class="article-date">June 18, 2019 · 8 min read</span>
+            </div>
+            <h1 class="article-title">GANs and the Dawn of Creative AI</h1>
+            <p class="article-subtitle">From mode collapse to StyleGAN — how adversarial training unlocked image synthesis and laid the groundwork for today's diffusion models.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Architect & Researcher</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="article-body">
+
+            <p>
+                In 2014, Ian Goodfellow and colleagues published a paper that fundamentally changed how machines could generate new content. <em>Generative Adversarial Networks</em> introduced a deceptively simple idea: train two neural networks in a game-theoretic competition. One generates fake data; the other tries to distinguish fakes from real data. Neither network is explicitly told what to learn. Instead, they learn through this adversarial dance.
+            </p>
+            <p>
+                Five years later, GANs had produced photorealistic faces, synthesized entire scenes, enabled data augmentation at scale, and accelerated drug discovery pipelines. Yet production GAN systems rarely escaped research labs. This article explains the breakthrough, the obstacles, and the architectural innovations that made GANs work—and why the field eventually pivoted toward diffusion models.
+            </p>
+
+            <h2>The GAN Architecture: A Game Between Two Networks</h2>
+
+            <p>
+                A GAN consists of two components working in opposition:
+            </p>
+
+            <ul>
+                <li><strong>Generator (G):</strong> Takes random noise as input and produces synthetic data (images, text, audio). Goal: fool the discriminator.</li>
+                <li><strong>Discriminator (D):</strong> Takes real or fake data and predicts the probability it's real. Goal: correctly classify real vs. fake.</li>
+            </ul>
+
+            <p>
+                The game is formalized in a minimax objective:
+            </p>
+
+<pre><code>min_G max_D E_x[log D(x)] + E_z[log(1 - D(G(z)))]
+
+where:
+  x = real data
+  z = random noise
+  D(x) = probability discriminator assigns to real data
+  G(z) = generated data from noise z</code></pre>
+
+            <p>
+                Intuitively, the discriminator wants to maximize the probability of correctly classifying real data (high <code>log D(x)</code>) and fake data (high <code>log(1 - D(G(z)))</code>). The generator wants to minimize this—tricking the discriminator into outputting high probabilities for fake data.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-lightbulb"></i> Why This Works</div>
+                <p>The discriminator never sees labels. It learns a decision boundary purely from observing real and fake distributions. The generator, seeing only the discriminator's gradient signal, improves by pushing its output distribution closer to the real data distribution. At equilibrium, the generator produces indistinguishable samples and the discriminator outputs 0.5 for all inputs.</p>
+            </div>
+
+            <h3>Conditional GANs and Control</h3>
+
+            <p>
+                Vanilla GANs generate from pure noise—you have no control over what the network produces. Conditional GANs (cGANs) inject additional information (class labels, text descriptions, or auxiliary data) into both generator and discriminator:
+            </p>
+
+<pre><code>min_G max_D E_x[log D(x | c)] + E_z[log(1 - D(G(z | c)))]
+
+where c is the conditioning information (e.g., class label)</code></pre>
+
+            <p>
+                Now the generator learns to produce specific outputs (e.g., "generate a dog" or "generate a beige car"). This unlocked practical applications: you could control what the network synthesized.
+            </p>
+
+            <h2>Mode Collapse: The First Major Challenge</h2>
+
+            <p>
+                Training a GAN is profoundly unstable. The most insidious failure mode is <em>mode collapse</em>: the generator learns to produce only a narrow subset of the training distribution, often a single mode or a handful of very similar samples.
+            </p>
+
+            <p>
+                Why does this happen? The generator's objective is to fool the discriminator. Once it finds a type of sample the discriminator finds hard to classify, it can output variations of that sample without improving further. There's no penalty for ignoring the rest of the real distribution. The generator collapses to a local equilibrium.
+            </p>
+
+<pre><code># Pseudocode: A naive training loop leading to mode collapse
+for epoch in range(100):
+    # Update discriminator
+    real_samples = get_real_data()
+    fake_samples = generator(random_noise())
+    
+    discriminator_loss = classify(real_samples, 1) + classify(fake_samples, 0)
+    update_discriminator(discriminator_loss)
+    
+    # Update generator
+    fake_samples = generator(random_noise())
+    generator_loss = -classify(fake_samples, 1)  # fool the discriminator
+    update_generator(generator_loss)
+
+# Result: Generator converges to producing a few "easy" samples
+# that consistently fool the discriminator. Done. Stuck.</code></pre>
+
+            <p>
+                Early GANs (2014–2016) exhibited severe mode collapse. Training papers often showed cherry-picked results. Practitioners avoided GANs in production.
+            </p>
+
+            <h2>Architectural Breakthroughs: Progressive Growing and StyleGAN</h2>
+
+            <h3>Wasserstein GANs (WGAN)</h3>
+
+            <p>
+                In 2017, Wasserstein GANs changed the training dynamics by replacing the discriminator's binary classification objective with the <em>Wasserstein distance</em>—a smoother measure of distance between distributions:
+            </p>
+
+<pre><code>min_G max_{D ∈ 1-Lip} E_x[D(x)] - E_z[D(G(z))]
+
+Key insight: The Wasserstein distance provides a meaningful gradient
+even when the generator and discriminator are far apart.
+Classical GANs can have zero gradient in this region.</code></pre>
+
+            <p>
+                WGANs stabilized training and reduced mode collapse significantly. The discriminator became a "critic" rating how real a sample was, rather than binary classification.
+            </p>
+
+            <h3>Progressive Growing (ProGAN)</h3>
+
+            <p>
+                Training high-resolution image generators was unstable. ProGAN (2017) introduced progressive training: start with a small generator and discriminator (e.g., 4×4 images), then gradually add layers to increase resolution. At each stage, the network has a simpler task, allowing stable convergence before tackling higher resolutions.
+            </p>
+
+            <ul>
+                <li>Stage 1: Generate 4×4 images (trivial)</li>
+                <li>Stage 2: Add layers, generate 8×8 images</li>
+                <li>Stage 3: Add layers, generate 16×16 images</li>
+                <li>Stage N: Generate 1024×1024 photorealistic images</li>
+            </ul>
+
+            <p>
+                This decoupling of resolution from architectural complexity made high-fidelity synthesis practical for the first time.
+            </p>
+
+            <h3>StyleGAN: Disentangling Control</h3>
+
+            <p>
+                ProGAN could generate high-quality images, but you couldn't control specific attributes. StyleGAN (2018) introduced a novel architecture:
+            </p>
+
+<pre><code>Generator Pipeline (Simplified):
+1. Latent code w (e.g., 512-dim vector)
+2. Mapping network: w → w' (disentangled representation)
+3. Synthesis network: Uses w' to modulate conv layers via adaptive instance norm
+   
+Result: Different regions of latent space control different features:
+  - One region → hair color
+  - Another region → face shape
+  - Yet another → lighting direction</code></pre>
+
+            <p>
+                StyleGAN separated <em>content</em> (the overall structure) from <em>style</em> (texture, color, fine details). This disentanglement made it possible to:
+            </p>
+
+            <ul>
+                <li>Mix and match styles from different samples</li>
+                <li>Smoothly interpolate between faces by moving through latent space</li>
+                <li>Generate faces with specific attributes (blue eyes, smiling, elderly)</li>
+                <li>Create convincing deepfakes with directional control</li>
+            </ul>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Architecture</th>
+                        <th>Key Innovation</th>
+                        <th>Resolution</th>
+                        <th>Quality</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Vanilla GAN</strong></td>
+                        <td>Adversarial loss</td>
+                        <td>32×32</td>
+                        <td>Blurry</td>
+                    </tr>
+                    <tr>
+                        <td><strong>WGAN</strong></td>
+                        <td>Wasserstein distance</td>
+                        <td>64×64</td>
+                        <td>Better diversity</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ProGAN</strong></td>
+                        <td>Progressive growth</td>
+                        <td>1024×1024</td>
+                        <td>Photorealistic</td>
+                    </tr>
+                    <tr>
+                        <td><strong>StyleGAN</strong></td>
+                        <td>Style disentanglement</td>
+                        <td>1024×1024</td>
+                        <td>Controllable</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Applications Unlocked by GANs</h2>
+
+            <h3>Synthetic Data Generation</h3>
+
+            <p>
+                Medical imaging has limited labeled data. A hospital might have 1,000 lung CT scans; training a diagnostic model requires 10,000+. GANs synthesized realistic but novel scans, augmenting training sets without privacy concerns. Classifiers trained on synthetic + real data outperformed those trained on real data alone.
+            </p>
+
+            <h3>Data Augmentation at Scale</h3>
+
+            <p>
+                For rare diseases or imbalanced datasets, GANs generate synthetic examples of underrepresented classes. A fraud detection model trained on 100,000 legitimate transactions and 50 frauds is useless; the discriminator learns to predict "not fraud" always. Generating 100,000 synthetic frauds (via GAN trained on real examples) balances the dataset and improves real detection performance.
+            </p>
+
+            <h3>Domain Transfer</h3>
+
+            <p>
+                CycleGAN and Pix2Pix used paired or unpaired images to learn transformations: photo → painting, summer → winter, object detection in simulation → object detection in real photos. A self-driving car trained in simulation can transfer to reality by transforming synthetic images to photorealistic ones.
+            </p>
+
+            <h3>Drug Discovery</h3>
+
+            <p>
+                Generating novel molecular structures is combinatorially hard. DeepDrug (and later VAE-GAN hybrids) learned to generate drug-like molecules with specific binding properties. Instead of screening 10 million compounds, researchers sampled 10,000 GAN-generated molecules and experimentally validated the top hits. Time-to-lead dropped dramatically.
+            </p>
+
+            <h3>Face Synthesis and Deepfakes</h3>
+
+            <p>
+                StyleGAN and similar models generated photorealistic faces of people who don't exist. This capability enabled research labs to demonstrate deepfake vulnerabilities—but also enabled malicious actors to create convincing synthetic identities for fraud. The duality remains unresolved.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-exclamation-triangle"></i> The Deepfake Problem</div>
+                <p>StyleGAN's ability to generate indistinguishable synthetic faces accelerated both detection research and malicious synthetic media creation. By 2020, deepfake detection became a major area of defensive ML investment—and an ongoing arms race.</p>
+            </div>
+
+            <h2>Why Production GANs Remained Elusive</h2>
+
+            <p>
+                Despite architectural improvements, GANs rarely escaped research labs into production systems. Three factors held them back:
+            </p>
+
+            <h3>1. Training Instability</h3>
+
+            <p>
+                GANs require careful tuning of learning rates, discriminator update schedules, batch sizes, and gradient penalties. A hyperparameter change could cause training to diverge overnight. Reproducibility was poor; a model that trained successfully on Monday failed on Tuesday with identical code.
+            </p>
+
+            <h3>2. Evaluation Difficulty</h3>
+
+            <p>
+                How do you measure the quality of synthetic data? Inception Score (IS) and Fréchet Inception Distance (FID) are noisy proxies. Unlike supervised learning, there's no validation accuracy. Many papers reported cherry-picked qualitative results.
+            </p>
+
+            <h3>3. Inference Cost</h3>
+
+            <p>
+                StyleGAN inference requires running a deep synthesis network. Real-time synthesis on mobile devices was impractical. Batch generation worked, but real-time personalization was out of reach.
+            </p>
+
+            <h2>The Pivot to Diffusion Models</h2>
+
+            <p>
+                By 2020, a different approach began gaining traction: <em>diffusion models</em>. Instead of a game between two networks, diffusion models learn to reverse a gradual noise corruption process:
+            </p>
+
+            <ul>
+                <li><strong>Forward pass:</strong> Real image + noise → pure noise (easy, deterministic)</li>
+                <li><strong>Reverse pass:</strong> Pure noise → real image (learned, generative)</li>
+            </ul>
+
+            <p>
+                Diffusion models had several advantages over GANs:
+            </p>
+
+            <ul>
+                <li><strong>Stable training:</strong> No adversarial game; supervised denoising objective is stable.</li>
+                <li><strong>Better evaluation:</strong> Log-likelihood can be computed, offering principled quality metrics.</li>
+                <li><strong>Flexibility:</strong> Easy to condition on text, class, image context, etc.</li>
+                <li><strong>Scaling:</strong> Performance improved reliably with model size, unlike GANs.</li>
+            </ul>
+
+            <p>
+                DALL-E, Stable Diffusion, and Midjourney all use diffusion-based backbones, not GANs. StyleGAN's reign as the state-of-the-art image generator ended by 2022.
+            </p>
+
+            <h2>The Enduring Legacy of GANs</h2>
+
+            <p>
+                If GANs lost the competition for image synthesis, their impact on AI research remains profound:
+            </p>
+
+            <ul>
+                <li><strong>Adversarial thinking:</strong> The idea that networks can learn through competition with each other unlocked new research directions (adversarial training, security, etc.).</li>
+                <li><strong>Unsupervised representation learning:</strong> GANs demonstrated that networks could learn meaningful representations without labels.</li>
+                <li><strong>Generative modeling as a research area:</strong> GANs proved generative models could produce human-competitive outputs, attracting massive investment in the field.</li>
+                <li><strong>Architectural patterns:</strong> Techniques like progressive training, style transfer, and disentanglement influenced diffusion models and other generators.</li>
+            </ul>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-book"></i> A Moment in History</div>
+                <p>GANs represent a specific moment in generative AI: the moment we realized machines could create novel, compelling content without explicit instruction. That capability—to synthesize, augment, and imagine—shaped everything that came after, from diffusion models to modern foundation models.</p>
+            </div>
+
+            <h2>Key Takeaways</h2>
+
+            <ol>
+                <li><strong>GANs introduced adversarial training:</strong> Two networks in competition learn representations without supervision.</li>
+                <li><strong>Mode collapse was the core challenge:</strong> Generators would converge to producing narrow subsets of the real distribution, defeating diversity.</li>
+                <li><strong>Architectural innovations solved critical problems:</strong> WGAN stabilized training; ProGAN unlocked high resolution; StyleGAN enabled disentangled control.</li>
+                <li><strong>Applications ranged from synthetic data to drug discovery:</strong> But production deployments remained rare due to training instability and evaluation difficulty.</li>
+                <li><strong>Diffusion models eventually dominated:</strong> Simpler training, better evaluation, and superior scaling led to the GAN → diffusion transition by 2021–2022.</li>
+            </ol>
+
+        </div>
+
+        <footer class="article-footer">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to all articles</a>
+            <div class="share-links">
+                <a href="https://twitter.com/intent/tweet?text=GANs%20and%20the%20Dawn%20of%20Creative%20AI&url=" title="Share on X"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=" title="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </footer>
+
+    </article>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const bar = document.getElementById('reading-progress');
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            if (docHeight > 0) {
+                bar.style.width = (scrollTop / docHeight) * 100 + '%';
+            }
+        });
+    </script>
+
+</body>
+</html>

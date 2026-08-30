@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building Reliable Tool-Calling Agents | Wrick Talukdar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">Agentic AI</span>
+                <span class="article-date">August 30, 2026 · 6 min read</span>
+            </div>
+            <h1 class="article-title">Building Reliable Tool-Calling Agents: Lessons from the Field</h1>
+            <p class="article-subtitle">Why string-parsing LLM output is a trap, and how structured tool-use APIs change the reliability calculus for production agent systems.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Architect & Researcher</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="article-body">
+
+            <p>
+                If you've built an LLM-powered agent that calls external tools — a calculator, a database, an API — you've almost certainly encountered <em>the parsing problem</em>. The model generates a free-text response containing something that looks like a function call, and your code tries to extract the tool name and arguments from that text using string splitting, regex, or pattern matching.
+            </p>
+            <p>
+                It works in demos. It breaks in production.
+            </p>
+            <p>
+                In this article, I'll walk through exactly why naive output parsing is fragile, what failure modes you'll encounter at scale, and how modern structured tool-use APIs (OpenAI function calling, Anthropic tool use, Amazon Bedrock tool configuration) eliminate the problem entirely. This is drawn from hands-on experience building agentic systems — including the code examples in my book <em>Building Agentic AI Systems</em>.
+            </p>
+
+            <h2>The Allure of String Parsing</h2>
+
+            <p>
+                The ReAct pattern (Reason + Act) asks a model to interleave reasoning with tool invocations. In its simplest form, you prompt the model to output structured text:
+            </p>
+
+<pre><code>Thought: I need to calculate (2+3)*4
+Action: calculator((2+3)*4)</code></pre>
+
+            <p>
+                Then you parse the output:
+            </p>
+
+<pre><code>action_line = response.split("Action:")[1].strip()
+tool_name = action_line.split("(")[0].strip()
+args = action_line.split("(")[1].split(")")[0]</code></pre>
+
+            <p>
+                This is elegant, readable, and pedagogically clear — which is why every tutorial (including Chapter 1 of my book) starts here. But it carries three categories of failure that compound at scale.
+            </p>
+
+            <h2>Three Ways String Parsing Breaks</h2>
+
+            <h3>1. Structural Ambiguity</h3>
+
+            <p>
+                The parser above uses <code>split("(")</code> to separate the tool name from arguments. But what happens when the argument itself contains parentheses?
+            </p>
+
+<pre><code># Model outputs: calculator((2+3)*4)
+args = "calculator((2+3)*4)".split("(")[1].split(")")[0]
+# Result: "2+3"  — silently wrong, not "(2+3)*4"</code></pre>
+
+            <p>
+                The parser grabs the text between the <em>first</em> open paren and the <em>first</em> close paren. Nested parentheses, quoted strings containing parens, JSON arguments — all silently truncated. This isn't a theoretical edge case; mathematical expressions, search queries with parenthetical qualifiers, and API payloads routinely contain nested delimiters.
+            </p>
+
+            <h3>2. Format Drift</h3>
+
+            <p>
+                LLMs are stochastic. Even with <code>temperature=0</code>, different inputs trigger different output patterns. Your parser expects <code>Action: tool_name(args)</code>, but the model might produce:
+            </p>
+
+            <ul>
+                <li><code>Action:  tool_name( args )</code> — extra whitespace</li>
+                <li><code>action: tool_name(args)</code> — lowercase prefix</li>
+                <li><code>Action: tool_name(args).</code> — trailing punctuation</li>
+                <li><code>Action:\ntool_name(args)</code> — linebreak after colon</li>
+                <li><code>I'll use the calculator. Action: tool_name(args)</code> — preamble on the same line</li>
+            </ul>
+
+            <p>
+                Each variant requires a new special case in your parser. What begins as three lines of code becomes a 50-line regex monster — and it still breaks on the next novel format the model invents.
+            </p>
+
+            <h3>3. Silent Failures</h3>
+
+            <p>
+                The most dangerous failure mode: the parser extracts <em>something</em>, but it's the wrong thing. No exception is raised. The tool executes with incorrect arguments, returns a plausible-looking result, and the agent continues reasoning on corrupted data. The user sees a confident, wrong answer with no indication that a parsing error occurred upstream.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-exclamation-triangle"></i> The Real Risk</div>
+                <p>String-parsing failures are not crashes — they're silent data corruption. In a multi-step agent loop, a bad parse on step 2 contaminates every subsequent step. By the time the final answer is wrong, the root cause is invisible.</p>
+            </div>
+
+            <h2>The Structured Output Solution</h2>
+
+            <p>
+                Modern LLM APIs solve this by moving tool-call extraction <em>out of the text stream</em> and into the API protocol itself. Instead of asking the model to write <code>calculator(expression)</code> as text, you declare tools as typed schemas and the API returns structured objects:
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Approach</th>
+                        <th>Provider</th>
+                        <th>How It Works</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Function Calling</strong></td>
+                        <td>OpenAI</td>
+                        <td>Declare tools as JSON schemas; model returns <code>tool_calls[]</code> with name + JSON args</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tool Use</strong></td>
+                        <td>Anthropic</td>
+                        <td>Declare tools in API request; model returns <code>tool_use</code> content blocks</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tool Configuration</strong></td>
+                        <td>Amazon Bedrock</td>
+                        <td>Pass tool specs in Converse API; model returns <code>toolUse</code> in response content</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Structured Outputs</strong></td>
+                        <td>OpenAI</td>
+                        <td>Enforce full JSON schema compliance on model output — guaranteed valid structure</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                Here's what the production version looks like with OpenAI function calling:
+            </p>
+
+<pre><code>response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=messages,
+    tools=[{
+        "type": "function",
+        "function": {
+            "name": "calculator",
+            "description": "Evaluate a math expression",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "expression": {"type": "string"}
+                },
+                "required": ["expression"]
+            }
+        }
+    }]
+)
+
+# No string parsing — structured extraction
+tool_call = response.choices[0].message.tool_calls[0]
+name = tool_call.function.name           # "calculator"
+args = json.loads(tool_call.function.arguments)  # {"expression": "(2+3)*4"}</code></pre>
+
+            <p>
+                The parentheses in <code>(2+3)*4</code> are now inside a JSON string value — they don't interfere with extraction. The tool name is a first-class field, not a substring. Argument types are validated against the schema. If the model doesn't want to call a tool, it simply doesn't populate <code>tool_calls</code>.
+            </p>
+
+            <h2>What Changes in Practice</h2>
+
+            <p>
+                Switching from string parsing to structured tool use isn't just a reliability improvement — it changes what you can build:
+            </p>
+
+            <ul>
+                <li><strong>Multi-tool calls per turn.</strong> The API can return multiple <code>tool_calls</code> in a single response. With string parsing, you'd need to parse multiple <code>Action:</code> lines — a combinatorial formatting nightmare.</li>
+                <li><strong>Typed arguments.</strong> The schema can enforce <code>integer</code>, <code>boolean</code>, <code>enum</code>, and nested object types. String parsing gives you one type: string.</li>
+                <li><strong>Parallel execution.</strong> Structured tool calls come with IDs, so you can dispatch tools concurrently and match results back to their calls unambiguously.</li>
+                <li><strong>No prompt engineering for format.</strong> You no longer spend tokens (and risk) on "Format your response as: Action: [tool_name(arguments)]". The model knows the schema from the API, not from prompt instructions.</li>
+            </ul>
+
+            <h2>When String Parsing Is Acceptable</h2>
+
+            <p>
+                That said, naive parsing has its place:
+            </p>
+
+            <ul>
+                <li><strong>Teaching.</strong> It makes the ReAct loop's mechanics visible. My Chapter 1 notebook uses it deliberately so readers can see thought → action → observation in plain text.</li>
+                <li><strong>Prototyping.</strong> If you're testing a new tool's description before committing to a schema, quick string parsing gets you to a working demo faster.</li>
+                <li><strong>Models without tool APIs.</strong> Some open-source or self-hosted models don't support structured tool use. String parsing (ideally with robust regex and validation) may be your only option.</li>
+            </ul>
+
+            <p>
+                The rule of thumb: <strong>if your system handles real user queries, use structured APIs. If you're learning or prototyping, string parsing is fine — just know its limits.</strong>
+            </p>
+
+            <h2>Key Takeaways</h2>
+
+            <ol>
+                <li><strong>String parsing of LLM output is inherently fragile</strong> — nested delimiters, format drift, and silent failures compound at scale.</li>
+                <li><strong>Structured tool-use APIs eliminate the parsing layer entirely</strong> — tool names, arguments, and types are first-class protocol objects.</li>
+                <li><strong>The shift enables new patterns</strong> — multi-tool calls, typed arguments, parallel dispatch — that are impractical with text parsing.</li>
+                <li><strong>Use string parsing only for teaching and quick prototyping</strong>, with clear caveats about its limitations.</li>
+            </ol>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-book"></i> From the Book</div>
+                <p>The code examples for both the naive <code>SimpleReActAgent</code> and the production <code>ProductionReActAgent</code> are in Chapter 1 of <em>Building Agentic AI Systems</em>. The full notebook lets you run both side-by-side and see exactly where the naive parser breaks.</p>
+            </div>
+
+        </div>
+
+        <footer class="article-footer">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to all articles</a>
+            <div class="share-links">
+                <a href="https://twitter.com/intent/tweet?text=Building%20Reliable%20Tool-Calling%20Agents&url=" title="Share on X"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=" title="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </footer>
+
+    </article>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const bar = document.getElementById('reading-progress');
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            if (docHeight > 0) {
+                bar.style.width = (scrollTop / docHeight) * 100 + '%';
+            }
+        });
+    </script>
+
+</body>
+</html>

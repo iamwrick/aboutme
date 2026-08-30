@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Word Embeddings Changed NLP Forever | Wrick Talukdar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">NLP</span>
+                <span class="article-date">September 12, 2015 · 7 min read</span>
+            </div>
+            <h1 class="article-title">How Word Embeddings Changed NLP Forever</h1>
+            <p class="article-subtitle">From one-hot vectors to Word2Vec and GloVe — the representation revolution that made machines understand meaning, analogy, and context for the first time.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Architect & Researcher</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="article-body">
+
+            <p>
+                For decades, the question that plagued natural language processing was deceptively simple: <em>How do you teach a machine what words mean?</em>
+            </p>
+
+            <p>
+                Early approaches—bag of words, TF-IDF, one-hot encoding—treated language as a collection of discrete symbols with no inherent relationship to one another. A computer couldn't tell you that "king" and "queen" were semantically related, or that "Paris" stood in the same relationship to "France" as "Tokyo" stood to "Japan." Words were atoms, not molecules. They didn't interact. They had no dimensions, no structure, no <em>meaning</em>.
+            </p>
+
+            <p>
+                Then, in 2013, Tomas Mikolov and a team at Google released Word2Vec—a deceptively simple neural architecture that would fundamentally rewire how machines process language. For the first time, words could be represented as dense vectors in a continuous space where <strong>geometry became semantics</strong>. You could subtract, add, and multiply word vectors and get results that made linguistic sense.
+            </p>
+
+            <p>
+                The moment researchers realized this was possible—that <code>king - man + woman ≈ queen</code>—the field transformed. This wasn't theoretical. This was a machine discovering analogical structure without being explicitly told it existed.
+            </p>
+
+            <p>
+                In this article, I'll walk through the revolution that word embeddings triggered: why the old approaches failed, how Word2Vec and GloVe cracked the representation problem, where they reached their limits, and how they seeded the path to modern language models that power today's AI systems.
+            </p>
+
+            <h2>The Old World: Why One-Hot and TF-IDF Were Fundamentally Broken</h2>
+
+            <p>
+                Before embeddings, the standard approach was deceptively straightforward: assign every word a unique index in a vocabulary, then represent each word as a binary vector where only that index is 1 and all others are 0.
+            </p>
+
+            <p>
+                If your vocabulary is <code>["dog", "cat", "animal", "runs", "sleeps"]</code> with indices 0–4, then:
+            </p>
+
+<pre><code>"dog"     = [1, 0, 0, 0, 0]
+"cat"     = [0, 1, 0, 0, 0]
+"animal"  = [0, 0, 1, 0, 0]
+"runs"    = [0, 0, 0, 1, 0]</code></pre>
+
+            <p>
+                This is called <strong>one-hot encoding</strong>. It's orthogonal: every word is equally distant (or equally indifferent) from every other word. The dot product between any two different one-hot vectors is zero. There is no signal that "dog" and "cat" are both animals, or that "runs" and "sleeps" are both verbs.
+            </p>
+
+            <p>
+                TF-IDF (Term Frequency–Inverse Document Frequency) tried to improve this by weighting words by their statistical importance: common words got lower weights, rare words got higher weights. This worked as a <em>proxy for relevance</em> in information retrieval, but it still gave you no semantic understanding. "Good" and "bad" would have very different TF-IDF scores, but their relationship to "sentiment" would remain invisible.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-lightbulb"></i> The Core Problem</div>
+                <p>One-hot vectors have dimensionality equal to vocabulary size (often 50,000+), yet contain almost no information. Most entries are zero. There's no way to express that two words are semantically similar. Linguistic structure is completely invisible.</p>
+            </div>
+
+            <p>
+                Consider building a sentiment classifier. With one-hot vectors, "good" and "positive" are strangers. A model trained on "good" has to learn from scratch that "positive" means the same thing. Every synonym requires independent examples. Every grammatical variant requires separate training. The data requirements explode.
+            </p>
+
+            <p>
+                What was missing wasn't better statistics—it was a fundamentally different representation: one where <strong>meaning lives in the geometry</strong>.
+            </p>
+
+            <h2>Word2Vec: Geometry as Meaning</h2>
+
+            <p>
+                In September 2013, Tomas Mikolov, Kai Chen, Greg Corrado, and Jeffrey Dean published <em>Efficient Estimation of Word Representations in Vector Space</em>. The insight was radical in its simplicity: instead of representing words as discrete one-hot symbols, train a shallow neural network to predict neighboring words, then use the hidden layer weights as your word representation.
+            </p>
+
+            <p>
+                Word2Vec comes in two flavors: <strong>Skip-gram</strong> and <strong>CBOW</strong> (Continuous Bag of Words).
+            </p>
+
+            <h3>Skip-gram: Predicting Context from Target</h3>
+
+            <p>
+                Skip-gram takes a target word (e.g., "dog") and trains a neural network to predict the words that appear nearby in context (e.g., "barks", "runs", "pet"). The network is deliberately shallow: input → hidden layer (say, 300 neurons) → softmax output layer.
+            </p>
+
+            <p>
+                After training on a huge corpus, you throw away the output layer and keep the hidden layer weights. Those weights <em>become your word embeddings</em>—a 300-dimensional vector for each word.
+            </p>
+
+<pre><code>from gensim.models import Word2Vec
+
+# Train on a corpus of sentences
+model = Word2Vec(sentences=corpus, vector_size=300, window=5, workers=4)
+
+# Get embedding for a word
+dog_vector = model.wv['dog']  # Returns a 300-dim array
+
+# Find similar words
+print(model.wv.most_similar('dog', topn=5))
+# Output: [('puppy', 0.89), ('dogs', 0.87), ('cat', 0.76), ...]</code></pre>
+
+            <p>
+                The magic happens in the learned geometry. Words that appear in similar contexts—"dog," "cat," "animal"—end up near each other in the 300-dimensional space. Antonyms and opposites often cluster opposite directions. Grammatical relationships encode as directional offsets.
+            </p>
+
+            <h3>CBOW: Predicting Target from Context</h3>
+
+            <p>
+                CBOW (Continuous Bag of Words) inverts the problem: given the surrounding context words, predict the target word. It's often faster to train and works better for smaller datasets. The mathematical principle is the same: the hidden layer learns to represent words as points in space where context-compatible words cluster together.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-magic"></i> Why This Works</div>
+                <p>The network learns that if it places "dog," "cat," and "animal" close together in vector space, the hidden layer can reconstruct context more efficiently. Nearby words have overlapping neighborhoods. The network compresses linguistic structure into geometry.</p>
+            </div>
+
+            <h2>The Moment: King − Man + Woman = Queen</h2>
+
+            <p>
+                The real breakthrough came when researchers tested vector arithmetic on learned embeddings. They discovered something almost magical:
+            </p>
+
+<pre><code># Word vector arithmetic
+king_vec = embeddings['king']
+man_vec = embeddings['man']
+woman_vec = embeddings['woman']
+
+result_vec = king_vec - man_vec + woman_vec
+
+# Find the closest word to result_vec
+closest_word = find_nearest_word(result_vec)
+print(closest_word)  # Output: 'queen'</code></pre>
+
+            <p>
+                The vector for <code>king - man + woman</code> was closest to the vector for <code>queen</code>. Not approximately. Not by accident. Consistently. With high confidence.
+            </p>
+
+            <p>
+                This single result shattered the conventional wisdom that machine learning on text was a matter of memorizing statistical patterns. The network had learned <em>structure</em>—abstract relational structure that could be manipulated algebraically.
+            </p>
+
+            <p>
+                Other analogies worked:
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Analogy</th>
+                        <th>Equation</th>
+                        <th>Expected</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Man is to Woman</td>
+                        <td>king - man + woman</td>
+                        <td>queen</td>
+                    </tr>
+                    <tr>
+                        <td>Capital relationships</td>
+                        <td>Paris - France + Japan</td>
+                        <td>Tokyo</td>
+                    </tr>
+                    <tr>
+                        <td>Verb tense</td>
+                        <td>run - ran + walk</td>
+                        <td>walked</td>
+                    </tr>
+                    <tr>
+                        <td>Comparative adjectives</td>
+                        <td>good - better + bad</td>
+                        <td>worse</td>
+                    </tr>
+                    <tr>
+                        <td>Currency</td>
+                        <td>dollar - USA + Japan</td>
+                        <td>yen</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                The geometry <em>encoded meaning</em>. Relationships between words were preserved as vector offsets. Direction and distance in the embedding space held linguistic information. For the first time, a machine had learned to represent language as a structured mathematical object.
+            </p>
+
+            <p>
+                This discovery had an immediate impact. Researchers realized that pre-trained Word2Vec vectors could be used as initialization for downstream tasks: sentiment analysis, named entity recognition, machine translation. Instead of starting with random vectors, you could start with vectors that already "understood" word relationships. Transfer learning, which had been common in computer vision, suddenly became viable for NLP.
+            </p>
+
+            <h2>GloVe: Combining Global Statistics with Local Context</h2>
+
+            <p>
+                Within two years, Word2Vec's dominance was challenged by <strong>GloVe</strong> (Global Vectors for Word Representation), developed by researchers at Stanford in 2014.
+            </p>
+
+            <p>
+                Word2Vec is fundamentally a <em>local</em> method: it learns word representations by optimizing for predictions in small, fixed-size context windows (usually 5–10 words). This works, but it doesn't explicitly leverage global statistics about word co-occurrence across the entire corpus.
+            </p>
+
+            <p>
+                GloVe combines both:
+            </p>
+
+            <ul>
+                <li><strong>Global co-occurrence statistics:</strong> Precompute a matrix of how often words appear together across the entire corpus</li>
+                <li><strong>Local context windows:</strong> Optimize embeddings so that the dot product between two word vectors approximates their co-occurrence probability</li>
+            </ul>
+
+            <p>
+                The result? Embeddings that capture both global semantic relationships (handled by the co-occurrence matrix) and local context patterns (optimized via gradient descent).
+            </p>
+
+            <p>
+                In practice, GloVe often outperformed Word2Vec on downstream tasks. The embeddings carried richer semantic information, and the method was more interpretable because the objective function—matching predicted co-occurrence to observed co-occurrence—was explicit.
+            </p>
+
+<pre><code># GloVe training (using the gensim wrapper or standalone tools)
+# Builds co-occurrence matrix, learns embeddings via SGD
+# Result: word vectors of high semantic quality
+
+# Key hyperparameters:
+# - vector_size: dimension of embeddings (typical: 50-300)
+# - cooccurrence_window: size of context
+# - x_max: cutoff for co-occurrence weighting
+# - alpha, learning_rate: standard SGD parameters</code></pre>
+
+            <h2>Practical Impact: When Embeddings Changed Real-World Systems</h2>
+
+            <h3>1. Sentiment Analysis</h3>
+
+            <p>
+                Pre-Word2Vec sentiment analysis required extensive feature engineering or large labeled datasets. With embeddings, a simple classifier (even logistic regression) operating on averaged embeddings could now generalize across synonyms and related expressions. "I love this movie" and "This film is fantastic" would have nearly identical representations, requiring less training data and generalizing better to new vocabulary.
+            </p>
+
+            <h3>2. Machine Translation</h3>
+
+            <p>
+                Sequence-to-sequence models (encoder-decoder architectures) became practical when initialized with pre-trained embeddings. The encoder could leverage learned word relationships to better understand source sentences, and the decoder could generate more fluent target translations. Google's neural machine translation system, deployed in 2016, built on this foundation.
+            </p>
+
+            <h3>3. Semantic Search</h3>
+
+            <p>
+                Search engines could now measure similarity between queries and documents in embedding space rather than through keyword matching alone. A search for "beautiful sunset" could match documents containing "gorgeous dawn" or "stunning landscape" because the embeddings captured semantic similarity beyond exact token matches.
+            </p>
+
+            <h3>4. Question Answering and Information Retrieval</h3>
+
+            <p>
+                Systems could retrieve relevant passages by computing similarity between a question's embedding and candidate passage embeddings. No longer bound by keyword overlap, QA systems could find the right answer even when phrased differently.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-chart-line"></i> The Scaling Pattern</div>
+                <p>As embeddings improved, tasks that previously required thousands of hand-labeled examples suddenly worked with hundreds. Transfer learning became the default strategy in NLP. You trained on massive unlabeled text, learned embeddings, then fine-tuned on task-specific data. This pattern—pretrain on scale, fine-tune on task—became the template for modern deep learning.</p>
+            </div>
+
+            <h2>Limitations: Where Embeddings Hit the Wall</h2>
+
+            <p>
+                By 2016–2017, the limitations of static word embeddings became clear:
+            </p>
+
+            <h3>Polysemy: One Vector Can't Hold Multiple Meanings</h3>
+
+            <p>
+                The word "bank" has at least two meanings: a financial institution or the side of a river. A single embedding vector can't represent both. It ends up somewhere in the middle, capturing neither meaning perfectly. In the sentence "I deposited money at the bank," the embedding for "bank" should lean toward the financial meaning. In "I walked along the bank of the river," it should lean toward geography. But a static embedding doesn't adapt.
+            </p>
+
+            <p>
+                This was a fundamental architectural limit: one word, one vector, no context-dependence.
+            </p>
+
+            <h3>Bias Baked Into Vectors</h3>
+
+            <p>
+                Word embeddings absorb biases from their training data. The classic example: <code>man - woman ≈ programmer</code>, but <code>woman - woman ≈ nurse</code>. The embeddings had learned gender stereotypes. Similar biases were found for race, nationality, and occupation. When systems built on these embeddings made decisions (hiring, loans, content recommendation), they perpetuated and amplified these biases.
+            </p>
+
+            <h3>Static, Pre-trained Vectors Don't Adapt to Domains</h3>
+
+            <p>
+                General-purpose embeddings trained on Wikipedia and Common Crawl don't capture domain-specific vocabulary relationships. In medical or legal text, the semantic relationships are different. You could retrain embeddings for each domain, but that's expensive. There's no principled way to fine-tune an already-trained Word2Vec model to a new domain.
+            </p>
+
+            <h3>Lack of Morphological Understanding</h3>
+
+            <p>
+                Out-of-vocabulary words (words not seen during training) have no embedding. Words with subtle morphological differences ("run", "running", "runner") have independent vectors with no obvious relationship. No architecture forced the model to recognize that "running" and "runner" share the root "run."
+            </p>
+
+            <h2>The Bridge: From Static Embeddings to Contextual Representations</h2>
+
+            <p>
+                The field needed something new: embeddings that could adapt to context, handle polysemy, and leverage subword structure. This led to the next generation of models, each building on the Word2Vec foundation:
+            </p>
+
+            <h3>FastText (2016)</h3>
+
+            <p>
+                Facebook's FastText addressed out-of-vocabulary words by representing each word as a bag of character n-grams. Now "running" is represented as a sum of vectors for "run", "unn", "nni", "nin", "ing", etc. Unknown words could be represented by their subword components. Morphologically similar words now had similar embeddings by construction.
+            </p>
+
+            <h3>ELMo (2018)</h3>
+
+            <p>
+                Embeddings from Language Models (ELMo) added context-dependence. Instead of looking up a single embedding for each word, ELMo ran the entire sentence through a bidirectional LSTM and generated <em>different</em> embeddings for the same word in different contexts. "Bank" in financial context got a different representation than "bank" in a geographical context. For the first time, embeddings were truly context-aware.
+            </p>
+
+            <h3>BERT (2018)</h3>
+
+            <p>
+                Google's BERT (Bidirectional Encoder Representations from Transformers) scaled up the idea with transformer architectures and larger datasets. BERT wasn't just about embeddings anymore—it was a fully contextualized language model that could be fine-tuned end-to-end for any downstream task. The embedding space wasn't fixed; it updated during task-specific training.
+            </p>
+
+            <h3>GPT and Beyond</h3>
+
+            <p>
+                From BERT forward, the story shifts to large language models trained on massive text corpora with billions to trillions of parameters. GPT, GPT-2, GPT-3 showed that with enough scale and the right architecture, language models could learn rich, multifaceted representations that generalized across an astonishing range of tasks.
+            </p>
+
+            <p>
+                But here's the key insight: all of these models are built on the exact same foundation that Word2Vec established. They all represent language as vectors in continuous space. They all use distance and direction to encode meaning. They all rely on the principle that <strong>geometry captures semantics</strong>.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-graduation-cap"></i> The Lineage</div>
+                <p>Word2Vec → FastText → ELMo → BERT → GPT-3 → Modern LLMs. Each step solves a limitation of the previous one, but the core insight—that words should be represented as learnable vectors in a continuous space—has remained constant. Word2Vec didn't just solve a problem; it opened a direction that the entire field followed for the next decade.</p>
+            </div>
+
+            <h2>Key Takeaways</h2>
+
+            <p>
+                Word embeddings represent one of the most important breakthroughs in natural language processing:
+            </p>
+
+            <ul>
+                <li><strong>Meaning lives in geometry:</strong> Words that are semantically related cluster near each other. Relationships between words encode as vector offsets. This insight transformed how machines represent language.</li>
+
+                <li><strong>Vector arithmetic works:</strong> <code>king - man + woman = queen</code> isn't a fluke. Embeddings capture abstract linguistic structure that can be manipulated algebraically. This was proof that machines could learn generalizable linguistic principles.</li>
+
+                <li><strong>Transfer learning became standard:</strong> Pre-trained embeddings from large unlabeled corpora could jump-start downstream tasks. This reduced data requirements and improved generalization across the board in NLP.</li>
+
+                <li><strong>Static embeddings had hard limits:</strong> Polysemy, bias, domain-specificity, and morphological blindness were fundamental architectural problems. They motivated the shift toward contextualized representations and eventually to large language models.</li>
+
+                <li><strong>The foundation held up:</strong> From Word2Vec through BERT and modern LLMs, the core principle—continuous, learnable representations in vector space—has proven robust enough to scale to billions of parameters and trillions of tokens.</li>
+
+                <li><strong>Bias is structural, not incidental:</strong> Embeddings inherit biases from training data. This taught the field a hard lesson: you can't claim neutrality. Representation itself is a choice, and those choices have consequences.</li>
+            </ul>
+
+            <p>
+                The path from one-hot vectors to Word2Vec to transformers to today's language models is a story of learning to represent language as mathematics. Each breakthrough was about finding better geometry to hold meaning. And that journey isn't over—it's just accelerating.
+            </p>
+
+        </div>
+
+        <div class="article-footer">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to all articles</a>
+            <div class="share-links">
+                <a href="#" title="Share on Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="Share on LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="#" title="Copy link"><i class="fas fa-link"></i></a>
+            </div>
+        </div>
+
+    </article>
+
+    <script>
+        // Reading progress tracker
+        function updateReadingProgress() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            document.getElementById('reading-progress').style.width = scrollPercent + '%';
+        }
+
+        window.addEventListener('scroll', updateReadingProgress);
+    </script>
+
+</body>
+</html>
