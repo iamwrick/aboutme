@@ -4013,6 +4013,68 @@
             .press-banner-text { font-size: 0.82rem; }
         }
 
+
+        /* About Section — two column with highlights */
+        .about-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .about-bio p {
+            font-size: 1.05rem;
+            color: var(--secondary-text);
+            line-height: 1.8;
+            margin-bottom: 1.25rem;
+        }
+
+        .about-bio p:last-child { margin-bottom: 0; }
+
+        .about-highlights {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .about-highlight-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            border-left: 2px solid rgba(255,255,255,0.1);
+            transition: border-color 0.2s;
+        }
+
+        .about-highlight-item:hover {
+            border-left-color: var(--accent-color);
+        }
+
+        .about-highlight-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            line-height: 1;
+            min-width: 3.5rem;
+            flex-shrink: 0;
+        }
+
+        .about-highlight-text {
+            font-size: 0.88rem;
+            color: var(--secondary-text);
+            line-height: 1.5;
+        }
+
+        .about-highlight-text em {
+            color: var(--accent-secondary);
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .about-layout { grid-template-columns: 1fr; gap: 2rem; }
+        }
+
     </style>
 </head>
 <body>
@@ -4148,54 +4210,43 @@
                         <p class="section-subtitle">Empowering the future through AI innovation and scientific research</p>
                     </div>
                     
-                    <div class="contact-grid">
-                        <div>
-                            <p style="font-size: 1.1rem; color: var(--secondary-text); line-height: 1.8; margin-bottom: 1.5rem;">
+                    <div class="about-layout">
+                        <div class="about-bio">
+                            <p>
                                 Wrick is a distinguished AI/ML architect and product leader with over two decades of experience driving 
-                                technological transformations in global enterprises. Throughout his career, Wrick has led digital initiatives 
-                                that drive significant cost savings and accelerate time-to-market. He has a proven track record of building 
+                                technological transformations in global enterprises. He has led digital initiatives 
+                                that drive significant cost savings and accelerate time-to-market, with a proven track record of building 
                                 high-performance teams that deliver innovative AI products and solutions.
                             </p>
-                            <p style="font-size: 1.1rem; color: var(--secondary-text); line-height: 1.8; margin-bottom: 1.5rem;">
+                            <p>
                                 As a strategic thinker, Wrick excels in aligning technology with business goals, fostering cross-functional 
-                                collaboration, and addressing complex challenges with data-driven approaches. His ability to bridge technical 
-                                expertise with business vision positions him as a key leader in driving sustainable growth and innovation. 
-                                Wrick is a TOGAF® Level 2 Certified Professional, holding multiple AWS and Azure certifications in 
-                                Artificial Intelligence and Machine Learning.
+                                collaboration, and addressing complex challenges with data-driven approaches. He is a TOGAF® Level 2 
+                                Certified Professional, holding multiple AWS and Azure certifications in AI and Machine Learning.
                             </p>
-                            <p style="font-size: 1.1rem; color: var(--secondary-text); line-height: 1.8; margin-bottom: 1.5rem;">
+                            <p>
                                 Beyond his professional achievements, Wrick has made a lasting impact on the global scientific community, 
                                 with his research widely referenced and cited worldwide. He serves as Chair of IEEE NIC, is a Senior Member 
                                 of IEEE, and holds the role of Chief AI/ML Architect for Generative AI Initiatives within the IEEE Industry 
-                                Engagement Committee (IEC), where he empowers young professionals to advance their careers through technology 
-                                and generative AI.
-                            </p>
-                            <p style="font-size: 1.1rem; color: var(--secondary-text); line-height: 1.8;">
-                                Additionally, as a Senior Member and Advisor of the Consumer Technology Society (CTSoc), he plays a key role 
-                                in shaping technology standards and provides strategic guidance on major global conferences, including ICCE.
+                                Engagement Committee (IEC).
                             </p>
                         </div>
-                        <div class="contact-info">
-                            <a href="mailto:wrick.talukdar@ieee.org" class="contact-item">
-                                <i class="fas fa-envelope"></i>
-                                <span>wrick.talukdar@ieee.org</span>
-                            </a>
-                            <a href="https://www.linkedin.com/in/wrick-talukdar/" target="_blank" class="contact-item">
-                                <i class="fab fa-linkedin"></i>
-                                <span>LinkedIn Profile</span>
-                            </a>
-                            <a href="https://scholar.google.com/citations?user=example" target="_blank" class="contact-item">
-                                <i class="fas fa-graduation-cap"></i>
-                                <span>Google Scholar</span>
-                            </a>
-                            <a href="https://www.researchgate.net/profile/Wrick-Talukdar-2" target="_blank" class="contact-item">
-                                <i class="fab fa-researchgate"></i>
-                                <span>ResearchGate</span>
-                            </a>
-                            <a href="https://github.com/iamwrick" target="_blank" class="contact-item">
-                                <i class="fab fa-github"></i>
-                                <span>GitHub</span>
-                            </a>
+                        <div class="about-highlights">
+                            <div class="about-highlight-item">
+                                <div class="about-highlight-num">20+</div>
+                                <div class="about-highlight-text">Years of global experience in AI, cloud, and product leadership</div>
+                            </div>
+                            <div class="about-highlight-item">
+                                <div class="about-highlight-num">Top 1%</div>
+                                <div class="about-highlight-text">Research impact among peers on ResearchGate</div>
+                            </div>
+                            <div class="about-highlight-item">
+                                <div class="about-highlight-num">1st</div>
+                                <div class="about-highlight-text">Award-winning author — 2025 Goody Business Book Awards Winner & Finalist</div>
+                            </div>
+                            <div class="about-highlight-item">
+                                <div class="about-highlight-num">3</div>
+                                <div class="about-highlight-text">International bestselling books on AI, ethics, and agentic systems</div>
+                            </div>
                         </div>
                     </div>
                 </div>
