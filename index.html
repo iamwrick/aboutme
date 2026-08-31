@@ -63,7 +63,7 @@
 
         body {
             font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--primary-bg);
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
             color: var(--primary-text);
             line-height: 1.65;
             font-weight: 400;
@@ -421,7 +421,7 @@
                 rgba(255, 255, 255, 0.2) 80%,
                 transparent 100%);
             transform: translateX(-50%);
-            opacity: 0.6;
+            opacity: 0.75;
             border-radius: 2px;
         }
 
@@ -534,7 +534,7 @@
         }
 
         .publication-item:hover::before {
-            opacity: 0.6;
+            opacity: 0.75;
         }
 
         .publication-item:hover {
@@ -2579,7 +2579,7 @@
         .filter-pill { background: rgba(255,255,255,0.04); border: 1px solid var(--border-color); color: var(--secondary-text); padding: 0.35rem 0.85rem; border-radius: 2rem; font-size: 0.72rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; font-family: inherit; }
         .filter-pill:hover { border-color: rgba(255,255,255,0.2); color: var(--primary-text); }
         .filter-pill.active { background: rgba(255,255,255,0.12); border-color: var(--accent-color); color: var(--accent-color); }
-        .pill-count { font-size: 0.65rem; opacity: 0.6; margin-left: 0.15rem; }
+        .pill-count { font-size: 0.65rem; opacity: 0.75; margin-left: 0.15rem; }
 
         .articles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.25rem; margin-top: 0.5rem; }
         .article-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 1rem; overflow: hidden; transition: all 0.3s ease; display: flex; flex-direction: column; }
@@ -2888,7 +2888,7 @@
 
         .pro-role-location i {
             font-size: 0.65rem;
-            opacity: 0.6;
+            opacity: 0.75;
         }
 
         .pro-role-desc {
@@ -3935,14 +3935,24 @@
 
         /* Particle Canvas */
         #particle-canvas {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            z-index: 0;
             pointer-events: none;
-            opacity: 0.5;
+            opacity: 0.75;
+        }
+
+        .hero-section {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
         }
 
         /* Press Feature Banner */
@@ -4078,7 +4088,6 @@
     </style>
 </head>
 <body>
-    <canvas id="particle-canvas"></canvas>
     <!-- Scroll Bar with tooltip navigation -->
     <div class="scroll-indicator" id="section-scrubber">
         <div class="scroll-bar-track">
@@ -4121,6 +4130,7 @@
         <div id="home" class="tab-content active">
             <!-- Hero Section -->
             <section class="hero-section">
+                <canvas id="particle-canvas"></canvas>
                 <div class="hero-content">
                     <div class="hero-text">
                         <h1 class="hero-title">Wrick Talukdar</h1>
@@ -7098,12 +7108,13 @@
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
             let particles = [];
-            const maxParticles = 60;
-            const connectionDistance = 150;
+            const maxParticles = 70;
+            const connectionDistance = 200;
 
             function resize() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
+                const hero = canvas.parentElement;
+                canvas.width = hero.offsetWidth;
+                canvas.height = hero.offsetHeight;
             }
             resize();
             window.addEventListener('resize', resize);
@@ -7114,7 +7125,7 @@
                     this.y = Math.random() * canvas.height;
                     this.vx = (Math.random() - 0.5) * 0.4;
                     this.vy = (Math.random() - 0.5) * 0.4;
-                    this.radius = Math.random() * 1.5 + 0.5;
+                    this.radius = Math.random() * 2.2 + 1;
                 }
                 update() {
                     this.x += this.vx;
@@ -7144,12 +7155,12 @@
                         const dy = particles[i].y - particles[j].y;
                         const dist = Math.sqrt(dx * dx + dy * dy);
                         if (dist < connectionDistance) {
-                            const alpha = (1 - dist / connectionDistance) * 0.15;
+                            const alpha = (1 - dist / connectionDistance) * 0.25;
                             ctx.beginPath();
                             ctx.moveTo(particles[i].x, particles[i].y);
                             ctx.lineTo(particles[j].x, particles[j].y);
                             ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
-                            ctx.lineWidth = 0.5;
+                            ctx.lineWidth = 0.6;
                             ctx.stroke();
                         }
                     }
