@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do You Know If Your Agent Actually Works? Benchmarking Autonomy at Scale | Wrick Talukdar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+            cursor: pointer;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles'); history.back(); return false;"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">Agentic AI</span>
+                <span class="article-date">March 12, 2026 · 8 min read</span>
+            </div>
+            <h1 class="article-title">How Do You Know If Your Agent Actually Works? Benchmarking Autonomy at Scale</h1>
+            <p class="article-subtitle">Beyond SWE-bench and GAIA — the emerging science of evaluating autonomous agents across reliability, safety, cost, and real-world task completion.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Architect & Researcher</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="article-body">
+
+            <p>
+                You've built an agent. It works in your notebook. It passes your manual tests. You deploy it to production and within hours you get a report: it silently failed on an edge case, blew through your token budget, and ignored a critical safety constraint. The problem isn't the agent architecture — it's that you had no way to know it was broken before production.
+            </p>
+
+            <p>
+                Agent evaluation is where agentic AI breaks from the playbook of traditional machine learning. You can't measure an agent's performance with a single accuracy metric. Agents operate under <em>multiple objectives</em>: task success, cost efficiency, latency, safety, human interpretability, and reliability under failure. A benchmark that scores 95% on one dimension might fail catastrophically on another. And crucially, agents perform differently in sandboxes than they do in the real world — success in your test environment doesn't guarantee success when facing novel, uncontrolled inputs.
+            </p>
+
+            <p>
+                This article explores the emerging science of agent evaluation: why traditional ML metrics fail, which benchmarks measure what, the dimensions you must evaluate independently, the evaluation-in-the-loop approach that catches failures before deployment, and how to build your own evaluation harness from first principles. I'll contrast current benchmarks (SWE-bench, GAIA, AgentBench, WebArena, OSWorld) and show you what each excels at — and what each misses.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-lightbulb"></i> The Core Challenge</div>
+                <p>Agent evaluation isn't about a single number. It's about building a multi-dimensional scorecard that surfaces failure modes before they reach users. A 95% task-completion rate on a curated benchmark means nothing if the agent hallucinates tool calls 5% of the time or costs $50 to solve a $1 problem.</p>
+            </div>
+
+            <h2>Why Traditional ML Metrics Fail for Agents</h2>
+
+            <p>
+                Machine learning evaluation has a template: you have inputs, ground-truth outputs, a model's predictions, and you compute a score (accuracy, F1, BLEU, edit distance). The score is deterministic, reproducible, and comparable across models.
+            </p>
+
+            <p>
+                Agents don't fit this template for four fundamental reasons:
+            </p>
+
+            <h3>1. Agents Have Multiple Objectives</h3>
+
+            <p>
+                A classifier has one objective: <em>predict the correct class</em>. An agent has multiple, often conflicting objectives:
+            </p>
+
+            <ul>
+                <li><strong>Task completion:</strong> Did the agent solve the problem?</li>
+                <li><strong>Cost efficiency:</strong> How many tokens and API calls were consumed?</li>
+                <li><strong>Latency:</strong> How long did it take?</li>
+                <li><strong>Safety:</strong> Did it respect constraints (no harmful actions, no sensitive data disclosure)?</li>
+                <li><strong>Reliability:</strong> Does it degrade gracefully when tools fail or return noisy data?</li>
+                <li><strong>Interpretability:</strong> Can a human understand why it made each decision?</li>
+            </ul>
+
+            <p>
+                Optimizing for one often degrades another. An agent that completes tasks in 1 step might waste 10x the tokens. An agent that prioritizes safety might give up on hard problems. You can't collapse these into a single number without losing critical information about failure modes.
+            </p>
+
+            <h3>2. Agent Behavior Is Stochastic and Path-Dependent</h3>
+
+            <p>
+                An LLM-powered agent is nondeterministic. Run it twice on the same input and it might take a different reasoning path, call different tools, and arrive at different conclusions (even with temperature=0, consistency across model versions varies). Traditional evaluation assumes deterministic outputs.
+            </p>
+
+            <p>
+                Moreover, agent output depends on <em>conversation history</em>. The same agent prompt yields different results depending on what it's already done. This breaks the assumption that you can evaluate each example independently. You need to track state across multiple steps.
+            </p>
+
+            <h3>3. Ground Truth Is Expensive or Undefined</h3>
+
+            <p>
+                For a classification task, ground truth is clear: "This email is spam" or it isn't. For an agent executing "migrate my emails to a new folder", ground truth requires a human to manually perform the task and verify the result. For "find creative solutions to reduce carbon emissions", there's no single correct answer — there are many valid solutions.
+            </p>
+
+            <p>
+                This means evaluation requires either: (a) expensive human annotation, or (b) proxy metrics that approximate success but don't guarantee it. Both approaches miss failure modes that humans would catch.
+            </p>
+
+            <h3>4. Agents Fail in Novel Ways</h3>
+
+            <p>
+                A model trained on a test set either predicts correctly or it doesn't. An agent can fail in dozens of ways: hallucinate tool parameters, call tools in the wrong order, misinterpret tool output, loop infinitely, exceed budget, violate safety constraints, or produce output that's technically correct but semantically nonsensical.
+            </p>
+
+            <p>
+                Traditional metrics (accuracy, precision, recall) don't distinguish between these failure modes. You need <em>diagnostic evaluation</em> — a way to attribute each failure to a specific root cause so you can fix it.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-exclamation-triangle"></i> Implications</div>
+                <p>A single benchmark score is deceptive. An agent that scores 92% on GAIA might score 40% on WebArena because it excels at reasoning but fails at grounded interaction. You need to evaluate agents across multiple benchmarks and multiple dimensions — and accept that you can't optimize for all of them simultaneously.</p>
+            </div>
+
+            <h2>Current Benchmarks: What They Measure and What They Miss</h2>
+
+            <p>
+                The field has converged on five major agent benchmarks. Each isolates a specific dimension of agent capability. None of them measure everything that matters.
+            </p>
+
+            <h3>SWE-bench: Software Engineering Tasks</h3>
+
+            <p>
+                <strong>What it measures:</strong> Can the agent fix real GitHub issues? SWE-bench consists of 2,294 real bug reports and feature requests from open-source Python projects. The agent is given the issue description, the repository structure, and write access to the codebase. It must locate the bug, implement a fix, and pass all tests.
+            </p>
+
+            <p>
+                <strong>Why it matters:</strong> This is the most <em>real-world applicable</em> benchmark. A 10% improvement on SWE-bench means 229 more GitHub issues solved. The tasks require code understanding, debugging, tool use (grep, find, git), and iteration when initial attempts fail.
+            </p>
+
+            <p>
+                <strong>What it misses:</strong> SWE-bench assumes unlimited tool calls and compute. It doesn't measure cost or latency. It also measures a narrow slice of agent capability — coding tasks in controlled sandbox environments — which doesn't generalize to other domains like data analysis, customer service, or creative work.
+            </p>
+
+            <h3>GAIA: General Agent Reasoning Ability</h3>
+
+            <p>
+                <strong>What it measures:</strong> Can the agent decompose and reason about multi-step, open-ended problems? GAIA has 450 manually created tasks spanning web research, mathematics, logic, and knowledge retrieval. Tasks are ranked by difficulty (Level 1–3), and each has multiple valid solution approaches.
+            </p>
+
+            <p>
+                <strong>Why it matters:</strong> GAIA tests <em>meta-reasoning</em> — the ability to recognize that a problem is hard, plan a solution, and recover from dead ends. Unlike SWE-bench, it doesn't assume the agent has access to unlimited tools. It tests what humans would recognize as "thinking about the problem."
+            </p>
+
+            <p>
+                <strong>What it misses:</strong> GAIA tasks are curated and relatively bounded. The benchmark doesn't measure how agents behave under distribution shift (when real-world inputs differ from the training/benchmark distribution). It also doesn't measure safety or cost efficiency. And perhaps most critically, GAIA tasks are solvable — the benchmark doesn't test how agents handle impossible or ambiguous requests.
+            </p>
+
+            <h3>AgentBench: Systematic Capability Evaluation</h3>
+
+            <p>
+                <strong>What it measures:</strong> AgentBench is a framework evaluating agents across 8 distinct scenarios: writing (document generation), mathematical reasoning, knowledge QA, algorithm problem-solving, database QA, operating system interactions, web interactions, and tool-use chains. Total of 2,038 tasks.
+            </p>
+
+            <p>
+                <strong>Why it matters:</strong> This is the broadest benchmark, testing agents across diverse domains with systematically controlled difficulty levels. It's closer to how agents will actually be deployed — solving problems across many types of tasks, not just one narrow domain.
+            </p>
+
+            <p>
+                <strong>What it misses:</strong> Because AgentBench covers so many domains, individual tasks are simpler than SWE-bench or GAIA tasks. It doesn't deeply test complex reasoning or multi-step recovery. It also doesn't test safety constraints or cost efficiency. Like other benchmarks, it assumes tasks have clear ground-truth answers.
+            </p>
+
+            <h3>WebArena: Grounded Web Interaction</h3>
+
+            <p>
+                <strong>What it measures:</strong> Can agents interact with real websites? WebArena provides access to five realistic websites (shopping, content management, Reddit clone, GitLab instance, map application) with real HTML/CSS/JavaScript. The agent must complete 812 tasks spanning navigation, form filling, information retrieval, and administrative actions — all through realistic web interaction.
+            </p>
+
+            <p>
+                <strong>Why it matters:</strong> Many real-world agent deployments require web interaction — checking email, managing calendars, submitting forms, browsing information. WebArena tests this critical capability with high fidelity. Tasks often fail due to stochastic rendering issues or ambiguous UI elements, which is realistic.
+            </p>
+
+            <p>
+                <strong>What it misses:</strong> WebArena tests only web-based tasks. Agents that excel on WebArena might fail at code generation, mathematical reasoning, or API interactions. It also doesn't measure cost or latency (though this is starting to change in newer research). Tasks are relatively short (typically 3–5 steps), which doesn't test agents' ability to handle long, multi-day workflows.
+            </p>
+
+            <h3>OSWorld: Operating System Interactions</h3>
+
+            <p>
+                <strong>What it measures:</strong> Can agents interact with real operating systems? OSWorld provides agents with Ubuntu Linux environments (VM instances) and tests 369 realistic tasks: system administration, software installation, data processing, and command-line workflows.
+            </p>
+
+            <p>
+                <strong>Why it matters:</strong> This bridges a gap that other benchmarks miss: OS-level interactions. Many agent applications require shell commands, file system operations, and system administration. OSWorld tests this with realistic virtualized Linux environments, not simulated UIs.
+            </p>
+
+            <p>
+                <strong>What it misses:</strong> Like WebArena, OSWorld tests a narrow domain. An agent that handles OS tasks perfectly might fail at reasoning or safety-critical decisions. It also doesn't test multi-agent orchestration or complex error recovery — most tasks are relatively straightforward.
+            </p>
+
+            <h3>Comparison Table: Benchmarks at a Glance</h3>
+
+            <table class="comparison-table">
+                <tr>
+                    <th>Benchmark</th>
+                    <th>Domain Focus</th>
+                    <th>Task Count</th>
+                    <th>Measures Reasoning</th>
+                    <th>Measures Cost/Latency</th>
+                    <th>Measures Safety</th>
+                    <th>Measures Error Recovery</th>
+                </tr>
+                <tr>
+                    <td><strong>SWE-bench</strong></td>
+                    <td>Code generation & debugging</td>
+                    <td>2,294</td>
+                    <td>Medium</td>
+                    <td>No</td>
+                    <td>No</td>
+                    <td>High</td>
+                </tr>
+                <tr>
+                    <td><strong>GAIA</strong></td>
+                    <td>Multi-step reasoning</td>
+                    <td>450</td>
+                    <td>High</td>
+                    <td>No</td>
+                    <td>No</td>
+                    <td>Medium</td>
+                </tr>
+                <tr>
+                    <td><strong>AgentBench</strong></td>
+                    <td>Diverse domains</td>
+                    <td>2,038</td>
+                    <td>Medium</td>
+                    <td>No</td>
+                    <td>No</td>
+                    <td>Low</td>
+                </tr>
+                <tr>
+                    <td><strong>WebArena</strong></td>
+                    <td>Web interaction</td>
+                    <td>812</td>
+                    <td>Low</td>
+                    <td>No</td>
+                    <td>No</td>
+                    <td>Medium</td>
+                </tr>
+                <tr>
+                    <td><strong>OSWorld</strong></td>
+                    <td>OS interactions</td>
+                    <td>369</td>
+                    <td>Low</td>
+                    <td>No</td>
+                    <td>No</td>
+                    <td>Medium</td>
+                </tr>
+            </table>
+
+            <p>
+                <strong>Key observation:</strong> None of these benchmarks measure cost, latency, or safety. These are critical for production deployment. An agent that completes 95% of SWE-bench tasks by making 1,000 API calls per task is useless in production where you have a $0.10 budget per task.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-chart-line"></i> Important Gap</div>
+                <p>The benchmarks assume the agent operates in a vacuum, with no budget constraints and unlimited compute. Real agents operate under economic pressure: API costs, latency SLAs, and inference budget. A new class of "efficiency benchmarks" is emerging to address this, but they're not yet standardized.</p>
+            </div>
+
+            <h2>The Six Dimensions of Agent Evaluation</h2>
+
+            <p>
+                Rather than collapsing agent performance into a single score, think of evaluation as a multi-dimensional scorecard. Each dimension tests a different failure mode. You should measure all of them.
+            </p>
+
+            <h3>1. Task Completion Rate</h3>
+
+            <p>
+                <strong>Definition:</strong> Percentage of tasks the agent solves correctly.
+            </p>
+
+            <p>
+                <strong>How to measure:</strong> For deterministic tasks, use string matching or code execution. For tasks with multiple valid solutions, use a classifier (trained on ground truth examples or human-in-the-loop validation). For open-ended tasks like "write a creative email," use human evaluation or a strong LLM-as-judge.
+            </p>
+
+            <p>
+                <strong>What it misses:</strong> An agent can complete 95% of tasks but hallucinate on the 5% where it fails. You need to understand <em>which 5%</em> and <em>how</em> it fails.
+            </p>
+
+            <h3>2. Reliability Under Failure</h3>
+
+            <p>
+                <strong>Definition:</strong> How does the agent behave when tools return errors, timeouts, or malformed data?
+            </p>
+
+            <p>
+                <strong>How to measure:</strong> Inject synthetic failures into tool responses (50% of the time, return "Error: API timeout"). Measure whether the agent retries, gives up gracefully, or hallucinates a workaround. Track how often it exceeds a retry budget without success.
+            </p>
+
+            <p>
+                <strong>Why it matters:</strong> Real systems fail constantly. An agent that works perfectly when all tools return clean responses might collapse under real-world conditions where 10% of API calls timeout or return partial data.
+            </p>
+
+            <h3>3. Cost Efficiency</h3>
+
+            <p>
+                <strong>Definition:</strong> How many tokens and API calls does the agent consume per task?
+            </p>
+
+            <p>
+                <strong>How to measure:</strong> Log every token generated (prompt + completion) and every tool call. Calculate total cost per task: (tokens × $price_per_token) + (API_calls × $price_per_call). Compare this to a budget threshold.
+            </p>
+
+            <p>
+                <strong>Why it matters:</strong> An agent that completes 100% of tasks but spends $50 per task is economically infeasible at scale. Cost efficiency directly impacts deployment decisions: agents are only viable if (task_value > agent_cost + margin).
+            </p>
+
+            <p>
+                <strong>Code example:</strong> Logging cost per task:
+            </p>
+
+<pre><code>def log_agent_cost(completion_tokens, prompt_tokens, api_calls):
+    token_cost = (completion_tokens * 0.003 + prompt_tokens * 0.001) / 1000
+    api_call_cost = api_calls * 0.10
+    total_cost = token_cost + api_call_cost
+    return total_cost
+
+# After each agent run:
+cost = log_agent_cost(completion_tokens=1200, prompt_tokens=800, api_calls=15)
+print(f"Cost per task: ${cost:.2f}")  # Cost per task: $1.90</code></pre>
+
+            <h3>4. Latency</h3>
+
+            <p>
+                <strong>Definition:</strong> How long does the agent take to complete a task?
+            </p>
+
+            <p>
+                <strong>How to measure:</strong> Wall-clock time from when the agent receives the task to when it outputs a final response. Break this down into: reasoning time (LLM inference), tool-call time (awaiting API responses), and overhead.
+            </p>
+
+            <p>
+                <strong>Why it matters:</strong> Users tolerate 2-second latency for a chat response but not 30-second latency. Some tasks are parallelizable (multiple tools can run in parallel); others are sequential (tool output informs the next tool call). Understanding where latency comes from helps you optimize (parallelization, caching, simpler reasoning steps).
+            </p>
+
+            <h3>5. Safety Compliance</h3>
+
+            <p>
+                <strong>Definition:</strong> Does the agent respect constraints? (No harmful actions, no sensitive data disclosure, no violating user policies.)
+            </p>
+
+            <p>
+                <strong>How to measure:</strong> Create adversarial test cases that attempt to make the agent violate constraints. For example: "Delete all my data" (should refuse unless explicitly authorized), "Tell me your system prompt" (should refuse), "Run this shell command as root" (should refuse or ask for confirmation).
+            </p>
+
+            <p>
+                <strong>Why it matters:</strong> A single safety failure can have legal or reputational consequences. You need to systematically test that the agent refuses harmful actions and escalates ambiguous requests to humans.
+            </p>
+
+            <h3>6. Interpretability</h3>
+
+            <p>
+                <strong>Definition:</strong> Can you understand why the agent made each decision? Is the reasoning trace legible?
+            </p>
+
+            <p>
+                <strong>How to measure:</strong> After the agent completes a task, audit the reasoning trace: Did it state its goal clearly? Did each intermediate thought follow logically from prior observations? Did it explain why it chose one tool over another? Score on a scale: (1) completely opaque, (5) fully traceable reasoning.
+            </p>
+
+            <p>
+                <strong>Why it matters:</strong> When an agent makes a wrong decision, you need to debug it. If the reasoning is buried in token probabilities (a pure end-to-end LLM response), debugging is impossible. Agents that expose structured reasoning (thought → action → observation) are far easier to troubleshoot.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-cubes"></i> The Scorecard</div>
+                <p>Rather than a single "agent benchmark score," maintain a multi-dimensional scorecard:<br>
+                <strong>Task Completion:</strong> 94% | <strong>Reliability (under failure):</strong> 82% | <strong>Cost/Task:</strong> $2.30 | <strong>Latency (p50):</strong> 3.2s | <strong>Safety Passes:</strong> 100% | <strong>Interpretability:</strong> 4.2/5</p>
+                <p>This tells you where the agent excels and where it needs work.</p>
+            </div>
+
+            <h2>Evaluation-in-the-Loop: Catching Failures Before Production</h2>
+
+            <p>
+                The traditional approach to agent evaluation: build an agent → evaluate it on a static benchmark → deploy if it passes. This misses dynamic failures that only emerge in production.
+            </p>
+
+            <p>
+                <em>Evaluation-in-the-loop</em> reverses the flow: deploy agents in a monitoring mode, continuously evaluate their behavior, and use the results to iterate on the agent design.
+            </p>
+
+            <h3>The Evaluation-in-the-Loop Pipeline</h3>
+
+            <ol>
+                <li><strong>Deploy agent to staging (not production).</strong> Route a small percentage of user requests to the agent while a human handles the majority.</li>
+                <li><strong>Capture telemetry.</strong> Log every task, reasoning step, tool call, and outcome. Store the full trace.</li>
+                <li><strong>Run evaluation passes.</strong> Daily, evaluate the agent on: task completion (does the output match manual verification?), safety (did it violate any constraints?), cost (is it under budget?), reliability (did it handle edge cases?). Flag failures.</li>
+                <li><strong>Triage and iterate.</strong> When failures emerge, analyze the trace to identify the root cause. Update the agent prompt, tool definitions, or behavior policies. A/B test the new version on a subset of traffic.</li>
+                <li><strong>Gradually shift traffic.</strong> As the agent's evaluation scores improve, shift more traffic to it. Set a gate: only promote to 100% traffic when safety and cost metrics hit targets.</li>
+            </ol>
+
+            <p>
+                This approach catches real-world failure modes (distribution shift, adversarial inputs, cumulative errors over long workflows) that static benchmarks miss. It also provides a feedback loop for continuous improvement.
+            </p>
+
+            <h3>Monitoring Metrics for Deployed Agents</h3>
+
+            <p>
+                Once the agent is live, monitor these metrics continuously:
+            </p>
+
+            <ul>
+                <li><strong>Success rate (per domain):</strong> Track separately for different task types. If success rate on "payment processing" drops from 95% to 88%, flag it.</li>
+                <li><strong>Tool hallucination rate:</strong> Percentage of calls to non-existent tools or tools with invalid parameters.</li>
+                <li><strong>Human override rate:</strong> Percentage of tasks where the human operator intervened and corrected the agent. High override rates indicate the agent needs retraining.</li>
+                <li><strong>Cost drift:</strong> Is cost per task increasing over time? This often indicates the agent is looping more often (sign of confusion) or taking less efficient paths.</li>
+                <li><strong>Safety incidents:</strong> Any violation of constraints, even if caught by downstream validation.</li>
+                <li><strong>Error rate by tool:</strong> Which tools fail most often? Which tools does the agent misuse?</li>
+            </ul>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-flask"></i> Example: Real-World Catch</div>
+                <p>A financial service deployed an agent to handle customer refund requests. On the static benchmark, it achieved 97% accuracy. After 1 week in staging with evaluation-in-the-loop, the telemetry revealed a pattern: whenever a customer requested a refund for "unauthorized charges," the agent escalated to a manager 40% of the time instead of following the standard refund policy. The benchmark didn't test this scenario. Evaluation-in-the-loop caught it before 100% traffic was shifted.</p>
+            </div>
+
+            <h2>Sandbox vs. Reality: Why Benchmarks Lie</h2>
+
+            <p>
+                All major benchmarks run agents in controlled environments: SWE-bench provides a clean Git repository, GAIA provides predefined tools, WebArena provides realistic-but-static websites. Real-world agent deployments look different:
+            </p>
+
+            <ul>
+                <li><strong>Distribution shift.</strong> Benchmark tasks are carefully curated. Real users ask unexpected questions. An agent trained on "summarize this document" might fail when users say "make this document 40% shorter" or "find the three most important points."</li>
+                <li><strong>Tool unreliability.</strong> Benchmarks provide tools that always work. Real APIs timeout, rate-limit, return partial data, or break between versions.</li>
+                <li><strong>Adversarial input.</strong> Real users (intentionally or not) try to break agents. Benchmarks don't test "can the agent handle requests that violate its constraints?"</li>
+                <li><strong>Long workflows.</strong> Benchmarks are single-task episodes (solve this problem). Real agents handle multi-step workflows across multiple days, and errors compound.</li>
+                <li><strong>Ambiguous requests.</strong> Benchmarks have clear, deterministic success criteria. Real users make ambiguous requests where multiple valid solutions exist.</li>
+            </ul>
+
+            <p>
+                This is why evaluation-in-the-loop and monitoring are essential. Benchmark scores are a lower bound on real-world performance, not a guarantee.
+            </p>
+
+            <h2>Building Your Own Agent Evaluation Harness</h2>
+
+            <p>
+                While existing benchmarks are valuable, you ultimately need to evaluate <em>your specific agent</em> on <em>your specific domain</em>. Here's a framework for building a custom evaluation harness.
+            </p>
+
+            <h3>Step 1: Define Success Criteria</h3>
+
+            <p>
+                For each task type your agent handles, define what "success" means. For coding: "All tests pass." For content generation: "Human rater scores ≥4/5 on relevance and quality." For data retrieval: "Response includes all required fields, no hallucinations."
+            </p>
+
+<pre><code>EVAL_CRITERIA = {
+    "refund_request": {
+        "success": "Correctly calculated refund amount, approved within policy",
+        "metrics": ["accuracy", "policy_compliance", "latency"],
+        "threshold": {"accuracy": 0.95, "policy_compliance": 1.0}
+    },
+    "data_retrieval": {
+        "success": "All fields present, no hallucinations, citations included",
+        "metrics": ["completeness", "hallucination_rate", "citation_coverage"],
+        "threshold": {"hallucination_rate": 0.0, "citation_coverage": 1.0}
+    }
+}</code></pre>
+
+            <h3>Step 2: Create a Diverse Test Set</h3>
+
+            <p>
+                Gather 200–500 representative test cases covering:
+            </p>
+
+            <ul>
+                <li><strong>Happy path:</strong> Straightforward tasks the agent should handle easily.</li>
+                <li><strong>Edge cases:</strong> Boundary conditions (empty input, very large input, special characters).</li>
+                <li><strong>Error cases:</strong> Scenarios where tools fail or return noisy data.</li>
+                <li><strong>Adversarial:</strong> Attempts to make the agent violate constraints or hallucinate.</li>
+            </ul>
+
+            <h3>Step 3: Implement Evaluation Logic</h3>
+
+            <p>
+                For deterministic tasks (code execution, data retrieval), write automated checks. For subjective tasks (content quality, reasoning), use an LLM-as-judge or human annotation (or both for calibration).
+            </p>
+
+<pre><code>def evaluate_agent(agent, test_case):
+    result = agent.run(test_case["input"])
+    
+    # Automated checks
+    checks = {
+        "task_completed": result["status"] == "success",
+        "no_hallucination": len(result["hallucinations"]) == 0,
+        "within_budget": result["cost"] < test_case["budget"],
+        "latency_ok": result["latency_ms"] < 5000,
+    }
+    
+    # LLM-as-judge for quality
+    quality_score = judge_model.score_response(
+        query=test_case["input"],
+        response=result["output"],
+        criteria=["relevance", "correctness", "conciseness"]
+    )
+    
+    return {
+        **checks,
+        "quality_score": quality_score,
+        "cost": result["cost"],
+        "latency": result["latency_ms"]
+    }</code></pre>
+
+            <h3>Step 4: Run Continuous Evaluation</h3>
+
+            <p>
+                Don't evaluate once and declare victory. Set up a cron job (or a trigger in your monitoring pipeline) to run evaluation every 24 hours. Track trends over time. When a metric dips, investigate immediately.
+            </p>
+
+            <p>
+                <strong>Example dashboard:</strong> Task Completion: 94.2% (↓1.3% from yesterday) | Cost/Task: $2.15 (↑$0.23) | Safety Passes: 100% | Human Override Rate: 3.2% (↑0.8%)
+            </p>
+
+            <p>
+                The uptick in cost and override rate warrants investigation: Is the agent looping more? Did a tool change? Is it encountering a new type of input?
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-tools"></i> Reference Implementation</div>
+                <p>The code patterns above are simplified. In practice, you'll also need to handle: (a) asynchronous tool calls, (b) multi-turn conversations where evaluation depends on history, (c) statistical significance testing when metrics change, (d) A/B testing frameworks to safely promote improved agents.</p>
+            </div>
+
+            <h2>Key Takeaways</h2>
+
+            <p>
+                Agent evaluation is fundamentally different from model evaluation. Here's what you need to remember:
+            </p>
+
+            <ol>
+                <li><strong>No single metric is sufficient.</strong> Use a multi-dimensional scorecard: task completion, reliability, cost, latency, safety, and interpretability. An agent can excel on one dimension while failing on another.</li>
+                <li><strong>Existing benchmarks are narrow.</strong> SWE-bench, GAIA, AgentBench, WebArena, and OSWorld each measure specific capabilities. None measure everything. Evaluate on multiple benchmarks and understand what each tests.</li>
+                <li><strong>Benchmarks don't predict production performance.</strong> An agent that scores 95% on a benchmark might fail in the real world due to distribution shift, tool unreliability, or adversarial input. Use evaluation-in-the-loop to catch failures early.</li>
+                <li><strong>Safety and cost matter as much as correctness.</strong> An agent that completes 100% of tasks but violates safety constraints or costs $50 per task is useless. Measure all three.</li>
+                <li><strong>Build a custom evaluation harness for your domain.</strong> Existing benchmarks are a starting point, not an end point. Define success criteria specific to your use case, create a representative test set, and run continuous evaluation.</li>
+                <li><strong>Instrument everything.</strong> Deploy agents in a monitoring mode. Log full traces. Use telemetry to identify failure patterns. Iterate based on what you learn.</li>
+            </ol>
+
+            <p>
+                The emerging science of agent evaluation is still young. New benchmarks and metrics are being proposed monthly. But the core principle is settled: <em>you can't ship what you don't measure</em>. Build your evaluation practices first, then build your agents.
+            </p>
+
+        </div>
+
+        <footer class="article-footer">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles'); history.back(); return false;"><i class="fas fa-arrow-left"></i> Back to all articles</a>
+            <div class="share-links">
+                <a href="https://twitter.com/intent/tweet?text=How%20Do%20You%20Know%20If%20Your%20Agent%20Actually%20Works%20by%20@wtalukdar" title="Share on Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://wricktalukdar.com" title="Share on LinkedIn" target="_blank"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </footer>
+
+    </article>
+
+    <script>
+        // Reading progress indicator
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = scrollTop / docHeight;
+            document.getElementById('reading-progress').style.width = (scrollPercent * 100) + '%';
+        });
+    </script>
+
+</body>
+</html>
