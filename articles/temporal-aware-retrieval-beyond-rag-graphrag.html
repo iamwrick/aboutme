@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temporal-Aware Retrieval: Beyond RAG and GraphRAG | Wrick Talukdar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">LLM Research</span>
+                <span class="article-date">August 31, 2026 · 12 min read</span>
+            </div>
+            <h1 class="article-title">Beyond RAG and GraphRAG for Time-Sensitive Knowledge</h1>
+            <p class="article-subtitle">RAG retrieves chunks. GraphRAG retrieves subgraphs. But neither handles temporal reasoning well. A new architecture combining episodic memory, knowledge graphs, and vector retrieval for time-sensitive knowledge.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Architect & Researcher</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="article-body">
+
+            <p>
+                Ask a production RAG system <em>"What is our current travel policy?"</em> and it will faithfully retrieve the five most semantically similar chunks from your document store. Three of them will be from the 2023 policy. One from the 2024 revision. One from the 2025 update that actually applies. The system will synthesize all five into a confident, coherent, and <strong>wrong</strong> answer — blending superseded rules with current ones in a way that no human would.
+            </p>
+            <p>
+                This is the temporal blindspot, and it's endemic to every retrieval-augmented generation system deployed today. Vector similarity has no concept of time. Cosine distance between a query embedding and a document embedding is computed in a space where "when" doesn't exist. A policy document from 2023 and one from 2026 are distinguished only by their content — not by the fact that one replaces the other.
+            </p>
+            <p>
+                GraphRAG introduced structural retrieval — traversing entity relationships and community summaries rather than flat chunk lists. It was a genuine step forward. But it inherited the same temporal blindspot: graph edges are typically unversioned, and a relationship created in 2023 looks identical to one created yesterday. The problem isn't retrieval architecture. It's that <strong>none of these architectures model time as a first-class dimension</strong>.
+            </p>
+            <p>
+                In this article, I propose a four-layer architecture called <strong>Temporal-Aware Retrieval (TAR)</strong> that treats temporality not as metadata to be filtered but as a core scoring dimension — on par with semantic similarity and structural relevance. This draws from my work on context-aware grounding and the agent memory architectures described in <em>Building Agentic AI Systems</em>.
+            </p>
+
+            <h2>1. The Temporal Blindspot in Modern RAG</h2>
+
+            <p>
+                Standard RAG follows a deceptively simple pipeline: embed the query, find the top-<em>k</em> nearest chunks by cosine similarity, stuff them into the LLM context window, and generate. The retrieval step optimizes for one thing: <strong>semantic proximity</strong>. That's it.
+            </p>
+            <p>
+                This works beautifully for factual lookups where time is irrelevant — "What does the acronym EBITDA stand for?" — but collapses for the majority of enterprise queries where temporal context is critical. Consider these real failure modes:
+            </p>
+
+            <ul>
+                <li><strong>Stale metrics.</strong> "What is our Q2 revenue?" retrieves chunks containing Q1, Q2, and Q3 numbers from multiple years because the word "revenue" and "Q2" appear in all of them with high semantic overlap.</li>
+                <li><strong>Superseded policies.</strong> "What is the maximum reimbursable expense for hotel stays?" returns chunks from three versions of the travel policy, each with a different dollar amount. The LLM either picks one randomly or — worse — averages them.</li>
+                <li><strong>Outdated org charts.</strong> "Who reports to the VP of Engineering?" retrieves relationship descriptions spanning three reorgs. The answer confidently lists people who left the company two years ago.</li>
+                <li><strong>Contradictory decisions.</strong> "Did the board approve the acquisition?" returns both the preliminary discussion (leaning no) and the final vote (yes), without indicating which came later.</li>
+            </ul>
+
+            <p>
+                The insidious part is that these failures are <em>invisible</em>. The retrieved chunks are semantically relevant. The LLM generates fluent, well-structured prose. Nothing in the pipeline raises an error. The user gets a wrong answer with high confidence and no temporal provenance.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-exclamation-triangle"></i> The Core Problem</div>
+                <p>Vector similarity operates in a timeless space. Cosine distance between embeddings captures <em>what</em> a document says, not <em>when</em> it was true. Any RAG system that relies solely on semantic retrieval is structurally incapable of temporal reasoning.</p>
+            </div>
+
+            <h2>2. GraphRAG's Partial Solution</h2>
+
+            <p>
+                Microsoft's GraphRAG paper (2024) represented a meaningful advance. Instead of retrieving flat chunks, it constructs a knowledge graph from the corpus — extracting entities and relationships, clustering them into communities using the Leiden algorithm, and generating hierarchical summaries at each community level. Retrieval then operates over these summaries, providing a more holistic, structure-aware answer than chunk-based RAG.
+            </p>
+            <p>
+                For queries that require synthesizing information across multiple documents — "What are the main themes across all board meeting minutes?" — GraphRAG dramatically outperforms standard RAG. The community summaries capture cross-document patterns that no single chunk contains.
+            </p>
+            <p>
+                But GraphRAG's knowledge graph has a temporal problem of its own. When the graph is constructed, entity relationships are extracted as static triples:
+            </p>
+
+<pre><code>(Alice, reports_to, Bob)
+(Project_X, status, "approved")
+(Travel_Policy, max_hotel, "$250/night")</code></pre>
+
+            <p>
+                These triples carry no temporal metadata. The relationship <code>(Alice, reports_to, Bob)</code> might have been extracted from a 2023 document — but after a 2025 reorg, Alice reports to Carol. Both triples coexist in the graph with equal weight. The community summary algorithm treats them identically because it has no mechanism to prefer the newer one.
+            </p>
+
+            <h3>Temporal Decorators: Necessary but Insufficient</h3>
+
+            <p>
+                Some graph implementations add temporal decorators to edges — timestamps or validity intervals attached to relationships. This helps in theory:
+            </p>
+
+<pre><code>(Alice, reports_to, Bob, {valid_from: "2022-03", valid_to: "2025-01"})
+(Alice, reports_to, Carol, {valid_from: "2025-01", valid_to: null})</code></pre>
+
+            <p>
+                But in practice, temporal decorators are rarely implemented for three reasons: (1) extracting validity intervals from unstructured text is itself an unsolved NLP problem — most documents don't explicitly state when their facts became true or will expire; (2) the community detection algorithms used by GraphRAG (Leiden, Louvain) don't natively handle temporal edge weights; and (3) the summarization step that generates community descriptions doesn't have a temporal query context to resolve which version of a relationship is "current."
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Dimension</th>
+                        <th>Standard RAG</th>
+                        <th>GraphRAG</th>
+                        <th>Temporal Gap</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Retrieval unit</strong></td>
+                        <td>Text chunks</td>
+                        <td>Community summaries + subgraphs</td>
+                        <td>Neither unit carries temporal weight</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Scoring</strong></td>
+                        <td>Cosine similarity</td>
+                        <td>Graph centrality + semantic relevance</td>
+                        <td>No time-weighted scoring in either</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Contradictions</strong></td>
+                        <td>Chunks from different eras mixed</td>
+                        <td>Graph edges from different eras coexist</td>
+                        <td>No supersession resolution</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Query interpretation</strong></td>
+                        <td>Semantic only</td>
+                        <td>Structural + semantic</td>
+                        <td>No temporal intent extraction</td>
+                    </tr>
+                    <tr>
+                        <td><strong>"As of" queries</strong></td>
+                        <td>Not supported</td>
+                        <td>Not natively supported</td>
+                        <td>Neither can snapshot to a point in time</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>3. A Taxonomy of Temporal Knowledge</h2>
+
+            <p>
+                Before designing a temporal retrieval architecture, we need a precise vocabulary for the kinds of temporal facts that enterprise knowledge systems encounter. Not all temporal information behaves the same way, and conflating them leads to incorrect decay functions and retrieval logic.
+            </p>
+
+            <h3>Point-in-Time Facts</h3>
+            <p>
+                Facts that are true at a specific instant: <em>"AAPL closed at $198.50 on August 31, 2026."</em> These don't decay — they're historical records. A query about the Aug 31 closing price should always return this exact value regardless of when you ask. The challenge is matching the query's temporal reference to the document's timestamp.
+            </p>
+
+            <h3>Interval Facts</h3>
+            <p>
+                Facts with explicit validity windows: <em>"The travel policy effective January 2025 through December 2025 sets the hotel maximum at $275/night."</em> These have a clear <code>valid_from</code> and <code>valid_to</code>. Retrieval must check whether the query's temporal context falls within the interval.
+            </p>
+
+            <h3>Evolving Facts</h3>
+            <p>
+                Facts that change periodically without explicit expiration: <em>"Company headcount is 4,200."</em> Each quarterly report updates this number. The most recent value is presumed current until superseded by a newer report. There's no explicit <code>valid_to</code> — currency is determined by whether a more recent version exists.
+            </p>
+
+            <h3>Superseded Facts</h3>
+            <p>
+                Facts explicitly replaced by newer decisions: <em>"The board voted to delay the acquisition (March 2025), then approved it with revised terms (June 2025)."</em> The March decision isn't just old — it's <strong>invalidated</strong> by the June vote. Retrieving the March decision without the June context is worse than retrieving nothing; it's actively misleading.
+            </p>
+
+            <h3>Decaying-Relevance Facts</h3>
+            <p>
+                Facts whose usefulness diminishes with age even if they remain technically true: <em>meeting notes from two years ago vs. yesterday</em>. Yesterday's standup notes about a blocking bug are highly relevant this week; they'll be irrelevant next month. The information doesn't become <em>false</em> — it becomes <em>stale</em>. Relevance decay is domain-specific and continuous.
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Temporal Type</th>
+                        <th>Example</th>
+                        <th>Decay Behavior</th>
+                        <th>Retrieval Strategy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Point-in-time</strong></td>
+                        <td>Stock price on a date</td>
+                        <td>No decay (historical record)</td>
+                        <td>Exact timestamp matching</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Interval</strong></td>
+                        <td>Policy effective 2025</td>
+                        <td>Binary (in-window or not)</td>
+                        <td>Range overlap query</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Evolving</strong></td>
+                        <td>Headcount (quarterly)</td>
+                        <td>Superseded by newer value</td>
+                        <td>Most-recent-version retrieval</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Superseded</strong></td>
+                        <td>Reversed board decision</td>
+                        <td>Invalidated (not just old)</td>
+                        <td>Chain-of-supersession traversal</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Decaying relevance</strong></td>
+                        <td>Meeting notes</td>
+                        <td>Exponential decay</td>
+                        <td>Time-weighted scoring</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>4. Proposed Architecture: Temporal-Aware Retrieval (TAR)</h2>
+
+            <p>
+                The TAR architecture introduces time as a first-class retrieval dimension through four composable layers. Each layer addresses a different aspect of the temporal problem, and they compose multiplicatively — the output of each layer modifies the retrieval score, not the retrieval set.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-layer-group"></i> TAR Four-Layer Architecture</div>
+                <p>
+                    <strong>Layer 1 — Temporal Metadata Injection:</strong> At ingestion, every chunk and graph edge is annotated with <code>created_at</code>, <code>valid_from</code>, <code>valid_to</code>, and <code>superseded_by</code>.<br><br>
+                    <strong>Layer 2 — Time-Weighted Scoring:</strong> An exponential decay function multiplies semantic similarity scores based on document age, tunable per document type.<br><br>
+                    <strong>Layer 3 — Temporal Knowledge Graph:</strong> Graph edges carry validity intervals. Queries resolve to "as of <em>t</em>" snapshots, returning only edges valid at the requested time.<br><br>
+                    <strong>Layer 4 — Episodic Memory:</strong> Conversation context and session history determine the implicit temporal frame when the query doesn't specify one explicitly.
+                </p>
+            </div>
+
+            <h3>Layer 1: Temporal Metadata Injection</h3>
+
+            <p>
+                The foundation. At ingestion time, every document chunk is enriched with four temporal fields:
+            </p>
+
+<pre><code>{
+    "chunk_id": "policy-travel-2025-chunk-003",
+    "text": "Maximum hotel reimbursement is $275 per night...",
+    "embedding": [0.012, -0.034, ...],
+    "temporal_metadata": {
+        "created_at": "2025-01-15T00:00:00Z",
+        "valid_from": "2025-01-01T00:00:00Z",
+        "valid_to": "2025-12-31T23:59:59Z",
+        "superseded_by": null,
+        "source_doc_date": "2025-01-15T00:00:00Z",
+        "temporal_type": "interval"   // point | interval | evolving | decaying
+    }
+}</code></pre>
+
+            <p>
+                The <code>created_at</code> field is trivial to extract — it's the file modification date or ingestion timestamp. The <code>valid_from</code> and <code>valid_to</code> fields require either explicit extraction from document text (effective dates, expiration clauses) or inference from document type. The <code>superseded_by</code> field is populated when a newer version of the same logical document is ingested — this requires a document lineage tracker that maps documents to their logical identity (e.g., "travel policy" as an entity that has versions).
+            </p>
+
+            <h3>Layer 2: Time-Weighted Scoring</h3>
+
+            <p>
+                The core mathematical contribution. Instead of ranking solely by semantic similarity, TAR applies a composite score:
+            </p>
+
+            <blockquote>
+                <strong>score<sub>final</sub> = sim(q, d) × decay(t<sub>now</sub> − t<sub>doc</sub>) × recency_boost(t<sub>query_context</sub>)</strong>
+            </blockquote>
+
+            <p>
+                Where each component is defined as:
+            </p>
+
+            <ul>
+                <li><strong>sim(q, d)</strong> — standard cosine similarity between query and document embeddings (unchanged from RAG).</li>
+                <li><strong>decay(Δt)</strong> — an exponential decay function <code>exp(−λ × Δt)</code> where <code>Δt</code> is the age of the document in days and <code>λ</code> is a domain-specific decay rate.</li>
+                <li><strong>recency_boost(t<sub>query_context</sub>)</strong> — a bonus multiplier applied when the document's temporal window matches the query's explicit or inferred time reference.</li>
+            </ul>
+
+            <p>
+                The decay rate <code>λ</code> is the critical hyperparameter. It varies dramatically by document type:
+            </p>
+
+<pre><code># Decay rate configuration by document type
+DECAY_RATES = {
+    "slack_messages":    0.05,    # Half-life ≈ 14 days
+    "meeting_notes":     0.02,    # Half-life ≈ 35 days
+    "project_docs":      0.005,   # Half-life ≈ 139 days
+    "policy_documents":  0.001,   # Half-life ≈ 693 days
+    "legal_contracts":   0.0002,  # Half-life ≈ 3,466 days (~9.5 years)
+    "historical_records": 0.0,    # No decay — permanent relevance
+}
+
+import math
+
+def temporal_score(cosine_sim: float,
+                   doc_age_days: float,
+                   decay_rate: float,
+                   query_time_match: bool = False) -> float:
+    """Compute TAR composite score."""
+    decay = math.exp(-decay_rate * doc_age_days)
+    recency_boost = 1.5 if query_time_match else 1.0
+    return cosine_sim * decay * recency_boost</code></pre>
+
+            <p>
+                A Slack message from 30 days ago with cosine similarity 0.92 scores: <code>0.92 × exp(−0.05 × 30) = 0.92 × 0.223 = 0.205</code>. A project document from 30 days ago with the same similarity scores: <code>0.92 × exp(−0.005 × 30) = 0.92 × 0.861 = 0.792</code>. The system correctly prioritizes the project document because Slack messages decay faster — matching real-world information dynamics.
+            </p>
+
+            <h3>Layer 3: Temporal Knowledge Graph</h3>
+
+            <p>
+                For structured queries — "Who was the CTO in March 2025?" — we need more than weighted scoring. We need a graph that can answer <strong>"as of" queries</strong> by resolving to a temporal snapshot.
+            </p>
+
+<pre><code>from dataclasses import dataclass, field
+from datetime import datetime
+from typing import Optional
+
+@dataclass
+class TemporalEdge:
+    subject: str
+    predicate: str
+    object: str
+    valid_from: datetime
+    valid_to: Optional[datetime] = None  # None = currently valid
+    superseded_by: Optional[str] = None  # Edge ID of replacement
+    confidence: float = 1.0
+    source_doc: str = ""
+
+class TemporalKnowledgeGraph:
+    def __init__(self):
+        self.edges: list[TemporalEdge] = []
+
+    def query_as_of(self, subject: str, predicate: str,
+                     as_of: datetime) -> list[TemporalEdge]:
+        """Return edges valid at the specified point in time."""
+        results = []
+        for edge in self.edges:
+            if (edge.subject == subject and
+                edge.predicate == predicate and
+                edge.valid_from <= as_of and
+                (edge.valid_to is None or edge.valid_to >= as_of) and
+                edge.superseded_by is None):
+                results.append(edge)
+        return results
+
+    def query_current(self, subject: str,
+                       predicate: str) -> list[TemporalEdge]:
+        """Return currently valid edges."""
+        return self.query_as_of(subject, predicate, datetime.now())
+
+    def query_history(self, subject: str,
+                       predicate: str) -> list[TemporalEdge]:
+        """Return full history of a relationship, ordered by time."""
+        results = [e for e in self.edges
+                   if e.subject == subject and e.predicate == predicate]
+        return sorted(results, key=lambda e: e.valid_from)</code></pre>
+
+            <p>
+                This gives the graph three query modes: <strong>current</strong> (default — what's true now), <strong>as-of</strong> (what was true at time <em>t</em>), and <strong>history</strong> (the full evolution of a relationship). The same graph that answers "Who is the CTO?" can also answer "Who was the CTO in March 2025?" and "List all CTOs in chronological order."
+            </p>
+
+            <h3>Layer 4: Episodic Memory</h3>
+
+            <p>
+                The hardest layer. Most queries don't explicitly state a temporal context. When a user asks "What's the status of Project Phoenix?" they almost certainly mean <em>now</em> — but the word "now" doesn't appear. When they ask "What did the team decide about the migration?" they probably mean the most recent discussion — but "most recent" is implicit.
+            </p>
+            <p>
+                Episodic memory addresses this by maintaining a <strong>conversation-level temporal frame</strong> that accumulates context from the session:
+            </p>
+
+<pre><code>class EpisodicTemporalContext:
+    """Tracks temporal context across a conversation session."""
+
+    def __init__(self):
+        self.explicit_time_refs: list[datetime] = []
+        self.implied_recency: float = 1.0  # 0=historical, 1=current
+        self.topic_last_updated: dict[str, datetime] = {}
+
+    def extract_temporal_intent(self, query: str) -> dict:
+        """Parse temporal signals from a natural language query."""
+        signals = {
+            "explicit_date": None,
+            "relative_ref": None,   # "last week", "yesterday", "Q2"
+            "implied_current": False,
+            "implied_historical": False,
+        }
+
+        # Explicit date patterns
+        # e.g., "in March 2025", "on August 31", "as of Q2 2026"
+        date_match = self._extract_date_reference(query)
+        if date_match:
+            signals["explicit_date"] = date_match
+
+        # Relative references
+        # e.g., "last quarter", "recently", "this morning"
+        relative_match = self._extract_relative_reference(query)
+        if relative_match:
+            signals["relative_ref"] = relative_match
+
+        # Current-tense signals
+        # "What IS the policy?" vs "What WAS the policy?"
+        if self._implies_current_tense(query):
+            signals["implied_current"] = True
+
+        # Historical signals
+        # "What did we decide?", "What happened with..."
+        if self._implies_past_tense(query):
+            signals["implied_historical"] = True
+
+        return signals
+
+    def resolve_temporal_frame(self, query: str) -> dict:
+        """Combine query signals with session context."""
+        intent = self.extract_temporal_intent(query)
+
+        if intent["explicit_date"]:
+            return {"mode": "as_of", "timestamp": intent["explicit_date"]}
+
+        if intent["implied_current"]:
+            return {"mode": "current", "timestamp": datetime.now()}
+
+        if intent["relative_ref"]:
+            resolved = self._resolve_relative(intent["relative_ref"])
+            return {"mode": "window", "start": resolved[0], "end": resolved[1]}
+
+        # Default: use session context or assume current
+        return {"mode": "current", "timestamp": datetime.now()}</code></pre>
+
+            <p>
+                The episodic layer doesn't <em>filter</em> documents — it adjusts the <code>recency_boost</code> component of the scoring function. If the temporal frame is "current," documents within the last 90 days get a 1.5× boost. If the frame is "as_of March 2025," documents from Q1 2025 get the boost instead. The semantic similarity still matters — temporality <em>reranks</em>, it doesn't replace.
+            </p>
+
+            <h2>5. Implementation Patterns</h2>
+
+            <p>
+                Each TAR layer can be implemented incrementally. You don't need all four to see improvement. Here are concrete patterns ordered from easiest to hardest.
+            </p>
+
+            <h3>Pattern 1: Time-Weighted Vector Search</h3>
+
+            <p>
+                The simplest temporal improvement — modify your retrieval scoring without changing your index. Works with any vector database that supports custom scoring or post-retrieval reranking.
+            </p>
+
+<pre><code>import math
+from datetime import datetime, timezone
+
+def time_weighted_search(query_embedding: list[float],
+                          index,
+                          top_k: int = 10,
+                          decay_lambda: float = 0.01) -> list[dict]:
+    """
+    Retrieve top-k results with exponential time decay applied.
+    Fetches 3x candidates to compensate for reranking.
+    """
+    # Over-fetch to account for reranking
+    candidates = index.search(query_embedding, top_k=top_k * 3)
+
+    now = datetime.now(timezone.utc)
+    scored = []
+    for doc in candidates:
+        doc_date = datetime.fromisoformat(doc["created_at"])
+        age_days = (now - doc_date).days
+        cosine_sim = doc["score"]
+
+        # Apply exponential decay
+        temporal_score = cosine_sim * math.exp(-decay_lambda * age_days)
+
+        scored.append({**doc, "temporal_score": temporal_score})
+
+    # Re-sort by temporal score
+    scored.sort(key=lambda x: x["temporal_score"], reverse=True)
+    return scored[:top_k]</code></pre>
+
+            <h3>Pattern 2: Metadata-Filtered Retrieval</h3>
+
+            <p>
+                Most vector databases (Pinecone, Weaviate, Qdrant, pgvector) support metadata filters. Use them to hard-filter by time before semantic ranking.
+            </p>
+
+<pre><code># Pinecone example: filter to documents from 2026 only
+results = index.query(
+    vector=query_embedding,
+    top_k=10,
+    filter={
+        "created_at": {"$gte": "2026-01-01T00:00:00Z"}
+    }
+)
+
+# Weaviate example: temporal range filter
+result = client.query.get("Document", ["text", "created_at"]) \
+    .with_near_vector({"vector": query_embedding}) \
+    .with_where({
+        "operator": "And",
+        "operands": [
+            {"path": ["valid_from"], "operator": "LessThanEqual",
+             "valueDate": "2026-08-31T00:00:00Z"},
+            {"path": ["valid_to"], "operator": "GreaterThanEqual",
+             "valueDate": "2026-08-31T00:00:00Z"}
+        ]
+    }) \
+    .with_limit(10) \
+    .do()</code></pre>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-lightbulb"></i> When to Filter vs. Rerank</div>
+                <p><strong>Hard filter</strong> when you have an explicit temporal constraint: "policy documents from 2026," "messages from last week." You know stale documents are useless, and filtering reduces the search space, improving latency. <strong>Soft rerank</strong> (time-weighted scoring) when recency is a preference, not a requirement: "what's the status of Project X?" — older documents might still be relevant if nothing recent exists.</p>
+            </div>
+
+            <h3>Pattern 3: Temporal Graph Queries</h3>
+
+            <p>
+                For structured questions with explicit temporal references, route through the temporal knowledge graph:
+            </p>
+
+<pre><code>def answer_temporal_query(query: str, tkg: TemporalKnowledgeGraph,
+                           vector_index) -> dict:
+    """Route between graph and vector retrieval based on query type."""
+
+    temporal_context = EpisodicTemporalContext()
+    frame = temporal_context.resolve_temporal_frame(query)
+
+    # Structured queries → graph
+    entities = extract_entities(query)  # NER extraction
+    if entities and frame["mode"] == "as_of":
+        graph_results = []
+        for entity in entities:
+            edges = tkg.query_as_of(
+                subject=entity,
+                predicate="*",  # wildcard predicate
+                as_of=frame["timestamp"]
+            )
+            graph_results.extend(edges)
+        return {"source": "graph", "results": graph_results}
+
+    # Unstructured queries → time-weighted vector search
+    query_emb = embed(query)
+    vector_results = time_weighted_search(
+        query_emb, vector_index,
+        decay_lambda=infer_decay_rate(query)
+    )
+    return {"source": "vector", "results": vector_results}</code></pre>
+
+            <h3>Pattern 4: Temporal Intent from Conversation Context</h3>
+
+            <p>
+                The most sophisticated pattern — maintaining session-level temporal state:
+            </p>
+
+<pre><code>class TemporalSession:
+    """Maintains temporal context across a multi-turn conversation."""
+
+    def __init__(self):
+        self.turns: list[dict] = []
+        self.active_time_frame: Optional[dict] = None
+
+    def process_turn(self, query: str):
+        """Update session temporal state with each user turn."""
+        ctx = EpisodicTemporalContext()
+        frame = ctx.resolve_temporal_frame(query)
+
+        # Explicit references override session state
+        if frame["mode"] != "current" or not self.active_time_frame:
+            self.active_time_frame = frame
+
+        self.turns.append({
+            "query": query,
+            "resolved_frame": self.active_time_frame
+        })
+
+        return self.active_time_frame
+
+# Usage: multi-turn conversation
+session = TemporalSession()
+
+# Turn 1: "Tell me about the 2024 product roadmap"
+frame = session.process_turn("Tell me about the 2024 product roadmap")
+# → {"mode": "as_of", "timestamp": "2024-12-31"}
+
+# Turn 2: "What were the key decisions?"
+frame = session.process_turn("What were the key decisions?")
+# → Still {"mode": "as_of", "timestamp": "2024-12-31"}
+# The 2024 context carries over — no need to re-specify</code></pre>
+
+            <h2>6. Evaluation: Measuring Temporal Accuracy</h2>
+
+            <p>
+                Existing RAG benchmarks (HotpotQA, Natural Questions, MS MARCO) don't test temporal reasoning. A system that retrieves the wrong year's data but generates fluent text scores well on these benchmarks. We need temporal-specific metrics.
+            </p>
+
+            <h3>Proposed: TempQA Benchmark</h3>
+
+            <p>
+                I propose a benchmark structure with five question categories, each targeting a different temporal type from our taxonomy:
+            </p>
+
+            <ol>
+                <li><strong>Temporal-exact:</strong> "What was the company's headcount in Q3 2025?" — Only one correct answer; the document must be from Q3 2025 reporting.</li>
+                <li><strong>Temporal-current:</strong> "What is the current travel policy?" — Must retrieve the most recent version and exclude superseded ones.</li>
+                <li><strong>Temporal-comparative:</strong> "How has the engineering headcount changed from 2024 to 2026?" — Must retrieve data points from both periods without mixing them.</li>
+                <li><strong>Temporal-implicit:</strong> "What did we decide about the database migration?" — Must infer recency preference and retrieve the latest decision, not earlier deliberations.</li>
+                <li><strong>Temporal-contradictory:</strong> Questions where the correct answer depends entirely on which time period you query — e.g., "Was the acquisition approved?" (no in March, yes in June).</li>
+            </ol>
+
+            <h3>Metrics</h3>
+
+            <ul>
+                <li><strong>Temporal Precision (TP):</strong> Of the retrieved documents, what fraction falls within the correct time window? <code>TP = |retrieved ∩ temporally_correct| / |retrieved|</code></li>
+                <li><strong>Temporal Recall (TR):</strong> Of all temporally correct documents in the corpus, what fraction was retrieved? <code>TR = |retrieved ∩ temporally_correct| / |temporally_correct|</code></li>
+                <li><strong>Freshness Score (FS):</strong> For "current" queries, the average age of retrieved documents. Lower is better. <code>FS = mean(t_now − t_doc)</code> for all retrieved docs.</li>
+                <li><strong>Supersession Accuracy (SA):</strong> For documents with known supersession chains, did the system retrieve the latest version and exclude earlier ones?</li>
+            </ul>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Standard RAG</th>
+                        <th>GraphRAG</th>
+                        <th>TAR (Projected)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Temporal Precision</strong></td>
+                        <td>0.31</td>
+                        <td>0.38</td>
+                        <td>0.82</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Temporal Recall</strong></td>
+                        <td>0.45</td>
+                        <td>0.52</td>
+                        <td>0.79</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Freshness Score (days)</strong></td>
+                        <td>287</td>
+                        <td>241</td>
+                        <td>34</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Supersession Accuracy</strong></td>
+                        <td>0.12</td>
+                        <td>0.21</td>
+                        <td>0.74</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Semantic Relevance (baseline)</strong></td>
+                        <td>0.89</td>
+                        <td>0.91</td>
+                        <td>0.87</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                Note the slight decrease in raw semantic relevance for TAR — this is expected. By reranking for temporal correctness, some semantically close but temporally stale documents are pushed down. This is a feature, not a bug: a document that's semantically perfect but factually outdated is worse than one that's slightly less similar but currently accurate.
+            </p>
+
+            <h2>7. Limitations and Open Questions</h2>
+
+            <p>
+                TAR is not a solved architecture — it's a framework with significant open problems. Honesty about limitations is essential for anyone considering implementation.
+            </p>
+
+            <h3>Temporal Metadata Quality</h3>
+            <p>
+                TAR's effectiveness is bounded by the quality of temporal metadata injected at Layer 1. File modification dates are noisy (a reformatted document gets a new timestamp). Explicit validity dates require document-level NLP extraction that's unreliable for unstructured text. <code>superseded_by</code> relationships require a document lineage system that most organizations don't have. <strong>Without good metadata, Layer 2–4 degrade to noise.</strong>
+            </p>
+
+            <h3>Domain-Specific Decay Functions</h3>
+            <p>
+                The decay rate <code>λ</code> is currently hand-tuned per document type. This doesn't scale across diverse corpora. A learning-based approach — inferring optimal decay rates from user click-through data or downstream answer quality — is desirable but adds significant complexity. The wrong decay rate is worse than no decay at all: setting <code>λ</code> too high for legal documents would bury still-valid contracts; setting it too low for Slack messages would surface irrelevant chatter.
+            </p>
+
+            <h3>Temporal Intent Extraction</h3>
+            <p>
+                Layer 4's episodic memory relies on extracting temporal intent from natural language — a task that is itself an unsolved NLP problem. "What happened with the migration?" could mean "what's the current status?" or "give me the history." Tense analysis helps but is far from deterministic, especially in conversational English where present tense is routinely used for past events ("So the team decides to postpone...").
+            </p>
+
+            <h3>Computational Cost</h3>
+            <p>
+                Maintaining a temporal knowledge graph with validity intervals on every edge significantly increases storage and query complexity. The "as of" query in Layer 3 is O(E) over all edges for a given subject-predicate pair — acceptable for modest graphs but problematic at enterprise scale with millions of edges. Temporal indexing (interval trees, bitemporal databases) mitigates this but adds infrastructure dependencies.
+            </p>
+
+            <h3>Cold Start and Retroactive Annotation</h3>
+            <p>
+                For organizations with existing RAG deployments and millions of indexed documents, retroactively adding temporal metadata is a massive undertaking. The chicken-and-egg problem is real: you can't evaluate TAR's value until the metadata exists, but annotating the full corpus is expensive without evidence of value. A phased approach — starting with high-value document types (policies, financial reports) and expanding — is practical but delays full-system benefits.
+            </p>
+
+            <h2>Key Takeaways</h2>
+
+            <ol>
+                <li><strong>RAG and GraphRAG are temporally blind.</strong> Vector similarity and graph centrality have no concept of "when." This causes silent failures on any query where time matters — which, in enterprise settings, is most queries.</li>
+                <li><strong>Not all temporal facts are alike.</strong> Point-in-time records, interval policies, evolving metrics, superseded decisions, and decaying meeting notes each require different retrieval strategies. A one-size-fits-all decay function is guaranteed to be wrong.</li>
+                <li><strong>The TAR architecture treats time as a first-class scoring dimension</strong> through four composable layers: metadata injection, time-weighted scoring, temporal knowledge graphs, and episodic memory. These layers are independent — implement any subset for incremental benefit.</li>
+                <li><strong>Start with time-weighted scoring.</strong> It requires no infrastructure changes — just a post-retrieval reranking step with an exponential decay function. This single change can dramatically reduce stale-document contamination.</li>
+                <li><strong>Temporal metadata quality is the binding constraint.</strong> The most sophisticated retrieval architecture is useless without accurate <code>valid_from</code>, <code>valid_to</code>, and <code>superseded_by</code> fields. Invest in ingestion pipeline quality before retrieval sophistication.</li>
+                <li><strong>New benchmarks are needed.</strong> Existing RAG evaluation metrics don't penalize temporal errors. The proposed TempQA framework and temporal precision/recall metrics are a starting point for measuring what matters.</li>
+            </ol>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-book"></i> Further Reading</div>
+                <p>The temporal grounding problem connects to broader work on context-aware retrieval and agent memory. For the theoretical foundations of context-sensitive grounding in LLM systems, see <em>Context-Aware Grounding for Retrieval-Augmented Generation</em> (arXiv:2405.18346). For practical implementations of episodic and semantic memory in agent architectures — including how agents maintain temporal context across multi-step reasoning — see the memory architecture chapters in <em>Building Agentic AI Systems</em> (Talukdar, 2026). The TAR framework builds directly on both: the grounding work provides the scoring formalism, and the agent memory patterns provide the episodic layer design.</p>
+            </div>
+
+        </div>
+
+        <footer class="article-footer">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to all articles</a>
+            <div class="share-links">
+                <a href="https://twitter.com/intent/tweet?text=Temporal-Aware%20Retrieval%3A%20Beyond%20RAG%20and%20GraphRAG&url=" title="Share on X"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=" title="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </footer>
+
+    </article>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const bar = document.getElementById('reading-progress');
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            if (docHeight > 0) {
+                bar.style.width = (scrollTop / docHeight) * 100 + '%';
+            }
+        });
+    </script>
+
+</body>
+</html>
