@@ -24,18 +24,18 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="Wrick Talukdar | Thought Leader · Innovator · Product Advisor · Bestselling Author">
     <meta property="og:description" content="Technology Leader at AWS. Published researcher in AI/ML. Author of 3 books including Building Agentic AI Systems. IEEE Senior Member. 26+ publications across IEEE, arXiv, and AWS.">
-    <meta property="og:image" content="og-image.png">
-    <meta property="og:url" content="">
+    <meta property="og:image" content="https://wricktalukdar.technology/og-image.png">
+    <meta property="og:url" content="https://wricktalukdar.technology/">
     <meta property="og:site_name" content="Wrick Talukdar">
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Wrick Talukdar | AI/ML Thought Leader & Bestselling Author">
     <meta name="twitter:description" content="Technology Leader at AWS. Published researcher. Author of Building Agentic AI Systems. IEEE Senior Member.">
-    <meta name="twitter:image" content="og-image.png">
+    <meta name="twitter:image" content="https://wricktalukdar.technology/og-image.png">
 
     <!-- Canonical -->
-    <link rel="canonical" href="">
+    <link rel="canonical" href="https://wricktalukdar.technology/">
 
 
     <title>Wrick Talukdar | AI/ML Architect & Researcher</title>
@@ -2293,14 +2293,22 @@
 
 
     
-        /* Tab content switching */
+        /* Tab content switching with fade */
         .tab-content {
             display: none;
             padding: 1rem 0;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
         }
 
         .tab-content.active {
             display: block;
+        }
+
+        .tab-content.active.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .tab-content h3 {
@@ -4092,6 +4100,82 @@
 
         @media (max-width: 768px) {
             .about-layout { grid-template-columns: 1fr; gap: 2rem; }
+        }
+
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--secondary-text);
+            font-size: 0.85rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        /* Article Search Bar */
+        .article-search-bar {
+            margin-bottom: 1.25rem;
+        }
+
+        .article-search-wrapper {
+            position: relative;
+            max-width: 400px;
+        }
+
+        .article-search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted-text);
+            font-size: 0.8rem;
+        }
+
+        .article-search-input {
+            width: 100%;
+            padding: 0.65rem 1rem 0.65rem 2.5rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 2rem;
+            color: var(--primary-text);
+            font-family: inherit;
+            font-size: 0.85rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .article-search-input::placeholder {
+            color: var(--muted-text);
+        }
+
+        .article-search-input:focus {
+            border-color: rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.06);
         }
 
     </style>
@@ -6117,6 +6201,14 @@
                         </div>
                     </div>
 
+                    <!-- Article Search -->
+                    <div class="article-search-bar">
+                        <div class="article-search-wrapper">
+                            <i class="fas fa-search article-search-icon"></i>
+                            <input type="text" id="article-search" class="article-search-input" placeholder="Search articles by title or topic..." oninput="searchArticles(this.value)">
+                        </div>
+                    </div>
+
                     <!-- Category Filter -->
                     <div class="articles-filter-bar">
                         <h3 class="filter-heading">Browse by Topic</h3>
@@ -6870,16 +6962,30 @@
     </footer>
 
 
+
+    <!-- Back to Top -->
+    <button id="back-to-top" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
     <script>
         // Section definitions for the scroll bar
         const scrollSections = ['home', 'articles', 'research', 'publications', 'books', 'memberships'];
         const scrollSectionLabels = { home: 'Home', articles: 'Articles', research: 'Research', publications: 'Publications', books: 'Books', memberships: 'Memberships' };
         
         function showTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active', 'visible');
+            });
             document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
             
-            document.getElementById(tabId).classList.add('active');
+            const activeTab = document.getElementById(tabId);
+            activeTab.classList.add('active');
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    activeTab.classList.add('visible');
+                });
+            });
             
             const navLink = document.querySelector(`a[onclick="showTab('${tabId}')"]`);
             if (navLink) navLink.classList.add('active');
@@ -7301,6 +7407,55 @@
 
         // Auto-update footer year
         document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+
+        // Back to top button
+        (function() {
+            const btn = document.getElementById('back-to-top');
+            if (!btn) return;
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 400) {
+                    btn.classList.add('show');
+                } else {
+                    btn.classList.remove('show');
+                }
+            });
+        })();
+
+        // Article search
+        function searchArticles(query) {
+            const cards = document.querySelectorAll('.article-card');
+            const q = query.toLowerCase().trim();
+            
+            // Reset all filter pills to inactive
+            document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+            if (!q) {
+                document.querySelector('.filter-pill[data-filter="all"]').classList.add('active');
+            }
+            
+            let count = 0;
+            cards.forEach(card => {
+                const title = (card.querySelector('.article-card-title') || {}).textContent || '';
+                const tag = card.dataset.tag || '';
+                const excerpt = (card.querySelector('.article-card-excerpt') || {}).textContent || '';
+                
+                if (!q || title.toLowerCase().includes(q) || tag.toLowerCase().includes(q) || excerpt.toLowerCase().includes(q)) {
+                    card.classList.remove('hidden');
+                    count++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            
+            const countEl = document.getElementById('articles-count');
+            if (countEl) countEl.textContent = !q ? '44' : count;
+        }
+
+        // Make initial home tab visible
+        (function() {
+            const home = document.querySelector('.tab-content.active');
+            if (home) home.classList.add('visible');
+        })();
 
     </script>
 </body>
