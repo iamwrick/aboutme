@@ -24,7 +24,7 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="Wrick Talukdar | Thought Leader · Innovator · Product Advisor · Bestselling Author">
     <meta property="og:description" content="Technology Leader at AWS. Published researcher in AI/ML. Author of 3 books including Building Agentic AI Systems. IEEE Senior Member. 26+ publications across IEEE, arXiv, and AWS.">
-    <meta property="og:image" content="photos/wrick talukdar v2.png">
+    <meta property="og:image" content="og-image.png">
     <meta property="og:url" content="">
     <meta property="og:site_name" content="Wrick Talukdar">
 
@@ -32,7 +32,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Wrick Talukdar | AI/ML Thought Leader & Bestselling Author">
     <meta name="twitter:description" content="Technology Leader at AWS. Published researcher. Author of Building Agentic AI Systems. IEEE Senior Member.">
-    <meta name="twitter:image" content="photos/wrick talukdar v2.png">
+    <meta name="twitter:image" content="og-image.png">
 
     <!-- Canonical -->
     <link rel="canonical" href="">
@@ -6082,7 +6082,7 @@
                             </div>
                             <div class="articles-metric-divider"></div>
                             <div class="articles-metric">
-                                <span class="articles-metric-num" id="articles-count">43</span>
+                                <span class="articles-metric-num" id="articles-count">44</span>
                                 <span class="articles-metric-label">Articles</span>
                             </div>
                             <div class="articles-metric-divider"></div>
@@ -6104,16 +6104,15 @@
                         <div class="featured-content">
                             <div class="featured-text">
                                 <div class="article-card-meta">
-                                    <span class="article-card-tag">Agentic AI</span>
-                                    <span class="article-card-date">Aug 30, 2026</span>
+                                    <span class="article-card-tag">LLM Research</span>
+                                    <span class="article-card-date">Aug 31, 2026</span>
                                 </div>
-                                <h2 class="featured-title">Building Reliable Tool-Calling Agents: Lessons from the Field</h2>
-                                <p class="featured-excerpt">Why string-parsing LLM output is a trap, and how structured tool-use APIs 
-                                    change the reliability calculus for production agent systems.</p>
-                                <a href="articles/building-reliable-tool-calling-agents.html" class="featured-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                <h2 class="featured-title">Beyond RAG and GraphRAG for Time-Sensitive Knowledge</h2>
+                                <p class="featured-excerpt">RAG retrieves chunks. GraphRAG retrieves subgraphs. But neither handles temporal reasoning well. A new architecture combining episodic memory, knowledge graphs, and vector retrieval.</p>
+                                <a href="articles/temporal-aware-retrieval-beyond-rag-graphrag.html" class="featured-read">Read article <i class="fas fa-arrow-right"></i></a>
                             </div>
                             <div class="featured-icon">
-                                <i class="fas fa-robot"></i>
+                                <i class="fas fa-clock"></i>
                             </div>
                         </div>
                     </div>
@@ -6132,7 +6131,7 @@
                             <button class="filter-pill" data-filter="Generative AI" onclick="filterArticles('Generative AI')">Generative AI <span class="pill-count">2</span></button>
                             <button class="filter-pill" data-filter="Healthcare AI" onclick="filterArticles('Healthcare AI')">Healthcare AI <span class="pill-count">2</span></button>
                             <button class="filter-pill" data-filter="IoT & AI" onclick="filterArticles('IoT & AI')">IoT & AI <span class="pill-count">1</span></button>
-                            <button class="filter-pill" data-filter="LLM Research" onclick="filterArticles('LLM Research')">LLM Research <span class="pill-count">3</span></button>
+                            <button class="filter-pill" data-filter="LLM Research" onclick="filterArticles('LLM Research')">LLM Research <span class="pill-count">4</span></button>
                             <button class="filter-pill" data-filter="MLOps" onclick="filterArticles('MLOps')">MLOps <span class="pill-count">1</span></button>
                             <button class="filter-pill" data-filter="Machine Learning" onclick="filterArticles('Machine Learning')">Machine Learning <span class="pill-count">1</span></button>
                             <button class="filter-pill" data-filter="NLP" onclick="filterArticles('NLP')">NLP <span class="pill-count">2</span></button>
@@ -6154,6 +6153,22 @@
 
                     <!-- Articles Grid -->
                     <div class="articles-grid">
+                            <div class="article-card" data-tag="LLM Research">
+                                <div class="article-card-image-placeholder"><i class="fas fa-clock"></i></div>
+                                <div class="article-card-body">
+                                    <div class="article-card-meta">
+                                        <span class="article-card-tag">LLM Research</span>
+                                        <span class="article-card-date">Aug 2026</span>
+                                    </div>
+                                    <h3 class="article-card-title">Beyond RAG and GraphRAG for Time-Sensitive Knowledge</h3>
+                                    <p class="article-card-excerpt">A new architecture combining episodic memory, knowledge graphs, and vector retrieval for time-sensitive knowledge.</p>
+                                    <div class="article-card-footer">
+                                        <a href="articles/temporal-aware-retrieval-beyond-rag-graphrag.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
+                                        <span class="article-card-readtime">12 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+
 
                             <div class="article-card" data-tag="Document AI">
                                 <div class="article-card-image-placeholder"><i class="fas fa-file-alt"></i></div>
@@ -7023,7 +7038,7 @@
                     card.classList.add('hidden');
                 }
             });
-            document.getElementById('articles-count').textContent = tag === 'all' ? '43' : visibleCount;
+            document.getElementById('articles-count').textContent = tag === 'all' ? '44' : visibleCount;
         }
 
         // Check if returning from an article page
