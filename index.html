@@ -4178,6 +4178,446 @@
             background: rgba(255,255,255,0.06);
         }
 
+
+        /* Press strip — side by side */
+        .press-strip {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+
+        .press-card {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            padding: 1rem 1.25rem;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .press-card:hover {
+            border-color: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.04);
+        }
+
+        .press-card-source {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #fbbf24;
+        }
+
+        .press-card-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 0.92rem;
+            color: var(--primary-text);
+            line-height: 1.3;
+        }
+
+        .press-card-icon {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 0.6rem;
+            color: var(--muted-text);
+            transition: color 0.2s;
+        }
+
+        .press-card:hover .press-card-icon { color: #fbbf24; }
+
+        @media (max-width: 768px) {
+            .press-strip { grid-template-columns: 1fr; }
+        }
+
+        /* Highlight USA Today */
+        .featured-in-highlight {
+            color: rgba(255,255,255,0.6) !important;
+            font-size: 0.85rem !important;
+        }
+
+
+        /* Thin line above section labels */
+        .trust-bar-section {
+            padding-top: 0;
+        }
+
+
+        /* Press Editorial Layout */
+        .press-section-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--muted-text);
+            margin-bottom: 1.25rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .press-editorial-layout {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        /* Hero card (USA Today) */
+        .press-hero-card {
+            padding: 1.75rem;
+            border: 1px solid rgba(251,191,36,0.15);
+            border-radius: 1rem;
+            background: linear-gradient(135deg, rgba(251,191,36,0.04), transparent);
+            transition: all 0.25s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .press-hero-card:hover {
+            border-color: rgba(251,191,36,0.3);
+            background: linear-gradient(135deg, rgba(251,191,36,0.06), transparent);
+        }
+
+        .press-hero-source {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #fbbf24;
+            margin-bottom: 0.6rem;
+        }
+
+        .press-hero-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            line-height: 1.3;
+            color: var(--accent-color);
+            margin-bottom: 0.6rem;
+        }
+
+        .press-hero-excerpt {
+            font-size: 0.82rem;
+            color: var(--secondary-text);
+            line-height: 1.55;
+            margin-bottom: 1rem;
+        }
+
+        .press-hero-link {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #fbbf24;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .press-hero-card:hover .press-hero-link { gap: 0.7rem; }
+
+        /* Side cards stack */
+        .press-side-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+
+        .press-side-card {
+            padding: 1rem 1.25rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            flex: 1;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .press-side-card:hover {
+            border-color: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.02);
+        }
+
+        .press-side-source {
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #fbbf24;
+        }
+
+        .press-side-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 0.92rem;
+            color: var(--primary-text);
+            line-height: 1.3;
+        }
+
+        .press-side-readlink {
+            font-size: 0.65rem;
+            color: var(--muted-text);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-top: auto;
+            padding-top: 0.25rem;
+            transition: color 0.2s;
+        }
+
+        .press-side-card:hover .press-side-readlink { color: #fbbf24; }
+
+        /* Recognition chips */
+        .recog-chips {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .recog-chip {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 2rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color);
+            font-size: 0.68rem;
+            color: var(--secondary-text);
+            transition: all 0.2s;
+        }
+
+        .recog-chip:hover { border-color: rgba(255,255,255,0.2); color: var(--primary-text); }
+
+        .recog-chip i { font-size: 0.6rem; color: var(--muted-text); }
+
+        .recog-gold {
+            background: rgba(251,191,36,0.05);
+            border-color: rgba(251,191,36,0.15);
+            color: #fbbf24;
+        }
+
+        .recog-gold i { color: #fbbf24; }
+
+        /* Also featured in */
+        .also-featured {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .also-featured-label {
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--muted-text);
+            white-space: nowrap;
+        }
+
+        .also-featured-link {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.3);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .also-featured-link:hover { color: var(--accent-color); }
+
+        @media (max-width: 768px) {
+            .press-editorial-layout { grid-template-columns: 1fr; }
+            .recog-chips { gap: 0.4rem; }
+        }
+
+
+        /* Horizontal Press Timeline */
+        .hz-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--muted-text);
+            margin-bottom: 1.5rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .hz-timeline {
+            position: relative;
+            display: flex;
+            gap: 0;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            scrollbar-width: none;
+        }
+        .hz-timeline::-webkit-scrollbar { display: none; }
+
+        .hz-timeline::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #60a5fa, rgba(96,165,250,0.3), rgba(255,255,255,0.06), rgba(255,255,255,0.06), rgba(255,255,255,0.06));
+            z-index: 0;
+            border-radius: 1px;
+        }
+
+        .hz-item {
+            flex: 1;
+            min-width: 155px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            padding: 0 0.35rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .hz-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.12);
+            border: 2px solid rgba(255,255,255,0.2);
+            margin-bottom: 0.75rem;
+            flex-shrink: 0;
+            transition: all 0.25s;
+        }
+
+        .hz-item:hover .hz-dot {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.4);
+            transform: scale(1.3);
+        }
+
+        .hz-item:first-child .hz-dot {
+            background: #60a5fa;
+            border-color: #60a5fa;
+            box-shadow: 0 0 12px rgba(96,165,250,0.35);
+        }
+
+        .hz-item:first-child:hover .hz-dot {
+            box-shadow: 0 0 18px rgba(96,165,250,0.5);
+        }
+
+        .hz-card {
+            text-align: center;
+            padding: 1rem 0.85rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            transition: all 0.25s;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hz-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: transparent;
+            transition: background 0.25s;
+        }
+
+        .hz-card:hover {
+            border-color: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.02);
+            transform: translateY(-8px) scale(1.15);
+            z-index: 2;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+        }
+
+        .hz-card:hover::before {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+        }
+
+        .hz-item:first-child .hz-card {
+            border-color: rgba(96,165,250,0.15);
+            background: rgba(96,165,250,0.02);
+        }
+
+        .hz-item:first-child .hz-card::before {
+            background: linear-gradient(90deg, transparent, rgba(96,165,250,0.3), transparent);
+        }
+
+        .hz-item:first-child .hz-card:hover {
+            border-color: rgba(96,165,250,0.3);
+            background: rgba(96,165,250,0.04);
+            transform: translateY(-8px) scale(1.15);
+            box-shadow: 0 16px 40px rgba(96,165,250,0.2);
+        }
+
+        .hz-source {
+            font-size: 0.58rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #60a5fa;
+            margin-bottom: 0.35rem;
+        }
+
+        .hz-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 0.85rem;
+            color: var(--primary-text);
+            line-height: 1.3;
+            margin-bottom: 0.35rem;
+        }
+
+        .hz-type {
+            font-size: 0.5rem;
+            color: var(--muted-text);
+            background: rgba(255,255,255,0.04);
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            border-radius: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .hz-link {
+            font-size: 0.6rem;
+            color: var(--muted-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            transition: all 0.2s;
+            margin-top: auto;
+        }
+
+        .hz-card:hover .hz-link { color: #60a5fa; }
+        .hz-link i { font-size: 0.5rem; transition: transform 0.2s; }
+        .hz-card:hover .hz-link i { transform: translateX(2px); }
+
+        @media (max-width: 768px) {
+            .hz-item { min-width: 140px; }
+            .hz-title { font-size: 0.78rem; }
+        }
+
+
+        .trust-bar-inner {
+            border-top: 1px solid rgba(255,255,255,0.12);
+            padding-top: 1.25rem;
+        }
+
     </style>
 </head>
 <body>
@@ -4255,34 +4695,71 @@
                     </div>
                 </div>
             </section>
-            <!-- Featured In -->
-            <section class="section" style="padding: 1.5rem 2rem;">
+            <!-- In the Press & Recognition -->
+            <section class="section" style="padding: 1rem 2rem 2rem;">
                 <div class="section-container">
-                    <div class="featured-in-strip">
-                        <span class="featured-in-label">Featured In</span>
-                        <div class="featured-in-logos">
-                            <a href="https://ceoworld.biz/2025/04/23/from-curiosity-to-real-world-impact-how-wrick-talukdar-is-shaping-the-future-of-ai/" target="_blank" class="featured-in-item">CEO World</a>
-                            <a href="https://www.bintelligence.com/judge/wrick-talukdar" target="_blank" class="featured-in-item">Business Intelligence Group</a>
-                            <a href="https://www.computer.org/publications/tech-news/trends/litellm-control-plane" target="_blank" class="featured-in-item">IEEE Computer Society</a>
-                            <a href="https://aws.amazon.com/blogs/machine-learning/author/wtalukda/" target="_blank" class="featured-in-item">AWS Machine Learning Blog</a>
-                            <a href="https://ieeexplore.ieee.org/document/10958205" target="_blank" class="featured-in-item">IEEE Xplore</a>
-                            <a href="https://www.theedgereview.org/magazine/issue-1/the-rise-of-agentic-ai-across-industries" target="_blank" class="featured-in-item">The Edge Review</a>
-                        </div>
+                    <div class="hz-label">In the Press & Recognition</div>
+
+                    <div class="hz-timeline">
+                        <a href="https://www.usatoday.com/story/special/contributor-content/2025/08/29/the-architecture-of-autonomy-wrick-talukdars-path-to-ai-leadership/85888457007/" target="_blank" class="hz-item">
+                            <div class="hz-dot"></div>
+                            <div class="hz-card">
+                                <div class="hz-source">USA Today</div>
+                                <div class="hz-type">Profile</div>
+                                <div class="hz-title">The Architecture of Autonomy: Path to AI Leadership</div>
+                                <span class="hz-link">Read article <i class="fas fa-arrow-right"></i></span>
+                            </div>
+                        </a>
+                        <a href="https://ceoworld.biz/2025/04/23/from-curiosity-to-real-world-impact-how-wrick-talukdar-is-shaping-the-future-of-ai/" target="_blank" class="hz-item">
+                            <div class="hz-dot"></div>
+                            <div class="hz-card">
+                                <div class="hz-source">CEO World</div>
+                                <div class="hz-type">Feature</div>
+                                <div class="hz-title">From Curiosity to Real-World Impact</div>
+                                <span class="hz-link">Read article <i class="fas fa-arrow-right"></i></span>
+                            </div>
+                        </a>
+                        <a href="https://macaubusiness.com/bestselling-packt-book-building-agentic-ai-systems-wins-2025-technology-award-at-goody-business-book-awards/" target="_blank" class="hz-item">
+                            <div class="hz-dot"></div>
+                            <div class="hz-card">
+                                <div class="hz-source">Macau Business</div>
+                                <div class="hz-type">Award</div>
+                                <div class="hz-title">Bestselling Book Wins 2025 Technology Award</div>
+                                <span class="hz-link">Read article <i class="fas fa-arrow-right"></i></span>
+                            </div>
+                        </a>
+                        <a href="https://resources.paperdigest.org/2024/10/most-influential-arxiv-artificial-intelligence-papers-2024-10/" target="_blank" class="hz-item">
+                            <div class="hz-dot"></div>
+                            <div class="hz-card">
+                                <div class="hz-source">PaperDigest</div>
+                                <div class="hz-type">Ranking</div>
+                                <div class="hz-title">#1 Most Influential arXiv AI Paper of 2024</div>
+                                <span class="hz-link">View ranking <i class="fas fa-arrow-right"></i></span>
+                            </div>
+                        </a>
+                        <a href="https://www.analyticsinsight.net/books/top-10-books-for-building-agentic-ai-systems-in-2026" target="_blank" class="hz-item">
+                            <div class="hz-dot"></div>
+                            <div class="hz-card">
+                                <div class="hz-source">Analytics Insight</div>
+                                <div class="hz-type">List</div>
+                                <div class="hz-title">Top 10 Books for Building Agentic AI Systems</div>
+                                <span class="hz-link">Read article <i class="fas fa-arrow-right"></i></span>
+                            </div>
+                        </a>
+                        <a href="https://ieeexplore.ieee.org/document/10958205" target="_blank" class="hz-item">
+                            <div class="hz-dot"></div>
+                            <div class="hz-card">
+                                <div class="hz-source">IEEE CE Magazine</div>
+                                <div class="hz-type">Journal</div>
+                                <div class="hz-title">Industry Forum on LLMs in Consumer Technology</div>
+                                <span class="hz-link">Read article <i class="fas fa-arrow-right"></i></span>
+                            </div>
+                        </a>
                     </div>
+
                 </div>
             </section>
 
-            <!-- Press Feature Banner -->
-            <section class="section" style="padding: 0.75rem 2rem;">
-                <div class="section-container">
-                    <a href="https://ceoworld.biz/2025/04/23/from-curiosity-to-real-world-impact-how-wrick-talukdar-is-shaping-the-future-of-ai/" target="_blank" class="press-banner">
-                        <span class="press-banner-label">Featured</span>
-                        <span class="press-banner-text">"From Curiosity to Real-World Impact: How Wrick Talukdar is Shaping the Future of AI"</span>
-                        <span class="press-banner-source">— CEO World Magazine</span>
-                        <i class="fas fa-arrow-right press-banner-arrow"></i>
-                    </a>
-                </div>
-            </section>
 
 
             
@@ -4291,7 +4768,11 @@
 
             <!-- Trust Bar -->
             <section class="trust-bar-section">
-                <div class="trust-bar-label">Affiliated & Contributing To</div>
+                <div class="section-container">
+                    <div class="trust-bar-inner">
+                        <div class="trust-bar-label">Affiliated & Contributing To</div>
+                    </div>
+                </div>
                 <div class="trust-bar">
                     <div class="trust-logo"><span class="trust-text-mark" style="color: #00629b; font-weight: 800;">IEEE</span><span class="trust-sub">Chair, Technology & Innovation</span></div>
                     <div class="trust-logo"><span class="trust-text-mark" style="color: #00629b; font-weight: 800;">IEEE</span><span class="trust-sub">Industry Engagement</span></div>
@@ -7441,52 +7922,4 @@
 
     </script>
 </body>
-</html
-            <!-- Connect -->
-            <section class="section" style="padding: 3rem 2rem 4rem;">
-                <div class="section-container">
-                    <div class="connect-modern">
-                        <div class="connect-left">
-                            <div class="connect-eyebrow">Get in Touch</div>
-                            <h3 class="connect-heading">Let's Shape What's Next</h3>
-                            <p class="connect-desc">Whether it's AI strategy for your enterprise, a research collaboration, a keynote, or a bold idea worth exploring — I'm always open to conversations that push boundaries.</p>
-                        </div>
-                        <div class="connect-right">
-                            <a href="https://www.linkedin.com/in/wrick-talukdar/" target="_blank" class="connect-card">
-                                <div class="connect-card-icon" style="color: #0a66c2;"><i class="fab fa-linkedin-in"></i></div>
-                                <div class="connect-card-info">
-                                    <div class="connect-card-name">LinkedIn</div>
-                                    <div class="connect-card-handle">in/wrick-talukdar</div>
-                                </div>
-                                <i class="fas fa-arrow-right connect-card-arrow"></i>
-                            </a>
-                            <a href="https://www.researchgate.net/profile/Wrick-Talukdar-2" target="_blank" class="connect-card">
-                                <div class="connect-card-icon" style="color: #00d0af;"><i class="fab fa-researchgate"></i></div>
-                                <div class="connect-card-info">
-                                    <div class="connect-card-name">ResearchGate</div>
-                                    <div class="connect-card-handle">592.1 Research Interest</div>
-                                </div>
-                                <i class="fas fa-arrow-right connect-card-arrow"></i>
-                            </a>
-                            <a href="https://scholar.google.com/scholar?q=author:wrick+talukdar" target="_blank" class="connect-card">
-                                <div class="connect-card-icon" style="color: #4285f4;"><i class="fas fa-graduation-cap"></i></div>
-                                <div class="connect-card-info">
-                                    <div class="connect-card-name">Google Scholar</div>
-                                    <div class="connect-card-handle">1,112+ citations</div>
-                                </div>
-                                <i class="fas fa-arrow-right connect-card-arrow"></i>
-                            </a>
-                            <a href="https://us.amazon.com/stores/author/B0F2J8S78Z" target="_blank" class="connect-card">
-                                <div class="connect-card-icon" style="color: #ff9900;"><i class="fab fa-amazon"></i></div>
-                                <div class="connect-card-info">
-                                    <div class="connect-card-name">Amazon Author</div>
-                                    <div class="connect-card-handle">3 books published</div>
-                                </div>
-                                <i class="fas fa-arrow-right connect-card-arrow"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
->
+</html>
