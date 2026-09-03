@@ -1434,7 +1434,7 @@
             font-size: 1.3rem;
             font-weight: 600;
             color: var(--primary-text);
-            margin-bottom: 0.5rem;
+            margin-bottom: 3rem;
         }
         
         .card-description {
@@ -2707,21 +2707,62 @@
         .filter-pill.active { background: rgba(255,255,255,0.12); border-color: var(--accent-color); color: var(--accent-color); }
         .pill-count { font-size: 0.65rem; opacity: 0.75; margin-left: 0.15rem; }
 
-        .articles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.25rem; margin-top: 0.5rem; }
-        .article-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 1rem; overflow: hidden; transition: all 0.3s ease; display: flex; flex-direction: column; }
+        .articles-grid { display: flex; flex-direction: column; gap: 0; margin-top: 0.5rem; }
+        .article-card {
+            display: grid;
+            grid-template-columns: 36px 1fr auto;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        .article-card:first-child { border-top: 1px solid rgba(255,255,255,0.05); }
         .article-card.hidden { display: none; }
-        .article-card:hover { border-color: rgba(255,255,255,0.2); box-shadow: 0 8px 24px rgba(0,0,0,0.3); transform: translateY(-4px); }
-        .article-card-image-placeholder { width: 100%; height: 80px; background: linear-gradient(135deg, rgba(30,30,30,1), rgba(50,50,50,1)); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--muted-text); }
-        .article-card-body { padding: 1rem 1.1rem; display: flex; flex-direction: column; flex: 1; }
-        .article-card-meta { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; flex-wrap: wrap; }
-        .article-card-tag { font-size: 0.62rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent-color); background: rgba(255,255,255,0.08); padding: 0.2rem 0.6rem; border-radius: 2rem; }
-        .article-card-date { font-size: 0.68rem; color: var(--muted-text); }
+        .article-card:hover {
+            background: rgba(255,255,255,0.02);
+            padding-left: 0.75rem;
+            margin-left: -0.75rem;
+            margin-right: -0.75rem;
+            padding-right: 0.75rem;
+            border-radius: 0.5rem;
+        }
+
+        .article-card:hover .article-card-title {
+            color: var(--accent-color);
+        }
+        .article-card-image-placeholder { width: 36px; height: 36px; min-width: 36px; border-radius: 0.5rem; background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: var(--muted-text); }
+        .article-card-body { padding: 0; display: flex; flex-direction: column; flex: 1; min-width: 0; gap: 0; }
+        .article-card-meta { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.1rem; }
+        .article-card-tag { font-size: 0.55rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent-color); background: rgba(255,255,255,0.08); padding: 0.2rem 0.6rem; border-radius: 2rem; }
+        .article-card-date { font-size: 0.58rem; color: var(--muted-text); }
         .article-card-title { font-family: 'Crimson Text', serif; font-size: 1.05rem; font-weight: 600; color: var(--primary-text); margin-bottom: 0.5rem; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .article-card-excerpt { font-size: 0.78rem; color: var(--secondary-text); line-height: 1.5; margin-bottom: 0.6rem; flex: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .article-card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 0.5rem; border-top: 1px solid var(--border-color); }
-        .article-card-read { font-size: 0.78rem; font-weight: 500; color: var(--accent-color); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; transition: gap 0.2s ease; }
+        .article-card-excerpt {
+            font-size: 0.82rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin: 0.3rem 0 0;
+        }
+        .article-card-footer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            padding: 0;
+        }
+
+        .article-card-read {
+            display: none;
+        }
+        .article-card-read { font-size: 0.65rem; font-weight: 500; color: var(--accent-color); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; transition: gap 0.2s ease; }
         .article-card-read:hover { gap: 0.6rem; }
-        .article-card-readtime { font-size: 0.68rem; color: var(--muted-text); }
+        .article-card-readtime {
+            font-size: 0.62rem;
+            color: var(--muted-text);
+            white-space: nowrap;
+        }
 
         @media (max-width: 768px) {
             .pub-stats-row { gap: 1.5rem; flex-wrap: wrap; }
@@ -2730,11 +2771,11 @@
             .articles-stats { gap: 1.5rem; }
             .featured-content { flex-direction: column; gap: 1rem; }
             .featured-icon { display: none; }
-            .articles-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+            .articles-grid { flex-direction: column; }
         }
 
         @media (max-width: 480px) {
-            .articles-grid { grid-template-columns: 1fr; }
+
         }
 
 
@@ -3000,7 +3041,7 @@
         .pro-role-meta {
             font-size: 0.78rem;
             color: var(--muted-text);
-            margin-bottom: 0.35rem;
+            margin-bottom: 0.5rem;
         }
 
         .pro-role-location {
@@ -4748,6 +4789,367 @@
             * { animation: none !important; transition: none !important; }
         }
 
+
+        /* RSS Subscribe Button */
+        .rss-subscribe-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            padding: 0.35rem 0.85rem;
+            border-radius: 2rem;
+            background: rgba(249, 115, 22, 0.08);
+            border: 1px solid rgba(249, 115, 22, 0.2);
+            color: #f97316;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            margin-left: 0.75rem;
+        }
+
+        .rss-subscribe-btn:hover {
+            background: rgba(249, 115, 22, 0.2);
+            border-color: rgba(249, 115, 22, 0.4);
+            transform: scale(1.1);
+        }
+
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.25rem;
+            margin-top: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--muted-text);
+            font-size: 0.85rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+
+
+        /* Page load entrance */
+        body {
+            animation: pageEntrance 0.8s ease forwards;
+        }
+
+        @keyframes pageEntrance {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+
+        /* Hero photo hover glow */
+        .hero-image img {
+            transition: all 0.4s ease;
+        }
+
+        .hero-image img:hover {
+            box-shadow:
+                0 25px 50px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(243, 244, 246, 0.15),
+                0 0 80px rgba(243, 244, 246, 0.08);
+            transform: scale(1.02);
+        }
+
+
+        /* Freshness badge */
+        .freshness-badge {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #4ade80;
+            background: rgba(74, 222, 128, 0.08);
+            border: 1px solid rgba(74, 222, 128, 0.15);
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            vertical-align: middle;
+            margin-left: 0.5rem;
+        }
+
+
+        /* NYT-Style Articles */
+        .nyt-masthead {
+            text-align: center;
+            padding: 1.5rem 0 1.25rem;
+            border-bottom: 2px solid var(--accent-color);
+            margin-bottom: 1.25rem;
+        }
+
+        .nyt-masthead-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            letter-spacing: -0.5px;
+        }
+
+        .nyt-masthead-sub {
+            font-size: 0.7rem;
+            color: var(--muted-text);
+            margin-top: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nyt-masthead-meta {
+            font-size: 0.65rem;
+            color: var(--muted-text);
+            margin-top: 0.6rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        /* Filter pills */
+        .nyt-pills {
+            display: flex;
+            gap: 0.4rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.25rem;
+            scrollbar-width: none;
+        }
+        .nyt-pills::-webkit-scrollbar { display: none; }
+
+        .nyt-pill {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--secondary-text);
+            padding: 0.3rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.62rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+        .nyt-pill:hover { border-color: rgba(255,255,255,0.25); color: var(--primary-text); }
+        .nyt-pill.active { background: rgba(255,255,255,0.1); border-color: var(--accent-color); color: var(--accent-color); }
+
+        /* Shared elements */
+        .nyt-cat {
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #60a5fa;
+            margin-bottom: 0.15rem;
+        }
+
+        .nyt-h3 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            line-height: 1.25;
+            color: var(--primary-text);
+            transition: color 0.2s;
+        }
+
+        .nyt-meta {
+            font-size: 0.62rem;
+            color: var(--muted-text);
+        }
+
+        .nyt-excerpt {
+            font-size: 0.78rem;
+            color: var(--secondary-text);
+            line-height: 1.55;
+            margin: 0.3rem 0 0.25rem;
+        }
+
+        .nyt-excerpt-sm {
+            font-size: 0.72rem;
+            color: var(--muted-text);
+            line-height: 1.45;
+            margin-top: 0.15rem;
+        }
+
+        /* Lead section */
+        .nyt-lead {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 0;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .nyt-lead-main {
+            padding-right: 2rem;
+            border-right: 1px solid var(--border-color);
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+            display: block;
+            height: 100%;
+        }
+
+        .nyt-lead-main::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 2rem;
+            height: 60px;
+            background: linear-gradient(transparent, var(--primary-bg));
+            pointer-events: none;
+        }
+
+        .nyt-lead-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            line-height: 1.2;
+            color: var(--accent-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .nyt-lead-excerpt {
+            font-size: 0.85rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 0.3rem;
+        }
+
+        .nyt-lead-main:hover .nyt-lead-title { color: #fff; }
+
+        .nyt-lead-side {
+            padding-left: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nyt-side-item {
+            padding: 0.85rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .nyt-side-item:last-child { border-bottom: none; }
+        .nyt-side-item:hover .nyt-h3 { color: var(--accent-color); }
+
+        /* 3-column grid */
+        .nyt-3col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .nyt-col {
+            padding: 0 1.25rem;
+        }
+        .nyt-col:first-child { padding-left: 0; }
+        .nyt-col:last-child { padding-right: 0; }
+        .nyt-col:not(:last-child) { border-right: 1px solid rgba(255,255,255,0.06); }
+
+        .nyt-grid-article {
+            display: block;
+            margin-bottom: 1.25rem;
+            text-decoration: none;
+            color: inherit;
+        }
+        .nyt-grid-article:last-child { margin-bottom: 0; }
+        .nyt-grid-article:hover .nyt-h3 { color: var(--accent-color); }
+
+        /* Numbered list */
+        .nyt-numbered-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .nyt-list-item {
+            display: grid;
+            grid-template-columns: 2.5rem 1fr;
+            gap: 1rem;
+            align-items: start;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
+        }
+        .nyt-list-item:first-child { border-top: 1px solid rgba(255,255,255,0.05); }
+        .nyt-list-item:hover { background: rgba(255,255,255,0.02); padding-left: 0.5rem; margin-left: -0.5rem; margin-right: -0.5rem; padding-right: 0.5rem; border-radius: 0.5rem; }
+        .nyt-list-item:hover .nyt-h3 { color: var(--accent-color); }
+
+        .nyt-list-num {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.08);
+            line-height: 1;
+        }
+
+        @media (max-width: 768px) {
+            .nyt-lead { grid-template-columns: 1fr; }
+            .nyt-lead-main { padding-right: 0; border-right: none; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
+            .nyt-lead-side { padding-left: 0; padding-top: 1rem; }
+            .nyt-3col { grid-template-columns: 1fr; }
+            .nyt-col { padding: 0; border-right: none !important; margin-bottom: 1rem; }
+            .nyt-masthead-title { font-size: 1.5rem; }
+        }
+
+
+        .nyt-lead-tags {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+
+        .nyt-lead-tag {
+            font-size: 0.58rem;
+            font-weight: 600;
+            color: var(--muted-text);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+        }
+
+
+        .nyt-lead-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            z-index: 1;
+        }
+
+        .nyt-lead-readmore {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #60a5fa;
+            transition: gap 0.2s;
+        }
+
+        .nyt-lead-main:hover .nyt-lead-readmore {
+            text-decoration: underline;
+        }
+
     </style>
 </head>
 <body>
@@ -5480,7 +5882,55 @@
                 </div>
             </section>
 
-        </div>
+        
+            <!-- Connect -->
+            <section class="section" style="padding: 3rem 2rem 4rem;">
+                <div class="section-container">
+                    <div class="connect-modern">
+                        <div class="connect-left">
+                            <div class="connect-eyebrow">Get in Touch</div>
+                            <h3 class="connect-heading">Let&#39;s Shape What&#39;s Next</h3>
+                            <p class="connect-desc">Whether it's AI strategy for your enterprise, a research collaboration, a keynote, or a bold idea worth exploring — I'm always open to conversations that push boundaries.</p>
+                        </div>
+                        <div class="connect-right">
+                            <a href="https://www.linkedin.com/in/wrick-talukdar/" target="_blank" class="connect-card">
+                                <div class="connect-card-icon" style="color: #0a66c2;"><i class="fab fa-linkedin-in"></i></div>
+                                <div class="connect-card-info">
+                                    <div class="connect-card-name">LinkedIn</div>
+                                    <div class="connect-card-handle">in/wrick-talukdar</div>
+                                </div>
+                                <i class="fas fa-arrow-right connect-card-arrow"></i>
+                            </a>
+                            <a href="https://www.researchgate.net/profile/Wrick-Talukdar-2" target="_blank" class="connect-card">
+                                <div class="connect-card-icon" style="color: #00d0af;"><i class="fab fa-researchgate"></i></div>
+                                <div class="connect-card-info">
+                                    <div class="connect-card-name">ResearchGate</div>
+                                    <div class="connect-card-handle">592.1 Research Interest</div>
+                                </div>
+                                <i class="fas fa-arrow-right connect-card-arrow"></i>
+                            </a>
+                            <a href="https://scholar.google.com/scholar?q=author:wrick+talukdar" target="_blank" class="connect-card">
+                                <div class="connect-card-icon" style="color: #4285f4;"><i class="fas fa-graduation-cap"></i></div>
+                                <div class="connect-card-info">
+                                    <div class="connect-card-name">Google Scholar</div>
+                                    <div class="connect-card-handle">1,112+ citations</div>
+                                </div>
+                                <i class="fas fa-arrow-right connect-card-arrow"></i>
+                            </a>
+                            <a href="https://us.amazon.com/stores/author/B0F2J8S78Z" target="_blank" class="connect-card">
+                                <div class="connect-card-icon" style="color: #ff9900;"><i class="fab fa-amazon"></i></div>
+                                <div class="connect-card-info">
+                                    <div class="connect-card-name">Amazon Author</div>
+                                    <div class="connect-card-handle">3 books published</div>
+                                </div>
+                                <i class="fas fa-arrow-right connect-card-arrow"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+</div>
 
         <!-- HIDDEN: Projects Section
         [-- Projects Section --]
@@ -5797,7 +6247,7 @@
                             <div class="timeline-date"><div class="paper-meta-card">
                                 <div class="paper-year">2026</div>
                                 <div class="paper-venue"><i class="fas fa-flask"></i> Academia AI</div>
-                                <div class="paper-type">Journal</div>
+                                <div class="paper-type">Journal · ~5 min read</div>
                                 
                             </div></div>
                             <div class="timeline-content">
@@ -5819,7 +6269,7 @@
                             <div class="timeline-date"><div class="paper-meta-card">
                                 <div class="paper-year">2024</div>
                                 <div class="paper-venue"><i class="fas fa-flask"></i> IJISRT</div>
-                                <div class="paper-type">Journal</div>
+                                <div class="paper-type">Journal · ~5 min read</div>
                                 <div class="paper-id"><i class="fas fa-file-alt"></i> arXiv:2406.06569</div>
                             </div></div>
                             <div class="timeline-content">
@@ -5843,7 +6293,7 @@
                             <div class="timeline-date"><div class="paper-meta-card">
                                 <div class="paper-year">2024</div>
                                 <div class="paper-venue"><i class="fas fa-flask"></i> IRJMETS</div>
-                                <div class="paper-type">Journal</div>
+                                <div class="paper-type">Journal · ~5 min read</div>
                                 <div class="paper-id"><i class="fas fa-file-alt"></i> arXiv:2406.01618</div>
                             </div></div>
                             <div class="timeline-content">
@@ -5867,7 +6317,7 @@
                             <div class="timeline-date"><div class="paper-meta-card">
                                 <div class="paper-year">2024</div>
                                 <div class="paper-venue"><i class="fas fa-flask"></i> IJISRT</div>
-                                <div class="paper-type">Journal</div>
+                                <div class="paper-type">Journal · ~5 min read</div>
                                 <div class="paper-id"><i class="fas fa-file-alt"></i> arXiv:2406.01096</div>
                             </div></div>
                             <div class="timeline-content">
@@ -5891,7 +6341,7 @@
                             <div class="timeline-date"><div class="paper-meta-card">
                                 <div class="paper-year">2024</div>
                                 <div class="paper-venue"><i class="fas fa-flask"></i> IJISRT</div>
-                                <div class="paper-type">Journal</div>
+                                <div class="paper-type">Journal · ~5 min read</div>
                                 <div class="paper-id"><i class="fas fa-file-alt"></i> arXiv:2405.18346</div>
                             </div></div>
                             <div class="timeline-content">
@@ -5915,7 +6365,7 @@
                             <div class="timeline-date"><div class="paper-meta-card">
                                 <div class="paper-year">2024</div>
                                 <div class="paper-venue"><i class="fas fa-flask"></i> J. AI Research</div>
-                                <div class="paper-type">Journal</div>
+                                <div class="paper-type">Journal · ~5 min read</div>
                                 <div class="paper-id"><i class="fas fa-file-alt"></i> arXiv:2406.10295</div>
                             </div></div>
                             <div class="timeline-content">
@@ -5939,7 +6389,7 @@
                             <div class="timeline-date"><div class="paper-meta-card">
                                 <div class="paper-year">2023</div>
                                 <div class="paper-venue"><i class="fas fa-flask"></i> WJAETS</div>
-                                <div class="paper-type">Journal</div>
+                                <div class="paper-type">Journal · ~5 min read</div>
                                 
                             </div></div>
                             <div class="timeline-content">
@@ -5963,7 +6413,7 @@
                             <div class="timeline-date"><div class="paper-meta-card">
                                 <div class="paper-year">2024</div>
                                 <div class="paper-venue"><i class="fas fa-flask"></i> J. Science & Tech</div>
-                                <div class="paper-type">Journal</div>
+                                <div class="paper-type">Journal · ~5 min read</div>
                                 <div class="paper-id"><i class="fas fa-file-alt"></i> arXiv:2408.04023</div>
                             </div></div>
                             <div class="timeline-content">
@@ -5987,7 +6437,7 @@
                             <div class="timeline-date"><div class="paper-meta-card">
                                 <div class="paper-year">2023</div>
                                 <div class="paper-venue"><i class="fas fa-flask"></i> Euro. J. Tech</div>
-                                <div class="paper-type">Journal</div>
+                                <div class="paper-type">Journal · ~5 min read</div>
                                 
                             </div></div>
                             <div class="timeline-content">
@@ -6044,15 +6494,15 @@
                     <!-- Publisher Filter -->
                     <div class="pub-filter-bar">
                         <div class="pub-filter-row">
-                            <button class="pub-filter active" data-filter="all" onclick="filterPubs('all')">All <span class="pub-pill-count">26</span></button>
-                            <button class="pub-filter" data-filter="AWS Blog" onclick="filterPubs('AWS Blog')">AWS Blog <span class="pub-pill-count">9</span></button>
-                            <button class="pub-filter" data-filter="IEEE Computer Society" onclick="filterPubs('IEEE Computer Society')">IEEE Computer Society <span class="pub-pill-count">5</span></button>
-                            <button class="pub-filter" data-filter="IEEE Xplore" onclick="filterPubs('IEEE Xplore')">IEEE Xplore <span class="pub-pill-count">1</span></button>
-                            <button class="pub-filter" data-filter="INFORMS" onclick="filterPubs('INFORMS')">INFORMS <span class="pub-pill-count">1</span></button>
-                            <button class="pub-filter" data-filter="Journal of Science and Technology" onclick="filterPubs('Journal of Science and Technology')">Journal of Science and Technology <span class="pub-pill-count">1</span></button>
-                            <button class="pub-filter" data-filter="ODSC" onclick="filterPubs('ODSC')">ODSC <span class="pub-pill-count">5</span></button>
-                            <button class="pub-filter" data-filter="The Edge Review" onclick="filterPubs('The Edge Review')">The Edge Review <span class="pub-pill-count">1</span></button>
-                            <button class="pub-filter" data-filter="arXiv" onclick="filterPubs('arXiv')">arXiv <span class="pub-pill-count">3</span></button>
+                            <button class="pub-filter active" data-filter="all" onclick=\"filterPubs('all', this)\">All <span class="pub-pill-count">26</span></button>
+                            <button class="pub-filter" data-filter="AWS Blog" onclick=\"filterPubs('AWS Blog', this)\">AWS Blog <span class="pub-pill-count">9</span></button>
+                            <button class="pub-filter" data-filter="IEEE Computer Society" onclick=\"filterPubs('IEEE Computer Society', this)\">IEEE Computer Society <span class="pub-pill-count">5</span></button>
+                            <button class="pub-filter" data-filter="IEEE Xplore" onclick=\"filterPubs('IEEE Xplore', this)\">IEEE Xplore <span class="pub-pill-count">1</span></button>
+                            <button class="pub-filter" data-filter="INFORMS" onclick=\"filterPubs('INFORMS', this)\">INFORMS <span class="pub-pill-count">1</span></button>
+                            <button class="pub-filter" data-filter="Journal of Science and Technology" onclick=\"filterPubs('Journal of Science and Technology', this)\">Journal of Science and Technology <span class="pub-pill-count">1</span></button>
+                            <button class="pub-filter" data-filter="ODSC" onclick=\"filterPubs('ODSC', this)\">ODSC <span class="pub-pill-count">5</span></button>
+                            <button class="pub-filter" data-filter="The Edge Review" onclick=\"filterPubs('The Edge Review', this)\">The Edge Review <span class="pub-pill-count">1</span></button>
+                            <button class="pub-filter" data-filter="arXiv" onclick=\"filterPubs('arXiv', this)\">arXiv <span class="pub-pill-count">3</span></button>
 
                         </div>
                     </div>
@@ -6745,793 +7195,407 @@
             <section class="section">
                 <div class="section-container">
 
-                    <!-- Articles Hero Strip -->
-                    <div class="articles-hero-strip">
-                        <div class="articles-hero-left">
-                            <h2 class="articles-hero-title">Articles & Insights</h2>
-                            <p class="articles-hero-desc">A decade of writing on AI, machine learning, deep learning, and emerging technology — from foundational concepts to cutting-edge research.</p>
-                        </div>
-                        <div class="articles-hero-metrics">
-                            <div class="articles-metric">
-                                <span class="articles-metric-num">50K+</span>
-                                <span class="articles-metric-label">Reads</span>
-                                <span class="articles-metric-trend">↑</span>
-                            </div>
-                            <div class="articles-metric-divider"></div>
-                            <div class="articles-metric">
-                                <span class="articles-metric-num" id="articles-count">44</span>
-                                <span class="articles-metric-label">Articles</span>
-                            </div>
-                            <div class="articles-metric-divider"></div>
-                            <div class="articles-metric">
-                                <span class="articles-metric-num">25</span>
-                                <span class="articles-metric-label">Topics</span>
-                            </div>
-                            <div class="articles-metric-divider"></div>
-                            <div class="articles-metric">
-                                <span class="articles-metric-num">15yr</span>
-                                <span class="articles-metric-label">Span</span>
-                            </div>
+                    <!-- NYT Masthead -->
+                    <div class="nyt-masthead">
+                        <h2 class="nyt-masthead-title">Articles & Insights</h2>
+                        <div class="nyt-masthead-sub">AI · Machine Learning · Agentic Systems · Research</div>
+                        <div class="nyt-masthead-meta">
+                            <span>25 Topics</span>
+                            <span class="freshness-badge">Updated Sep 2026</span>
+                            <a href="articles.xml" target="_blank" class="rss-subscribe-btn"><i class="fas fa-rss"></i> RSS</a>
                         </div>
                     </div>
 
-                    <!-- Featured Article -->
-                    <div class="featured-article">
-                        <div class="featured-badge"><i class="fas fa-star"></i> Latest</div>
-                        <div class="featured-content">
-                            <div class="featured-text">
-                                <div class="article-card-meta">
-                                    <span class="article-card-tag">LLM Research</span>
-                                    <span class="article-card-date">Aug 31, 2026</span>
-                                </div>
-                                <h2 class="featured-title">Beyond RAG and GraphRAG for Time-Sensitive Knowledge</h2>
-                                <p class="featured-excerpt">RAG retrieves chunks. GraphRAG retrieves subgraphs. But neither handles temporal reasoning well. A new architecture combining episodic memory, knowledge graphs, and vector retrieval.</p>
-                                <a href="articles/temporal-aware-retrieval-beyond-rag-graphrag.html" class="featured-read">Read article <i class="fas fa-arrow-right"></i></a>
-                            </div>
-                            <div class="featured-icon">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Article Search -->
+                    <!-- Search -->
                     <div class="article-search-bar">
                         <div class="article-search-wrapper">
                             <i class="fas fa-search article-search-icon"></i>
-                            <input type="text" id="article-search" class="article-search-input" placeholder="Search articles by title or topic..." oninput="searchArticles(this.value)">
+                            <input type="text" id="article-search" class="article-search-input" placeholder="Search articles..." oninput="searchArticles(this.value)">
                         </div>
                     </div>
 
-                    <!-- Category Filter -->
-                    <div class="articles-filter-bar">
-                        <h3 class="filter-heading">Browse by Topic</h3>
-                        <div class="filter-pills">
-                            <button class="filter-pill active" data-filter="all" onclick="filterArticles('all')">All</button>
-                            <button class="filter-pill" data-filter="AI Ethics" onclick="filterArticles('AI Ethics')">AI Ethics <span class="pill-count">2</span></button>
-                            <button class="filter-pill" data-filter="Agentic AI" onclick="filterArticles('Agentic AI')">Agentic AI <span class="pill-count">8</span></button>
-                            <button class="filter-pill" data-filter="Computer Vision" onclick="filterArticles('Computer Vision')">Computer Vision <span class="pill-count">1</span></button>
-                            <button class="filter-pill" data-filter="Deep Learning" onclick="filterArticles('Deep Learning')">Deep Learning <span class="pill-count">2</span></button>
-                            <button class="filter-pill" data-filter="Document AI" onclick="filterArticles('Document AI')">Document AI <span class="pill-count">3</span></button>
-                            <button class="filter-pill" data-filter="Edge Computing" onclick="filterArticles('Edge Computing')">Edge Computing <span class="pill-count">1</span></button>
-                            <button class="filter-pill" data-filter="Generative AI" onclick="filterArticles('Generative AI')">Generative AI <span class="pill-count">2</span></button>
-                            <button class="filter-pill" data-filter="Healthcare AI" onclick="filterArticles('Healthcare AI')">Healthcare AI <span class="pill-count">2</span></button>
-                            <button class="filter-pill" data-filter="IoT & AI" onclick="filterArticles('IoT & AI')">IoT & AI <span class="pill-count">1</span></button>
-                            <button class="filter-pill" data-filter="LLM Research" onclick="filterArticles('LLM Research')">LLM Research <span class="pill-count">4</span></button>
-                            <button class="filter-pill" data-filter="MLOps" onclick="filterArticles('MLOps')">MLOps <span class="pill-count">1</span></button>
-                            <button class="filter-pill" data-filter="Machine Learning" onclick="filterArticles('Machine Learning')">Machine Learning <span class="pill-count">1</span></button>
-                            <button class="filter-pill" data-filter="NLP" onclick="filterArticles('NLP')">NLP <span class="pill-count">2</span></button>
-                            <button class="filter-pill" data-filter="Privacy & ML" onclick="filterArticles('Privacy & ML')">Privacy & ML <span class="pill-count">1</span></button>
-                            <button class="filter-pill" data-filter="Reinforcement Learning" onclick="filterArticles('Reinforcement Learning')">Reinforcement Learning <span class="pill-count">1</span></button>
-                            <button class="filter-pill" data-filter="Responsible AI" onclick="filterArticles('Responsible AI')">Responsible AI <span class="pill-count">1</span></button>
-                            <button class="filter-pill" data-filter="Financial AI" onclick="filterArticles('Financial AI')">Financial AI <span class="pill-count">1</span></button>
-                            <button class="filter-pill" data-filter="Speech AI" onclick="filterArticles('Speech AI')">Speech AI <span class="pill-count">2</span></button>
-                            <button class="filter-pill" data-filter="Multimodal AI" onclick="filterArticles('Multimodal AI')">Multimodal AI <span class="pill-count">1</span></button>
-                            <button class="filter-pill" data-filter="Physical AI" onclick="filterArticles('Physical AI')">Physical AI <span class="pill-count">2</span></button>
-                            <button class="filter-pill" data-filter="Enterprise AI" onclick="filterArticles('Enterprise AI')">Enterprise AI <span class="pill-count">1</span></button>
-                            <button class="filter-pill" data-filter="AI Engineering" onclick="filterArticles('AI Engineering')">AI Engineering <span class="pill-count">1</span></button>
-                            <button class="filter-pill" data-filter="Data Engineering" onclick="filterArticles('Data Engineering')">Data Engineering <span class="pill-count">1</span></button>
+                    <!-- Filter Pills -->
+                    <div class="nyt-pills">
+                        <button class="nyt-pill active" data-filter="all" onclick=\"filterArticles('all', this)\">All</button>
+                            <button class="nyt-pill" data-filter="AI Engineering" onclick=\"filterArticles('AI Engineering', this)\">AI Engineering</button>
+                            <button class="nyt-pill" data-filter="AI Ethics" onclick=\"filterArticles('AI Ethics', this)\">AI Ethics</button>
+                            <button class="nyt-pill" data-filter="AI Safety" onclick=\"filterArticles('AI Safety', this)\">AI Safety</button>
+                            <button class="nyt-pill" data-filter="Agentic AI" onclick=\"filterArticles('Agentic AI', this)\">Agentic AI</button>
+                            <button class="nyt-pill" data-filter="Computer Vision" onclick=\"filterArticles('Computer Vision', this)\">Computer Vision</button>
+                            <button class="nyt-pill" data-filter="Data Engineering" onclick=\"filterArticles('Data Engineering', this)\">Data Engineering</button>
+                            <button class="nyt-pill" data-filter="Data Science" onclick=\"filterArticles('Data Science', this)\">Data Science</button>
+                            <button class="nyt-pill" data-filter="Deep Learning" onclick=\"filterArticles('Deep Learning', this)\">Deep Learning</button>
+                            <button class="nyt-pill" data-filter="Document AI" onclick=\"filterArticles('Document AI', this)\">Document AI</button>
+                            <button class="nyt-pill" data-filter="Edge Computing" onclick=\"filterArticles('Edge Computing', this)\">Edge Computing</button>
+                            <button class="nyt-pill" data-filter="Enterprise AI" onclick=\"filterArticles('Enterprise AI', this)\">Enterprise AI</button>
+                            <button class="nyt-pill" data-filter="Financial AI" onclick=\"filterArticles('Financial AI', this)\">Financial AI</button>
+                            <button class="nyt-pill" data-filter="Generative AI" onclick=\"filterArticles('Generative AI', this)\">Generative AI</button>
+                            <button class="nyt-pill" data-filter="Healthcare AI" onclick=\"filterArticles('Healthcare AI', this)\">Healthcare AI</button>
+                            <button class="nyt-pill" data-filter="IoT & AI" onclick=\"filterArticles('IoT & AI', this)\">IoT & AI</button>
+                            <button class="nyt-pill" data-filter="LLM Research" onclick=\"filterArticles('LLM Research', this)\">LLM Research</button>
+                            <button class="nyt-pill" data-filter="MLOps" onclick=\"filterArticles('MLOps', this)\">MLOps</button>
+                            <button class="nyt-pill" data-filter="Machine Learning" onclick=\"filterArticles('Machine Learning', this)\">Machine Learning</button>
+                            <button class="nyt-pill" data-filter="Multimodal AI" onclick=\"filterArticles('Multimodal AI', this)\">Multimodal AI</button>
+                            <button class="nyt-pill" data-filter="NLP" onclick=\"filterArticles('NLP', this)\">NLP</button>
+                            <button class="nyt-pill" data-filter="Physical AI" onclick=\"filterArticles('Physical AI', this)\">Physical AI</button>
+                            <button class="nyt-pill" data-filter="Privacy & ML" onclick=\"filterArticles('Privacy & ML', this)\">Privacy & ML</button>
+                            <button class="nyt-pill" data-filter="Reinforcement Learning" onclick=\"filterArticles('Reinforcement Learning', this)\">Reinforcement Learning</button>
+                            <button class="nyt-pill" data-filter="Responsible AI" onclick=\"filterArticles('Responsible AI', this)\">Responsible AI</button>
+                            <button class="nyt-pill" data-filter="Speech AI" onclick=\"filterArticles('Speech AI', this)\">Speech AI</button>
 
-                                                    <button class="filter-pill" data-filter="Data Science" onclick="filterArticles('Data Science')">Data Science <span class="pill-count">1</span></button>
-                            <button class="filter-pill" data-filter="AI Safety" onclick="filterArticles('AI Safety')">AI Safety <span class="pill-count">1</span></button>
-</div>
                     </div>
 
-                    <!-- Articles Grid -->
-                    <div class="articles-grid">
-                            <div class="article-card" data-tag="LLM Research">
-                                <div class="article-card-image-placeholder"><i class="fas fa-clock"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">LLM Research</span>
-                                        <span class="article-card-date">Aug 2026</span>
-                                    </div>
-                                    <h3 class="article-card-title">Beyond RAG and GraphRAG for Time-Sensitive Knowledge</h3>
-                                    <p class="article-card-excerpt">A new architecture combining episodic memory, knowledge graphs, and vector retrieval for time-sensitive knowledge.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/temporal-aware-retrieval-beyond-rag-graphrag.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">12 min read</span>
-                                    </div>
-                                </div>
+                    <!-- Lead Section -->
+                    <div class="nyt-lead">
+                        <a href="articles/temporal-aware-retrieval-beyond-rag-graphrag.html" class="nyt-lead-main">
+                            <div class="nyt-cat">LLM Research · Latest</div>
+                            <h2 class="nyt-lead-title">Beyond RAG and GraphRAG for Time-Sensitive Knowledge</h2>
+                            <p class="nyt-lead-excerpt">Ask a production RAG system "What is our current travel policy?" and it will faithfully retrieve the five most semantically similar chunks from your document store. Three of them will be from the 2023 policy. One from the 2024 revision. One from the 2025 update that actually applies. The system will synthesize all five into a confident, coherent, and wrong answer — blending superseded rules with current ones in a way that no human would.</p>
+                            <p class="nyt-lead-excerpt">This is the temporal blindspot, and it's endemic to every retrieval-augmented generation system deployed today. Vector similarity has no concept of time. Cosine distance between a query embedding and a document embedding is computed in a space where "when" doesn't exist. A policy document from 2023 and one from 2026 are distinguished only by their content — not by the fact that one replaces the other.</p>
+                            <p class="nyt-lead-excerpt">GraphRAG introduced structural retrieval — traversing entity relationships and community summaries rather than flat chunk lists. It was a genuine step forward. But it inherited the same temporal blindspot: graph edges are typically unversioned, and a relationship created in 2023 looks identical to one created yesterday. The problem isn't retrieval architecture. It's that none of these architectures model time as a first-class dimension.</p>
+                            <p class="nyt-lead-excerpt">In this article, I propose a four-layer architecture called Temporal-Aware Retrieval (TAR) that treats temporality not as metadata to be filtered but as a core scoring dimension — on par with semantic similarity and structural relevance. This draws from my work on context-aware grounding and the agent memory architectures described in Building Agentic AI Systems.</p>
+                            <p class="nyt-lead-excerpt">Standard RAG follows a deceptively simple pipeline: embed the query, find the top-k nearest chunks by cosine similarity, stuff them into the LLM context window, and generate. The retrieval step optimizes for one thing: semantic proximity. That's it.</p>
+                            <p class="nyt-lead-excerpt">This works beautifully for factual lookups where time is irrelevant — "What does the acronym EBITDA stand for?" — but collapses for the majority of enterprise queries where temporal context is critical. Consider these real failure modes:</p>
+                            <div class="nyt-lead-bottom">
+                                <span class="nyt-meta">12 min read · August 2026</span>
+                                <span class="nyt-lead-readmore">Continue reading →</span>
                             </div>
+                        </a>
+                        <div class="nyt-lead-side">
+                            <a href="#" class="nyt-side-item">
+                                <div class="nyt-cat">Document AI</div>
+                                <h3 class="nyt-h3">Intelligent Document Processing at Scale with Amazon Bedrock</h3>
+                                <span class="nyt-meta">8 min read</span>
+                            </a>
+                            <a href="articles/navigating-ethics-generative-ai-healthcare.html" class="nyt-side-item">
+                                <div class="nyt-cat">AI Ethics</div>
+                                <h3 class="nyt-h3">Navigating the Ethics of Generative AI in Healthcare</h3>
+                                <span class="nyt-meta">10 min read</span>
+                            </a>
+                            <a href="articles/meta-reasoning-autonomous-agents.html" class="nyt-side-item">
+                                <div class="nyt-cat">Agentic AI</div>
+                                <h3 class="nyt-h3">Meta-Reasoning in Autonomous Agents: Do Self-Monitoring LLMs Actually Perform Better?</h3>
+                                <span class="nyt-meta">8 min read</span>
+                            </a>
 
+                        </div>
+                    </div>
 
-                            <div class="article-card" data-tag="Document AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-file-alt"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Document AI</span>
-                                        <span class="article-card-date">Jul 2026</span>
-                                    </div>
-                                    <h3 class="article-card-title">Intelligent Document Processing at Scale with Amazon Bedrock</h3>
-                                    <p class="article-card-excerpt">A practitioner's guide to building enterprise IDP pipelines using 
-                                    Bedrock Data Automation, Textract, and multi-modal foundation models.</p>
-                                    <div class="article-card-footer">
-                                        <a href="#" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">8 min read</span>
-                                    </div>
+                    <!-- 3-Column Grid -->
+                    <div class="nyt-3col">
+                        <div class="nyt-col">
+                                <a href="articles/agentic-design-patterns-production.html" class="nyt-grid-article">
+                                    <div class="nyt-cat">Agentic AI</div>
+                                    <h3 class="nyt-h3">Agentic Design Patterns for Production Systems</h3>
+                                    <p class="nyt-excerpt">From ReAct loops to multi-agent orchestration — the design patterns that separate demo agents from production-grade autonomous systems.</p>
+                                    <span class="nyt-meta">10 min read</span>
+                                </a>
+                                <a href="articles/synthetic-data-clinical-documentation.html" class="nyt-grid-article">
+                                    <div class="nyt-cat">Healthcare AI</div>
+                                    <h3 class="nyt-h3">Synthetic Data Generation for Clinical Documentation: Bridging Privacy and Utility</h3>
+                                    <p class="nyt-excerpt">How LLMs can generate high-fidelity synthetic clinical transcripts that preserve statistical properties while containing zero real patient information.</p>
+                                    <span class="nyt-meta">9 min read</span>
+                                </a>
+
+                        </div>
+                        <div class="nyt-col">
+                                <a href="articles/multimodal-financial-document-classification.html" class="nyt-grid-article">
+                                    <div class="nyt-cat">Document AI</div>
+                                    <h3 class="nyt-h3">Cost-Effective Multi-Modal Classification for Financial Documents</h3>
+                                    <p class="nyt-excerpt">Why text-only approaches fail for financial documents, and how multi-modal methods capture layout, visual, and textual signals for robust classification.</p>
+                                    <span class="nyt-meta">7 min read</span>
+                                </a>
+                                <a href="articles/unsupervised-supervised-synergy-nlp.html" class="nyt-grid-article">
+                                    <div class="nyt-cat">Machine Learning</div>
+                                    <h3 class="nyt-h3">Synergizing Unsupervised and Supervised Learning: When Labels Are Scarce</h3>
+                                    <p class="nyt-excerpt">Supervised models need labels; unsupervised methods don't — but combining them strategically yields results neither achieves alone.</p>
+                                    <span class="nyt-meta">8 min read</span>
+                                </a>
+
+                        </div>
+                        <div class="nyt-col">
+                                <a href="articles/document-skew-multimodal-llms.html" class="nyt-grid-article">
+                                    <div class="nyt-cat">Document AI</div>
+                                    <h3 class="nyt-h3">How Document Skew Breaks Multi-Modal LLMs — and What to Do About It</h3>
+                                    <p class="nyt-excerpt">Multi-modal LLMs excel at document extraction — until the scan is tilted. Measuring and mitigating the impact of skew on extraction accuracy.</p>
+                                    <span class="nyt-meta">7 min read</span>
+                                </a>
+                                <a href="articles/context-aware-grounding-llm-fidelity.html" class="nyt-grid-article">
+                                    <div class="nyt-cat">LLM Research</div>
+                                    <h3 class="nyt-h3">Context-Aware Grounding: Keeping LLMs Faithful to the Source</h3>
+                                    <p class="nyt-excerpt">Grounding techniques that anchor LLM outputs to source documents, reducing hallucination and improving fidelity in extraction pipelines.</p>
+                                    <span class="nyt-meta">9 min read</span>
+                                </a>
+
+                        </div>
+                    </div>
+
+                    <!-- Numbered List -->
+                    <div class="nyt-numbered-list" id="articles-count-target">
+                            <a href="articles/trust-safety-ethics-llm-development.html" class="nyt-list-item" data-tag="AI Ethics">
+                                <div class="nyt-list-num">01</div>
+                                <div>
+                                    <div class="nyt-cat">AI Ethics</div>
+                                    <h3 class="nyt-h3">Trust, Safety, and Ethics in LLM Development: A Practitioner's Framework</h3>
+                                    <p class="nyt-excerpt-sm">As LLMs grow more capable, the risks of information leakage, misinformation, and misalignment grow too. A practical fram...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="AI Ethics">
-                                <div class="article-card-image-placeholder"><i class="fas fa-shield-alt"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">AI Ethics</span>
-                                        <span class="article-card-date">Aug 30, 2026</span>
-                                    </div>
-                                    <h3 class="article-card-title">Navigating the Ethics of Generative AI in Healthcare</h3>
-                                    <p class="article-card-excerpt">Examining privacy boundaries, bias detection strategies, and responsible 
-                                    deployment patterns for clinical AI applications.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/navigating-ethics-generative-ai-healthcare.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">10 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/llms-healthcare-documentation-automation.html" class="nyt-list-item" data-tag="Healthcare AI">
+                                <div class="nyt-list-num">02</div>
+                                <div>
+                                    <div class="nyt-cat">Healthcare AI</div>
+                                    <h3 class="nyt-h3">LLMs for Healthcare Documentation: Automating the Clinical Burden</h3>
+                                    <p class="nyt-excerpt-sm">Clinical documentation consumes 35% of a physician's day. How LLMs are transforming note generation, coding, and summari...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Agentic AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-brain"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Agentic AI</span>
-                                        <span class="article-card-date">Mar 2026</span>
-                                    </div>
-                                    <h3 class="article-card-title">Meta-Reasoning in Autonomous Agents: Do Self-Monitoring LLMs Actually Perform Better?</h3>
-                                    <p class="article-card-excerpt">Empirical evidence on whether self-monitoring and regulation improve adaptability and trustworthiness in LLM-based autonomous agents across GAIA and AgentBench.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/meta-reasoning-autonomous-agents.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">8 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/gas-station-future-ai-iot.html" class="nyt-list-item" data-tag="IoT & AI">
+                                <div class="nyt-list-num">03</div>
+                                <div>
+                                    <div class="nyt-cat">IoT & AI</div>
+                                    <h3 class="nyt-h3">The Gas Station of the Future: Where AI/ML Meets IoT at the Edge</h3>
+                                    <p class="nyt-excerpt-sm">Reimagining fuel retail with computer vision, predictive maintenance, and real-time IoT analytics — a case study in appl...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Agentic AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-sitemap"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Agentic AI</span>
-                                        <span class="article-card-date">Jan 2026</span>
-                                    </div>
-                                    <h3 class="article-card-title">Agentic Design Patterns for Production Systems</h3>
-                                    <p class="article-card-excerpt">From ReAct loops to multi-agent orchestration — the design patterns that separate demo agents from production-grade autonomous systems.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/agentic-design-patterns-production.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">10 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/edge-ai-deploying-models-resource-constrained.html" class="nyt-list-item" data-tag="Edge Computing">
+                                <div class="nyt-list-num">04</div>
+                                <div>
+                                    <div class="nyt-cat">Edge Computing</div>
+                                    <h3 class="nyt-h3">Edge AI: Deploying Deep Learning on Resource-Constrained Devices</h3>
+                                    <p class="nyt-excerpt-sm">Model pruning, quantization, knowledge distillation, and TinyML — the techniques that shrink billion-parameter models to...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Healthcare AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-hospital"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Healthcare AI</span>
-                                        <span class="article-card-date">Jun 2024</span>
-                                    </div>
-                                    <h3 class="article-card-title">Synthetic Data Generation for Clinical Documentation: Bridging Privacy and Utility</h3>
-                                    <p class="article-card-excerpt">How LLMs can generate high-fidelity synthetic clinical transcripts that preserve statistical properties while containing zero real patient information.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/synthetic-data-clinical-documentation.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">9 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/few-shot-learning-large-language-models.html" class="nyt-list-item" data-tag="LLM Research">
+                                <div class="nyt-list-num">05</div>
+                                <div>
+                                    <div class="nyt-cat">LLM Research</div>
+                                    <h3 class="nyt-h3">Few-Shot Learning with Large Language Models: The GPT-3 Moment</h3>
+                                    <p class="nyt-excerpt-sm">When GPT-3 showed that prompting could replace fine-tuning for many tasks, it changed the economics and accessibility of...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Document AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-file-invoice-dollar"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Document AI</span>
-                                        <span class="article-card-date">Jun 2024</span>
-                                    </div>
-                                    <h3 class="article-card-title">Cost-Effective Multi-Modal Classification for Financial Documents</h3>
-                                    <p class="article-card-excerpt">Why text-only approaches fail for financial documents, and how multi-modal methods capture layout, visual, and textual signals for robust classification.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/multimodal-financial-document-classification.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">7 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/mlops-bridging-gap-notebooks-production.html" class="nyt-list-item" data-tag="MLOps">
+                                <div class="nyt-list-num">06</div>
+                                <div>
+                                    <div class="nyt-cat">MLOps</div>
+                                    <h3 class="nyt-h3">MLOps: Bridging the Gap Between Notebooks and Production</h3>
+                                    <p class="nyt-excerpt-sm">87% of ML models never reach production. Feature stores, model registries, CI/CD for ML, and monitoring — the infrastruc...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Machine Learning">
-                                <div class="article-card-image-placeholder"><i class="fas fa-project-diagram"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Machine Learning</span>
-                                        <span class="article-card-date">Jun 2024</span>
-                                    </div>
-                                    <h3 class="article-card-title">Synergizing Unsupervised and Supervised Learning: When Labels Are Scarce</h3>
-                                    <p class="article-card-excerpt">Supervised models need labels; unsupervised methods don't — but combining them strategically yields results neither achieves alone.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/unsupervised-supervised-synergy-nlp.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">8 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/explainable-ai-opening-black-box.html" class="nyt-list-item" data-tag="Responsible AI">
+                                <div class="nyt-list-num">07</div>
+                                <div>
+                                    <div class="nyt-cat">Responsible AI</div>
+                                    <h3 class="nyt-h3">Explainable AI: Opening the Black Box Before Regulators Do</h3>
+                                    <p class="nyt-excerpt-sm">SHAP, LIME, attention visualization — the practical toolkit for making ML decisions interpretable when stakeholders ask ...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Document AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-file-image"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Document AI</span>
-                                        <span class="article-card-date">May 2024</span>
-                                    </div>
-                                    <h3 class="article-card-title">How Document Skew Breaks Multi-Modal LLMs — and What to Do About It</h3>
-                                    <p class="article-card-excerpt">Multi-modal LLMs excel at document extraction — until the scan is tilted. Measuring and mitigating the impact of skew on extraction accuracy.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/document-skew-multimodal-llms.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">7 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/federated-learning-privacy-preserving-ml.html" class="nyt-list-item" data-tag="Privacy & ML">
+                                <div class="nyt-list-num">08</div>
+                                <div>
+                                    <div class="nyt-cat">Privacy & ML</div>
+                                    <h3 class="nyt-h3">Federated Learning: Training Models Without Sharing Data</h3>
+                                    <p class="nyt-excerpt-sm">How federated learning enables collaborative model training across hospitals, banks, and devices — without raw data ever...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="LLM Research">
-                                <div class="article-card-image-placeholder"><i class="fas fa-anchor"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">LLM Research</span>
-                                        <span class="article-card-date">May 2024</span>
-                                    </div>
-                                    <h3 class="article-card-title">Context-Aware Grounding: Keeping LLMs Faithful to the Source</h3>
-                                    <p class="article-card-excerpt">Grounding techniques that anchor LLM outputs to source documents, reducing hallucination and improving fidelity in extraction pipelines.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/context-aware-grounding-llm-fidelity.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">9 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/generative-adversarial-networks-creative-ai.html" class="nyt-list-item" data-tag="Generative AI">
+                                <div class="nyt-list-num">09</div>
+                                <div>
+                                    <div class="nyt-cat">Generative AI</div>
+                                    <h3 class="nyt-h3">GANs and the Dawn of Creative AI</h3>
+                                    <p class="nyt-excerpt-sm">From mode collapse to StyleGAN — how adversarial training unlocked image synthesis and laid the groundwork for today's d...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="AI Ethics">
-                                <div class="article-card-image-placeholder"><i class="fas fa-shield-alt"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">AI Ethics</span>
-                                        <span class="article-card-date">Aug 2024</span>
-                                    </div>
-                                    <h3 class="article-card-title">Trust, Safety, and Ethics in LLM Development: A Practitioner's Framework</h3>
-                                    <p class="article-card-excerpt">As LLMs grow more capable, the risks of information leakage, misinformation, and misalignment grow too. A practical framework for building trustworthy systems.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/trust-safety-ethics-llm-development.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">11 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/reinforcement-learning-beyond-games.html" class="nyt-list-item" data-tag="Reinforcement Learning">
+                                <div class="nyt-list-num">10</div>
+                                <div>
+                                    <div class="nyt-cat">Reinforcement Learning</div>
+                                    <h3 class="nyt-h3">Reinforcement Learning Beyond Games: From AlphaGo to Real-World Control</h3>
+                                    <p class="nyt-excerpt-sm">AlphaGo captured headlines, but the real story is RL's migration to robotics, supply chain, and recommendation systems —...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Healthcare AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-notes-medical"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Healthcare AI</span>
-                                        <span class="article-card-date">Apr 2024</span>
-                                    </div>
-                                    <h3 class="article-card-title">LLMs for Healthcare Documentation: Automating the Clinical Burden</h3>
-                                    <p class="article-card-excerpt">Clinical documentation consumes 35% of a physician's day. How LLMs are transforming note generation, coding, and summarization — with guardrails.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/llms-healthcare-documentation-automation.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">8 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/transfer-learning-revolution-nlp.html" class="nyt-list-item" data-tag="NLP">
+                                <div class="nyt-list-num">11</div>
+                                <div>
+                                    <div class="nyt-cat">NLP</div>
+                                    <h3 class="nyt-h3">Transfer Learning Comes to NLP: From Word2Vec to BERT</h3>
+                                    <p class="nyt-excerpt-sm">The journey from static word embeddings to contextualized representations — and why pre-training then fine-tuning became...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="IoT & AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-gas-pump"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">IoT & AI</span>
-                                        <span class="article-card-date">Nov 2023</span>
-                                    </div>
-                                    <h3 class="article-card-title">The Gas Station of the Future: Where AI/ML Meets IoT at the Edge</h3>
-                                    <p class="article-card-excerpt">Reimagining fuel retail with computer vision, predictive maintenance, and real-time IoT analytics — a case study in applied AI at the edge.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/gas-station-future-ai-iot.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">6 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/rise-of-transformers-attention-is-all-you-need.html" class="nyt-list-item" data-tag="Deep Learning">
+                                <div class="nyt-list-num">12</div>
+                                <div>
+                                    <div class="nyt-cat">Deep Learning</div>
+                                    <h3 class="nyt-h3">The Rise of Transformers: Why Attention Changed Everything</h3>
+                                    <p class="nyt-excerpt-sm">How the self-attention mechanism in 'Attention Is All You Need' replaced recurrence, launched the transformer era, and r...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Edge Computing">
-                                <div class="article-card-image-placeholder"><i class="fas fa-microchip"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Edge Computing</span>
-                                        <span class="article-card-date">May 2023</span>
-                                    </div>
-                                    <h3 class="article-card-title">Edge AI: Deploying Deep Learning on Resource-Constrained Devices</h3>
-                                    <p class="article-card-excerpt">Model pruning, quantization, knowledge distillation, and TinyML — the techniques that shrink billion-parameter models to run on microcontrollers and phones.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/edge-ai-deploying-models-resource-constrained.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">7 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/convolutional-neural-networks-image-classification.html" class="nyt-list-item" data-tag="Computer Vision">
+                                <div class="nyt-list-num">13</div>
+                                <div>
+                                    <div class="nyt-cat">Computer Vision</div>
+                                    <h3 class="nyt-h3">CNNs at Scale: Lessons from ImageNet to Production Deployment</h3>
+                                    <p class="nyt-excerpt-sm">What ResNets, batch normalization, and data augmentation taught us about training deep networks — and how those lessons ...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="LLM Research">
-                                <div class="article-card-image-placeholder"><i class="fas fa-magic"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">LLM Research</span>
-                                        <span class="article-card-date">Aug 2022</span>
-                                    </div>
-                                    <h3 class="article-card-title">Few-Shot Learning with Large Language Models: The GPT-3 Moment</h3>
-                                    <p class="article-card-excerpt">When GPT-3 showed that prompting could replace fine-tuning for many tasks, it changed the economics and accessibility of NLP overnight.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/few-shot-learning-large-language-models.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">9 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/word-embeddings-changed-nlp-forever.html" class="nyt-list-item" data-tag="NLP">
+                                <div class="nyt-list-num">14</div>
+                                <div>
+                                    <div class="nyt-cat">NLP</div>
+                                    <h3 class="nyt-h3">How Word Embeddings Changed NLP Forever</h3>
+                                    <p class="nyt-excerpt-sm">From one-hot vectors to Word2Vec and GloVe — the representation revolution that made machines understand meaning and ana...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="MLOps">
-                                <div class="article-card-image-placeholder"><i class="fas fa-cogs"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">MLOps</span>
-                                        <span class="article-card-date">Apr 2021</span>
-                                    </div>
-                                    <h3 class="article-card-title">MLOps: Bridging the Gap Between Notebooks and Production</h3>
-                                    <p class="article-card-excerpt">87% of ML models never reach production. Feature stores, model registries, CI/CD for ML, and monitoring — the infrastructure that changes that statistic.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/mlops-bridging-gap-notebooks-production.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">8 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/diffusion-models-ai-image-generation.html" class="nyt-list-item" data-tag="Generative AI">
+                                <div class="nyt-list-num">15</div>
+                                <div>
+                                    <div class="nyt-cat">Generative AI</div>
+                                    <h3 class="nyt-h3">Diffusion Models: The Math Behind AI's Creative Explosion</h3>
+                                    <p class="nyt-excerpt-sm">How denoising score matching and classifier-free guidance dethroned GANs and powered DALL-E, Stable Diffusion, and Midjo...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Responsible AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-search"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Responsible AI</span>
-                                        <span class="article-card-date">Feb 2020</span>
-                                    </div>
-                                    <h3 class="article-card-title">Explainable AI: Opening the Black Box Before Regulators Do</h3>
-                                    <p class="article-card-excerpt">SHAP, LIME, attention visualization — the practical toolkit for making ML decisions interpretable when stakeholders ask 'why?'</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/explainable-ai-opening-black-box.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">7 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/financial-generative-ai-wall-street.html" class="nyt-list-item" data-tag="Financial AI">
+                                <div class="nyt-list-num">16</div>
+                                <div>
+                                    <div class="nyt-cat">Financial AI</div>
+                                    <h3 class="nyt-h3">Generative AI on Wall Street: From Document Parsing to Autonomous Trading Memos</h3>
+                                    <p class="nyt-excerpt-sm">How investment banks and fintechs are deploying LLMs for 10-K analysis, risk summarization, and client reporting — with ...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Privacy & ML">
-                                <div class="article-card-image-placeholder"><i class="fas fa-network-wired"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Privacy & ML</span>
-                                        <span class="article-card-date">Oct 2020</span>
-                                    </div>
-                                    <h3 class="article-card-title">Federated Learning: Training Models Without Sharing Data</h3>
-                                    <p class="article-card-excerpt">How federated learning enables collaborative model training across hospitals, banks, and devices — without raw data ever leaving the source.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/federated-learning-privacy-preserving-ml.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">8 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/speech-to-speech-real-time-ai.html" class="nyt-list-item" data-tag="Speech AI">
+                                <div class="nyt-list-num">17</div>
+                                <div>
+                                    <div class="nyt-cat">Speech AI</div>
+                                    <h3 class="nyt-h3">Speech-to-Speech AI: The End of the Text Bottleneck</h3>
+                                    <p class="nyt-excerpt-sm">From cascaded ASR→LLM→TTS pipelines to native speech-to-speech models — how end-to-end voice AI is achieving sub-500ms l...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Generative AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-palette"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Generative AI</span>
-                                        <span class="article-card-date">Jun 2019</span>
-                                    </div>
-                                    <h3 class="article-card-title">GANs and the Dawn of Creative AI</h3>
-                                    <p class="article-card-excerpt">From mode collapse to StyleGAN — how adversarial training unlocked image synthesis and laid the groundwork for today's diffusion models.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/generative-adversarial-networks-creative-ai.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">8 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/domain-specific-speech-recognition.html" class="nyt-list-item" data-tag="Speech AI">
+                                <div class="nyt-list-num">18</div>
+                                <div>
+                                    <div class="nyt-cat">Speech AI</div>
+                                    <h3 class="nyt-h3">Domain-Specific Speech Recognition: When Whisper Isn't Enough</h3>
+                                    <p class="nyt-excerpt-sm">Medical dictation, legal transcription, financial earnings calls — why general-purpose ASR fails in specialized domains ...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Reinforcement Learning">
-                                <div class="article-card-image-placeholder"><i class="fas fa-gamepad"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Reinforcement Learning</span>
-                                        <span class="article-card-date">Sep 2019</span>
-                                    </div>
-                                    <h3 class="article-card-title">Reinforcement Learning Beyond Games: From AlphaGo to Real-World Control</h3>
-                                    <p class="article-card-excerpt">AlphaGo captured headlines, but the real story is RL's migration to robotics, supply chain, and recommendation systems — with hard-won lessons about sample efficiency.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/reinforcement-learning-beyond-games.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">9 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/multimodal-foundation-models-unified-intelligence.html" class="nyt-list-item" data-tag="Multimodal AI">
+                                <div class="nyt-list-num">19</div>
+                                <div>
+                                    <div class="nyt-cat">Multimodal AI</div>
+                                    <h3 class="nyt-h3">Multimodal Foundation Models: Toward Unified Intelligence</h3>
+                                    <p class="nyt-excerpt-sm">GPT-4o, Gemini, Claude — models that see, hear, read, and reason simultaneously. What unified multimodality means for th...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="NLP">
-                                <div class="article-card-image-placeholder"><i class="fas fa-language"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">NLP</span>
-                                        <span class="article-card-date">Nov 2018</span>
-                                    </div>
-                                    <h3 class="article-card-title">Transfer Learning Comes to NLP: From Word2Vec to BERT</h3>
-                                    <p class="article-card-excerpt">The journey from static word embeddings to contextualized representations — and why pre-training then fine-tuning became the dominant paradigm.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/transfer-learning-revolution-nlp.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">8 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/physical-ai-robots-real-world.html" class="nyt-list-item" data-tag="Physical AI">
+                                <div class="nyt-list-num">20</div>
+                                <div>
+                                    <div class="nyt-cat">Physical AI</div>
+                                    <h3 class="nyt-h3">Physical AI: When Foundation Models Meet the Real World</h3>
+                                    <p class="nyt-excerpt-sm">From simulation to manipulation — how vision-language-action models, world simulators, and sim-to-real transfer are fina...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Deep Learning">
-                                <div class="article-card-image-placeholder"><i class="fas fa-bolt"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Deep Learning</span>
-                                        <span class="article-card-date">Dec 2017</span>
-                                    </div>
-                                    <h3 class="article-card-title">The Rise of Transformers: Why Attention Changed Everything</h3>
-                                    <p class="article-card-excerpt">How the self-attention mechanism in 'Attention Is All You Need' replaced recurrence, launched the transformer era, and reshaped every corner of AI.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/rise-of-transformers-attention-is-all-you-need.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">9 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/future-agentic-ai-autonomous-systems.html" class="nyt-list-item" data-tag="Agentic AI">
+                                <div class="nyt-list-num">21</div>
+                                <div>
+                                    <div class="nyt-cat">Agentic AI</div>
+                                    <h3 class="nyt-h3">The Future of Agentic AI: From Copilots to Fully Autonomous Systems</h3>
+                                    <p class="nyt-excerpt-sm">The trajectory from tool-augmented assistants to goal-driven autonomous agents — and the trust, safety, and governance i...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Computer Vision">
-                                <div class="article-card-image-placeholder"><i class="fas fa-image"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Computer Vision</span>
-                                        <span class="article-card-date">Mar 2016</span>
-                                    </div>
-                                    <h3 class="article-card-title">CNNs at Scale: Lessons from ImageNet to Production Deployment</h3>
-                                    <p class="article-card-excerpt">What ResNets, batch normalization, and data augmentation taught us about training deep networks — and how those lessons still apply to modern vision models.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/convolutional-neural-networks-image-classification.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">7 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/small-language-models-efficient-ai.html" class="nyt-list-item" data-tag="LLM Research">
+                                <div class="nyt-list-num">22</div>
+                                <div>
+                                    <div class="nyt-cat">LLM Research</div>
+                                    <h3 class="nyt-h3">Small Language Models: The Case for Efficient, Specialized AI</h3>
+                                    <p class="nyt-excerpt-sm">Phi, Gemma, Mistral — why smaller models fine-tuned for specific tasks are beating GPT-4 at a fraction of the cost and l...</p>
                                 </div>
-                            </div>
-
-
-                            <div class="article-card" data-tag="NLP">
-                                <div class="article-card-image-placeholder"><i class="fas fa-font"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">NLP</span>
-                                        <span class="article-card-date">Sep 2015</span>
-                                    </div>
-                                    <h3 class="article-card-title">How Word Embeddings Changed NLP Forever</h3>
-                                    <p class="article-card-excerpt">From one-hot vectors to Word2Vec and GloVe — the representation revolution that made machines understand meaning and analogy.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/word-embeddings-changed-nlp-forever.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">7 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/rag-to-knowledge-graphs-enterprise.html" class="nyt-list-item" data-tag="Enterprise AI">
+                                <div class="nyt-list-num">23</div>
+                                <div>
+                                    <div class="nyt-cat">Enterprise AI</div>
+                                    <h3 class="nyt-h3">Beyond RAG: Knowledge Graphs as the Enterprise Memory Layer</h3>
+                                    <p class="nyt-excerpt-sm">RAG retrieves chunks; knowledge graphs understand relationships. How enterprises are combining both for grounded, contex...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Generative AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-wand-magic-sparkles"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Generative AI</span>
-                                        <span class="article-card-date">Oct 2022</span>
-                                    </div>
-                                    <h3 class="article-card-title">Diffusion Models: The Math Behind AI's Creative Explosion</h3>
-                                    <p class="article-card-excerpt">How denoising score matching and classifier-free guidance dethroned GANs and powered DALL-E, Stable Diffusion, and Midjourney.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/diffusion-models-ai-image-generation.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">9 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/ai-code-generation-software-engineering.html" class="nyt-list-item" data-tag="AI Engineering">
+                                <div class="nyt-list-num">24</div>
+                                <div>
+                                    <div class="nyt-cat">AI Engineering</div>
+                                    <h3 class="nyt-h3">AI Code Generation: Rewriting Software Engineering From the Inside</h3>
+                                    <p class="nyt-excerpt-sm">Copilot, Cursor, Devin — how AI coding assistants evolved from autocomplete to autonomous software engineers, and what i...</p>
                                 </div>
-                            </div>
-
-
-                            <div class="article-card" data-tag="Financial AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-chart-line"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Financial AI</span>
-                                        <span class="article-card-date">Feb 2025</span>
-                                    </div>
-                                    <h3 class="article-card-title">Generative AI on Wall Street: From Document Parsing to Autonomous Trading Memos</h3>
-                                    <p class="article-card-excerpt">How investment banks and fintechs are deploying LLMs for 10-K analysis, risk summarization, and client reporting — with the guardrails regulators demand.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/financial-generative-ai-wall-street.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">9 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/synthetic-data-next-frontier-model-training.html" class="nyt-list-item" data-tag="Data Engineering">
+                                <div class="nyt-list-num">25</div>
+                                <div>
+                                    <div class="nyt-cat">Data Engineering</div>
+                                    <h3 class="nyt-h3">Synthetic Data 2.0: The Next Frontier in Model Training</h3>
+                                    <p class="nyt-excerpt-sm">We're running out of internet data. How self-play, model-generated datasets, and constitutional AI are creating the trai...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Speech AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-microphone-alt"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Speech AI</span>
-                                        <span class="article-card-date">Jul 2025</span>
-                                    </div>
-                                    <h3 class="article-card-title">Speech-to-Speech AI: The End of the Text Bottleneck</h3>
-                                    <p class="article-card-excerpt">From cascaded ASR→LLM→TTS pipelines to native speech-to-speech models — how end-to-end voice AI is achieving sub-500ms latency with emotional nuance.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/speech-to-speech-real-time-ai.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">8 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/sequence-to-sequence-models-translation.html" class="nyt-list-item" data-tag="Deep Learning">
+                                <div class="nyt-list-num">26</div>
+                                <div>
+                                    <div class="nyt-cat">Deep Learning</div>
+                                    <h3 class="nyt-h3">Sequence-to-Sequence Models: The Architecture That Taught Machines to Translate</h3>
+                                    <p class="nyt-excerpt-sm">From encoder-decoder RNNs to attention-augmented seq2seq — how neural machine translation surpassed statistical methods ...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Speech AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-headset"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Speech AI</span>
-                                        <span class="article-card-date">Mar 2025</span>
-                                    </div>
-                                    <h3 class="article-card-title">Domain-Specific Speech Recognition: When Whisper Isn't Enough</h3>
-                                    <p class="article-card-excerpt">Medical dictation, legal transcription, financial earnings calls — why general-purpose ASR fails in specialized domains and how to fix it.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/domain-specific-speech-recognition.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">8 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/automl-democratizing-machine-learning.html" class="nyt-list-item" data-tag="Data Science">
+                                <div class="nyt-list-num">27</div>
+                                <div>
+                                    <div class="nyt-cat">Data Science</div>
+                                    <h3 class="nyt-h3">AutoML: Democratizing Machine Learning or Hiding the Hard Parts?</h3>
+                                    <p class="nyt-excerpt-sm">Google AutoML, Auto-sklearn, and H2O promised ML for everyone. What they actually delivered — and where human expertise ...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Multimodal AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-layer-group"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Multimodal AI</span>
-                                        <span class="article-card-date">Sep 2025</span>
-                                    </div>
-                                    <h3 class="article-card-title">Multimodal Foundation Models: Toward Unified Intelligence</h3>
-                                    <p class="article-card-excerpt">GPT-4o, Gemini, Claude — models that see, hear, read, and reason simultaneously. What unified multimodality means for the next generation of AI systems.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/multimodal-foundation-models-unified-intelligence.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">10 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/agent-to-agent-communication-protocols.html" class="nyt-list-item" data-tag="Agentic AI">
+                                <div class="nyt-list-num">28</div>
+                                <div>
+                                    <div class="nyt-cat">Agentic AI</div>
+                                    <h3 class="nyt-h3">Agent-to-Agent Communication: How A2A, MCP, and ACP Are Shaping the Multi-Agent Internet</h3>
+                                    <p class="nyt-excerpt-sm">How agents coordinate without a central orchestrator — A2A, MCP, ACP protocols, emergent collaboration, and the path to ...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Physical AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-robot"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Physical AI</span>
-                                        <span class="article-card-date">Apr 2026</span>
-                                    </div>
-                                    <h3 class="article-card-title">Physical AI: When Foundation Models Meet the Real World</h3>
-                                    <p class="article-card-excerpt">From simulation to manipulation — how vision-language-action models, world simulators, and sim-to-real transfer are finally making robots useful.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/physical-ai-robots-real-world.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">9 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/self-evolving-agents-autonomous-learning.html" class="nyt-list-item" data-tag="Agentic AI">
+                                <div class="nyt-list-num">29</div>
+                                <div>
+                                    <div class="nyt-cat">Agentic AI</div>
+                                    <h3 class="nyt-h3">Self-Evolving Agents: Can AI Systems Improve Themselves Without Human Feedback?</h3>
+                                    <p class="nyt-excerpt-sm">Self-play, self-critique, and autonomous skill acquisition — the research frontier where agents learn from their own exp...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Agentic AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-rocket"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Agentic AI</span>
-                                        <span class="article-card-date">Jun 2026</span>
-                                    </div>
-                                    <h3 class="article-card-title">The Future of Agentic AI: From Copilots to Fully Autonomous Systems</h3>
-                                    <p class="article-card-excerpt">The trajectory from tool-augmented assistants to goal-driven autonomous agents — and the trust, safety, and governance infrastructure we need to get there.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/future-agentic-ai-autonomous-systems.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">11 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/embodied-multimodal-agents-physical-ai.html" class="nyt-list-item" data-tag="Physical AI">
+                                <div class="nyt-list-num">30</div>
+                                <div>
+                                    <div class="nyt-cat">Physical AI</div>
+                                    <h3 class="nyt-h3">Embodied Multimodal Agents: When Digital AI Meets the Physical World</h3>
+                                    <p class="nyt-excerpt-sm">Vision-language-action models, embodied reasoning, and sim-to-real transfer — the convergence of foundation models and r...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="LLM Research">
-                                <div class="article-card-image-placeholder"><i class="fas fa-compress-arrows-alt"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">LLM Research</span>
-                                        <span class="article-card-date">Nov 2024</span>
-                                    </div>
-                                    <h3 class="article-card-title">Small Language Models: The Case for Efficient, Specialized AI</h3>
-                                    <p class="article-card-excerpt">Phi, Gemma, Mistral — why smaller models fine-tuned for specific tasks are beating GPT-4 at a fraction of the cost and latency.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/small-language-models-efficient-ai.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">7 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/agent-evaluation-benchmarking-autonomy.html" class="nyt-list-item" data-tag="Agentic AI">
+                                <div class="nyt-list-num">31</div>
+                                <div>
+                                    <div class="nyt-cat">Agentic AI</div>
+                                    <h3 class="nyt-h3">How Do You Know If Your Agent Actually Works? Benchmarking Autonomy at Scale</h3>
+                                    <p class="nyt-excerpt-sm">Beyond SWE-bench and GAIA — the emerging science of evaluating autonomous agents across reliability, safety, cost, and r...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Enterprise AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-project-diagram"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Enterprise AI</span>
-                                        <span class="article-card-date">May 2025</span>
-                                    </div>
-                                    <h3 class="article-card-title">Beyond RAG: Knowledge Graphs as the Enterprise Memory Layer</h3>
-                                    <p class="article-card-excerpt">RAG retrieves chunks; knowledge graphs understand relationships. How enterprises are combining both for grounded, context-aware AI that actually knows the org.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/rag-to-knowledge-graphs-enterprise.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">9 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/long-term-memory-architectures-agents.html" class="nyt-list-item" data-tag="Agentic AI">
+                                <div class="nyt-list-num">32</div>
+                                <div>
+                                    <div class="nyt-cat">Agentic AI</div>
+                                    <h3 class="nyt-h3">Long-Term Memory for AI Agents: Episodic Recall, Knowledge Graphs, and Persistent Context</h3>
+                                    <p class="nyt-excerpt-sm">How agents remember and learn across sessions — persistent memory, episodic recall, working memory, and knowledge graph ...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="AI Engineering">
-                                <div class="article-card-image-placeholder"><i class="fas fa-code"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">AI Engineering</span>
-                                        <span class="article-card-date">Aug 2025</span>
-                                    </div>
-                                    <h3 class="article-card-title">AI Code Generation: Rewriting Software Engineering From the Inside</h3>
-                                    <p class="article-card-excerpt">Copilot, Cursor, Devin — how AI coding assistants evolved from autocomplete to autonomous software engineers, and what it means for the profession.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/ai-code-generation-software-engineering.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">8 min read</span>
-                                    </div>
+                            </a>
+                            <a href="articles/agent-safety-alignment-trust-frameworks.html" class="nyt-list-item" data-tag="AI Safety">
+                                <div class="nyt-list-num">33</div>
+                                <div>
+                                    <div class="nyt-cat">AI Safety</div>
+                                    <h3 class="nyt-h3">Agent Safety and Alignment: Trust Frameworks for Autonomous Systems</h3>
+                                    <p class="nyt-excerpt-sm">Sandboxing, permission models, audit trails, and adversarial robustness — the unsolved safety problem for autonomous age...</p>
                                 </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Data Engineering">
-                                <div class="article-card-image-placeholder"><i class="fas fa-database"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Data Engineering</span>
-                                        <span class="article-card-date">Jan 2026</span>
-                                    </div>
-                                    <h3 class="article-card-title">Synthetic Data 2.0: The Next Frontier in Model Training</h3>
-                                    <p class="article-card-excerpt">We're running out of internet data. How self-play, model-generated datasets, and constitutional AI are creating the training data for the next generation of models.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/synthetic-data-next-frontier-model-training.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">8 min read</span>
-                                    </div>
-                                </div>
-                            </div>
-
-
-
-                            <div class="article-card" data-tag="Deep Learning">
-                                <div class="article-card-image-placeholder"><i class="fas fa-brain"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Deep Learning</span>
-                                        <span class="article-card-date">Mar 2018</span>
-                                    </div>
-                                    <h3 class="article-card-title">Sequence-to-Sequence Models: The Architecture That Taught Machines to Translate</h3>
-                                    <p class="article-card-excerpt">From encoder-decoder RNNs to attention-augmented seq2seq — how neural machine translation surpassed statistical methods and redefined NLP.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/sequence-to-sequence-models-translation.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">8 min read</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Data Science">
-                                <div class="article-card-image-placeholder"><i class="fas fa-chart-pie"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Data Science</span>
-                                        <span class="article-card-date">Aug 2018</span>
-                                    </div>
-                                    <h3 class="article-card-title">AutoML: Democratizing Machine Learning or Hiding the Hard Parts?</h3>
-                                    <p class="article-card-excerpt">Google AutoML, Auto-sklearn, and H2O promised ML for everyone. What they actually delivered — and where human expertise remains irreplaceable.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/automl-democratizing-machine-learning.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">7 min read</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Agentic AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-network-wired"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Agentic AI</span>
-                                        <span class="article-card-date">Aug 2026</span>
-                                    </div>
-                                    <h3 class="article-card-title">Agent-to-Agent Communication: How A2A, MCP, and ACP Are Shaping the Multi-Agent Internet</h3>
-                                    <p class="article-card-excerpt">How agents coordinate without a central orchestrator — A2A, MCP, ACP protocols, emergent collaboration, and the path to decentralized multi-agent systems.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/agent-to-agent-communication-protocols.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">10 min read</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Agentic AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-dna"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Agentic AI</span>
-                                        <span class="article-card-date">Jul 2026</span>
-                                    </div>
-                                    <h3 class="article-card-title">Self-Evolving Agents: Can AI Systems Improve Themselves Without Human Feedback?</h3>
-                                    <p class="article-card-excerpt">Self-play, self-critique, and autonomous skill acquisition — the research frontier where agents learn from their own experience without human-in-the-loop.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/self-evolving-agents-autonomous-learning.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">11 min read</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Physical AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-hand-paper"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Physical AI</span>
-                                        <span class="article-card-date">May 2026</span>
-                                    </div>
-                                    <h3 class="article-card-title">Embodied Multimodal Agents: When Digital AI Meets the Physical World</h3>
-                                    <p class="article-card-excerpt">Vision-language-action models, embodied reasoning, and sim-to-real transfer — the convergence of foundation models and robotics.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/embodied-multimodal-agents-physical-ai.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">9 min read</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Agentic AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-chart-line"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Agentic AI</span>
-                                        <span class="article-card-date">Mar 2026</span>
-                                    </div>
-                                    <h3 class="article-card-title">How Do You Know If Your Agent Actually Works? Benchmarking Autonomy at Scale</h3>
-                                    <p class="article-card-excerpt">Beyond SWE-bench and GAIA — the emerging science of evaluating autonomous agents across reliability, safety, cost, and real-world task completion.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/agent-evaluation-benchmarking-autonomy.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">8 min read</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="article-card" data-tag="Agentic AI">
-                                <div class="article-card-image-placeholder"><i class="fas fa-brain"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">Agentic AI</span>
-                                        <span class="article-card-date">Jan 2026</span>
-                                    </div>
-                                    <h3 class="article-card-title">Long-Term Memory for AI Agents: Episodic Recall, Knowledge Graphs, and Persistent Context</h3>
-                                    <p class="article-card-excerpt">How agents remember and learn across sessions — persistent memory, episodic recall, working memory, and knowledge graph integration architectures.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/long-term-memory-architectures-agents.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">9 min read</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="article-card" data-tag="AI Safety">
-                                <div class="article-card-image-placeholder"><i class="fas fa-shield-alt"></i></div>
-                                <div class="article-card-body">
-                                    <div class="article-card-meta">
-                                        <span class="article-card-tag">AI Safety</span>
-                                        <span class="article-card-date">Nov 2025</span>
-                                    </div>
-                                    <h3 class="article-card-title">Agent Safety and Alignment: Trust Frameworks for Autonomous Systems</h3>
-                                    <p class="article-card-excerpt">Sandboxing, permission models, audit trails, and adversarial robustness — the unsolved safety problem for autonomous agents and how enterprises are addressing it.</p>
-                                    <div class="article-card-footer">
-                                        <a href="articles/agent-safety-alignment-trust-frameworks.html" class="article-card-read">Read article <i class="fas fa-arrow-right"></i></a>
-                                        <span class="article-card-readtime">10 min read</span>
-                                    </div>
-                                </div>
-                            </div>
+                            </a>
 
                     </div>
 
@@ -7539,19 +7603,19 @@
             </section>
         </div>
 
-
-                    </div>
-
-                </div>
-            </section>
-        </div>
-
+        
 
     </main>
 
     <!-- Footer -->
     <footer class="footer">
-        <p>&copy; <span id="footer-year">2026</span> Wrick Talukdar. All rights reserved. <span class="footer-updated">Last updated: August 2026</span></p>
+        <p>&copy; <span id="footer-year">2026</span> Wrick Talukdar. All rights reserved. <span class="footer-updated">Last updated: September 2026</span></p>
+        <div class="footer-links">
+            <a href="https://www.linkedin.com/in/wrick-talukdar/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://www.researchgate.net/profile/Wrick-Talukdar-2" target="_blank"><i class="fab fa-researchgate"></i></a>
+            <a href="https://us.amazon.com/stores/author/B0F2J8S78Z" target="_blank"><i class="fab fa-amazon"></i></a>
+            <a href="articles.xml" target="_blank" title="RSS Feed"><i class="fas fa-rss"></i></a>
+        </div>
     </footer>
 
 
@@ -7562,6 +7626,8 @@
     </button>
 
     <script>
+try {
+
         // Section definitions for the scroll bar
         const scrollSections = ['home', 'articles', 'research', 'publications', 'books', 'memberships'];
         const scrollSectionLabels = { home: 'Home', articles: 'Articles', research: 'Research', publications: 'Publications', books: 'Books', memberships: 'Memberships' };
@@ -7573,6 +7639,7 @@
             document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
             
             const activeTab = document.getElementById(tabId);
+            if (!activeTab) return;
             activeTab.classList.add('active');
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
@@ -7580,7 +7647,7 @@
                 });
             });
             
-            const navLink = document.querySelector(`a[onclick="showTab('${tabId}')"]`);
+            const navLink = document.querySelector(`a[onclick="showTab('${tabId}', this)"]`) || document.querySelector(`a[onclick="showTab('${tabId}')"]`);
             if (navLink) navLink.classList.add('active');
             
             updateScrollBarFill(tabId);
@@ -7701,12 +7768,12 @@
         }
 
         // Publication filter by publisher
-        function filterPubs(publisher) {
+        function filterPubs(publisher, el) {
             const entries = document.querySelectorAll('.pub-entry');
             const pills = document.querySelectorAll('.pub-filter');
             
             pills.forEach(p => p.classList.remove('active'));
-            event.target.classList.add('active');
+            if (el) el.classList.add('active');
             
             let count = 0;
             entries.forEach(entry => {
@@ -7721,23 +7788,20 @@
         }
 
         // Article filter by category
-        function filterArticles(tag) {
-            const cards = document.querySelectorAll('.article-card');
-            const pills = document.querySelectorAll('.filter-pill');
+        function filterArticles(tag, el) {
+            const items = document.querySelectorAll('.nyt-list-item');
+            const pills = document.querySelectorAll('.nyt-pill');
             
             pills.forEach(p => p.classList.remove('active'));
-            event.target.classList.add('active');
+            if (el) el.classList.add('active');
             
-            let visibleCount = 0;
-            cards.forEach(card => {
-                if (tag === 'all' || card.dataset.tag === tag) {
-                    card.classList.remove('hidden');
-                    visibleCount++;
+            items.forEach(item => {
+                if (tag === 'all' || item.dataset.tag === tag) {
+                    item.style.display = '';
                 } else {
-                    card.classList.add('hidden');
+                    item.style.display = 'none';
                 }
             });
-            document.getElementById('articles-count').textContent = tag === 'all' ? '44' : visibleCount;
         }
 
         // Check if returning from an article page
@@ -7878,7 +7942,7 @@
                 });
 
                 // Cards and timeline items with staggered delays
-                document.querySelectorAll('.card, .pro-company, .article-card, .pub-entry, .testimonial-card, .focus-card, .connect-card, .mem-row').forEach((el, i) => {
+                document.querySelectorAll('.card, .pro-company, .nyt-grid-article, .nyt-list-item, .pub-entry, .testimonial-card, .focus-card, .connect-card, .mem-row').forEach((el, i) => {
                     if (!el.classList.contains('reveal')) {
                         el.classList.add('reveal');
                         el.dataset.revealDelay = (i % 6) * 80; // stagger within groups
@@ -8017,39 +8081,29 @@
 
         // Article search
         function searchArticles(query) {
-            const cards = document.querySelectorAll('.article-card');
+            const items = document.querySelectorAll('.nyt-list-item, .nyt-grid-article, .nyt-side-item, .nyt-lead-main');
             const q = query.toLowerCase().trim();
             
-            // Reset all filter pills to inactive
-            document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nyt-pill').forEach(p => p.classList.remove('active'));
             if (!q) {
-                document.querySelector('.filter-pill[data-filter="all"]').classList.add('active');
+                const allPill = document.querySelector('.nyt-pill[data-filter="all"]');
+                if (allPill) allPill.classList.add('active');
             }
             
-            let count = 0;
-            cards.forEach(card => {
-                const title = (card.querySelector('.article-card-title') || {}).textContent || '';
-                const tag = card.dataset.tag || '';
-                const excerpt = (card.querySelector('.article-card-excerpt') || {}).textContent || '';
-                
-                if (!q || title.toLowerCase().includes(q) || tag.toLowerCase().includes(q) || excerpt.toLowerCase().includes(q)) {
-                    card.classList.remove('hidden');
-                    count++;
-                } else {
-                    card.classList.add('hidden');
-                }
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = (!q || text.includes(q)) ? '' : 'none';
             });
-            
-            const countEl = document.getElementById('articles-count');
-            if (countEl) countEl.textContent = !q ? '44' : count;
         }
 
         // Make initial home tab visible
         (function() {
-            const home = document.querySelector('.tab-content.active');
-            if (home) home.classList.add('visible');
+            const homeTab = document.querySelector('.tab-content.active');
+            if (homeTab) homeTab.classList.add('visible');
         })();
 
-    </script>
+    
+} catch(e) { console.warn('Script error:', e.message); }
+</script>
 </body>
 </html>
