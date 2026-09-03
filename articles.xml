@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Wrick Talukdar — Articles &amp; Insights</title>
+    <link>https://wricktalukdar.technology</link>
+    <description>Articles on AI, Machine Learning, Agentic AI, Generative AI, and emerging technology by Wrick Talukdar.</description>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 02 Sep 2026 18:46:43 +0000</lastBuildDate>
+    <atom:link href="https://wricktalukdar.technology/articles.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>How Do You Know If Your Agent Actually Works? Benchmarking Autonomy at Scale</title>
+      <link>https://wricktalukdar.technology/articles/agent-evaluation-benchmarking-autonomy.html</link>
+      <description>Beyond SWE-bench and GAIA — the emerging science of evaluating autonomous agents across reliability, safety, cost, and real-world task completion.</description>
+      <guid>https://wricktalukdar.technology/articles/agent-evaluation-benchmarking-autonomy.html</guid>
+    </item>
+    <item>
+      <title>Agent Safety and Alignment: Trust Frameworks for Autonomous Systems</title>
+      <link>https://wricktalukdar.technology/articles/agent-safety-alignment-trust-frameworks.html</link>
+      <description>Sandboxing, permission models, audit trails, and adversarial robustness — the unsolved safety problem for autonomous agents and how enterprises are addressing it.</description>
+      <guid>https://wricktalukdar.technology/articles/agent-safety-alignment-trust-frameworks.html</guid>
+    </item>
+    <item>
+      <title>Agent-to-Agent Communication: How A2A, MCP, and ACP Are Shaping the Multi-Agent Internet</title>
+      <link>https://wricktalukdar.technology/articles/agent-to-agent-communication-protocols.html</link>
+      <description>How agents coordinate without a central orchestrator — A2A, MCP, ACP protocols, emergent collaboration, and the path to decentralized multi-agent systems.</description>
+      <guid>https://wricktalukdar.technology/articles/agent-to-agent-communication-protocols.html</guid>
+    </item>
+    <item>
+      <title>Agentic Design Patterns for Production Systems</title>
+      <link>https://wricktalukdar.technology/articles/agentic-design-patterns-production.html</link>
+      <description>From ReAct loops to multi-agent orchestration — the design patterns that separate demo agents from production-grade autonomous systems.</description>
+      <guid>https://wricktalukdar.technology/articles/agentic-design-patterns-production.html</guid>
+    </item>
+    <item>
+      <title>AI Code Generation: Rewriting Software Engineering From the Inside</title>
+      <link>https://wricktalukdar.technology/articles/ai-code-generation-software-engineering.html</link>
+      <description>Copilot, Cursor, Devin — how AI coding assistants evolved from autocomplete to autonomous software engineers, and what it means for the profession.</description>
+      <guid>https://wricktalukdar.technology/articles/ai-code-generation-software-engineering.html</guid>
+    </item>
+    <item>
+      <title>AutoML: Democratizing Machine Learning or Hiding the Hard Parts?</title>
+      <link>https://wricktalukdar.technology/articles/automl-democratizing-machine-learning.html</link>
+      <description>Google AutoML, Auto-sklearn, and H2O promised ML for everyone. What they actually delivered — and where human expertise remains irreplaceable.</description>
+      <guid>https://wricktalukdar.technology/articles/automl-democratizing-machine-learning.html</guid>
+    </item>
+    <item>
+      <title>Building Reliable Tool-Calling Agents</title>
+      <link>https://wricktalukdar.technology/articles/building-reliable-tool-calling-agents.html</link>
+      <description>Why string-parsing LLM output is a trap, and how structured tool-use APIs change the reliability calculus for production agent systems.</description>
+      <guid>https://wricktalukdar.technology/articles/building-reliable-tool-calling-agents.html</guid>
+    </item>
+    <item>
+      <title>Context-Aware Grounding: Keeping LLMs Faithful to the Source</title>
+      <link>https://wricktalukdar.technology/articles/context-aware-grounding-llm-fidelity.html</link>
+      <description>Grounding techniques that anchor LLM outputs to source documents, reducing hallucination and improving fidelity in extraction pipelines.</description>
+      <guid>https://wricktalukdar.technology/articles/context-aware-grounding-llm-fidelity.html</guid>
+    </item>
+    <item>
+      <title>CNNs at Scale: Lessons from ImageNet to Production Deployment</title>
+      <link>https://wricktalukdar.technology/articles/convolutional-neural-networks-image-classification.html</link>
+      <description>What ResNets, batch normalization, and data augmentation taught us about training deep networks — and how those lessons still apply to modern vision models.</description>
+      <guid>https://wricktalukdar.technology/articles/convolutional-neural-networks-image-classification.html</guid>
+    </item>
+    <item>
+      <title>Diffusion Models: The Math Behind AI's Creative Explosion</title>
+      <link>https://wricktalukdar.technology/articles/diffusion-models-ai-image-generation.html</link>
+      <description>How denoising score matching and classifier-free guidance dethroned GANs and powered DALL-E, Stable Diffusion, and Midjourney.</description>
+      <guid>https://wricktalukdar.technology/articles/diffusion-models-ai-image-generation.html</guid>
+    </item>
+    <item>
+      <title>How Document Skew Breaks Multi-Modal LLMs — and What to Do About It</title>
+      <link>https://wricktalukdar.technology/articles/document-skew-multimodal-llms.html</link>
+      <description>Multi-modal LLMs excel at document extraction — until the scan is tilted. Measuring and mitigating the impact of skew on extraction accuracy.</description>
+      <guid>https://wricktalukdar.technology/articles/document-skew-multimodal-llms.html</guid>
+    </item>
+    <item>
+      <title>Domain-Specific Speech Recognition: When Whisper Isn't Enough</title>
+      <link>https://wricktalukdar.technology/articles/domain-specific-speech-recognition.html</link>
+      <description>Medical dictation, legal transcription, financial earnings calls — why general-purpose ASR fails in specialized domains and how to fix it.</description>
+      <guid>https://wricktalukdar.technology/articles/domain-specific-speech-recognition.html</guid>
+    </item>
+    <item>
+      <title>Edge AI: Deploying Deep Learning on Resource-Constrained Devices</title>
+      <link>https://wricktalukdar.technology/articles/edge-ai-deploying-models-resource-constrained.html</link>
+      <description>Model pruning, quantization, knowledge distillation, and TinyML — the techniques that shrink billion-parameter models to run on microcontrollers and phones.</description>
+      <guid>https://wricktalukdar.technology/articles/edge-ai-deploying-models-resource-constrained.html</guid>
+    </item>
+    <item>
+      <title>Embodied Multimodal Agents: When Digital AI Meets the Physical World</title>
+      <link>https://wricktalukdar.technology/articles/embodied-multimodal-agents-physical-ai.html</link>
+      <description>Vision-language-action models, embodied reasoning, and sim-to-real transfer — the convergence of foundation models and robotics.</description>
+      <guid>https://wricktalukdar.technology/articles/embodied-multimodal-agents-physical-ai.html</guid>
+    </item>
+    <item>
+      <title>Explainable AI: Opening the Black Box</title>
+      <link>https://wricktalukdar.technology/articles/explainable-ai-opening-black-box.html</link>
+      <description>SHAP, LIME, attention visualization — the practical toolkit for making ML decisions interpretable when stakeholders ask 'why?'</description>
+      <guid>https://wricktalukdar.technology/articles/explainable-ai-opening-black-box.html</guid>
+    </item>
+    <item>
+      <title>Federated Learning: Training Models Without Sharing Data</title>
+      <link>https://wricktalukdar.technology/articles/federated-learning-privacy-preserving-ml.html</link>
+      <description>How federated learning enables collaborative model training across hospitals, banks, and devices — without raw data ever leaving the source.</description>
+      <guid>https://wricktalukdar.technology/articles/federated-learning-privacy-preserving-ml.html</guid>
+    </item>
+    <item>
+      <title>Few-Shot Learning with Large Language Models</title>
+      <link>https://wricktalukdar.technology/articles/few-shot-learning-large-language-models.html</link>
+      <description>When GPT-3 showed that prompting could replace fine-tuning for many tasks, it changed the economics and accessibility of NLP overnight.</description>
+      <guid>https://wricktalukdar.technology/articles/few-shot-learning-large-language-models.html</guid>
+    </item>
+    <item>
+      <title>Generative AI on Wall Street: From Document Parsing to Autonomous Trading Memos</title>
+      <link>https://wricktalukdar.technology/articles/financial-generative-ai-wall-street.html</link>
+      <description>How investment banks and fintechs are deploying LLMs for 10-K analysis, risk summarization, and client reporting — with the guardrails regulators demand.</description>
+      <guid>https://wricktalukdar.technology/articles/financial-generative-ai-wall-street.html</guid>
+    </item>
+    <item>
+      <title>The Future of Agentic AI: From Copilots to Fully Autonomous Systems</title>
+      <link>https://wricktalukdar.technology/articles/future-agentic-ai-autonomous-systems.html</link>
+      <description>The trajectory from tool-augmented assistants to goal-driven autonomous agents — and the trust, safety, and governance infrastructure we need to get there.</description>
+      <guid>https://wricktalukdar.technology/articles/future-agentic-ai-autonomous-systems.html</guid>
+    </item>
+    <item>
+      <title>The Gas Station of the Future: Where AI/ML Meets IoT at the Edge</title>
+      <link>https://wricktalukdar.technology/articles/gas-station-future-ai-iot.html</link>
+      <description>Reimagining fuel retail with computer vision, predictive maintenance, and real-time IoT analytics — a case study in applied AI at the edge.</description>
+      <guid>https://wricktalukdar.technology/articles/gas-station-future-ai-iot.html</guid>
+    </item>
+    <item>
+      <title>GANs and the Dawn of Creative AI</title>
+      <link>https://wricktalukdar.technology/articles/generative-adversarial-networks-creative-ai.html</link>
+      <description>From mode collapse to StyleGAN — how adversarial training unlocked image synthesis and laid the groundwork for today's diffusion models.</description>
+      <guid>https://wricktalukdar.technology/articles/generative-adversarial-networks-creative-ai.html</guid>
+    </item>
+    <item>
+      <title>LLMs for Healthcare Documentation: Automating the Clinical Burden</title>
+      <link>https://wricktalukdar.technology/articles/llms-healthcare-documentation-automation.html</link>
+      <description>Clinical documentation consumes 35% of a physician's day. How LLMs are transforming note generation, coding, and summarization — with guardrails.</description>
+      <guid>https://wricktalukdar.technology/articles/llms-healthcare-documentation-automation.html</guid>
+    </item>
+    <item>
+      <title>Long-Term Memory for AI Agents</title>
+      <link>https://wricktalukdar.technology/articles/long-term-memory-architectures-agents.html</link>
+      <description>How agents remember and learn across sessions — persistent memory, episodic recall, working memory, and knowledge graph integration architectures.</description>
+      <guid>https://wricktalukdar.technology/articles/long-term-memory-architectures-agents.html</guid>
+    </item>
+    <item>
+      <title>Meta-Reasoning in Autonomous Agents</title>
+      <link>https://wricktalukdar.technology/articles/meta-reasoning-autonomous-agents.html</link>
+      <description>Empirical evidence on whether self-monitoring and regulation improve adaptability and trustworthiness in LLM-based autonomous agents across GAIA and AgentBench.</description>
+      <guid>https://wricktalukdar.technology/articles/meta-reasoning-autonomous-agents.html</guid>
+    </item>
+    <item>
+      <title>MLOps: Bridging the Gap Between Notebooks and Production</title>
+      <link>https://wricktalukdar.technology/articles/mlops-bridging-gap-notebooks-production.html</link>
+      <description>87% of ML models never reach production. Feature stores, model registries, CI/CD for ML, and monitoring — the infrastructure that changes that statistic.</description>
+      <guid>https://wricktalukdar.technology/articles/mlops-bridging-gap-notebooks-production.html</guid>
+    </item>
+    <item>
+      <title>Cost-Effective Multi-Modal Classification for Financial Documents</title>
+      <link>https://wricktalukdar.technology/articles/multimodal-financial-document-classification.html</link>
+      <description>Why text-only approaches fail for financial documents, and how multi-modal methods capture layout, visual, and textual signals for robust classification.</description>
+      <guid>https://wricktalukdar.technology/articles/multimodal-financial-document-classification.html</guid>
+    </item>
+    <item>
+      <title>Multimodal Foundation Models: Toward Unified Intelligence</title>
+      <link>https://wricktalukdar.technology/articles/multimodal-foundation-models-unified-intelligence.html</link>
+      <description>GPT-4o, Gemini, Claude — models that see, hear, read, and reason simultaneously. What unified multimodality means for the next generation of AI systems.</description>
+      <guid>https://wricktalukdar.technology/articles/multimodal-foundation-models-unified-intelligence.html</guid>
+    </item>
+    <item>
+      <title>Navigating the Ethics of Generative AI in Healthcare</title>
+      <link>https://wricktalukdar.technology/articles/navigating-ethics-generative-ai-healthcare.html</link>
+      <description>Examining privacy boundaries, bias detection strategies, and responsible deployment patterns for clinical AI applications.</description>
+      <guid>https://wricktalukdar.technology/articles/navigating-ethics-generative-ai-healthcare.html</guid>
+    </item>
+    <item>
+      <title>Physical AI: When Foundation Models Meet the Real World</title>
+      <link>https://wricktalukdar.technology/articles/physical-ai-robots-real-world.html</link>
+      <description>From simulation to manipulation — how vision-language-action models, world simulators, and sim-to-real transfer are finally making robots useful.</description>
+      <guid>https://wricktalukdar.technology/articles/physical-ai-robots-real-world.html</guid>
+    </item>
+    <item>
+      <title>Beyond RAG: Knowledge Graphs as the Enterprise Memory Layer</title>
+      <link>https://wricktalukdar.technology/articles/rag-to-knowledge-graphs-enterprise.html</link>
+      <description>RAG retrieves chunks; knowledge graphs understand relationships. How enterprises are combining both for grounded, context-aware AI that actually knows the org.</description>
+      <guid>https://wricktalukdar.technology/articles/rag-to-knowledge-graphs-enterprise.html</guid>
+    </item>
+    <item>
+      <title>Reinforcement Learning Beyond Games</title>
+      <link>https://wricktalukdar.technology/articles/reinforcement-learning-beyond-games.html</link>
+      <description>AlphaGo captured headlines, but the real story is RL's migration to robotics, supply chain, and recommendation systems — with hard-won lessons about sample efficiency.</description>
+      <guid>https://wricktalukdar.technology/articles/reinforcement-learning-beyond-games.html</guid>
+    </item>
+    <item>
+      <title>The Rise of Transformers: Why Attention Changed Everything</title>
+      <link>https://wricktalukdar.technology/articles/rise-of-transformers-attention-is-all-you-need.html</link>
+      <description>How the self-attention mechanism in 'Attention Is All You Need' replaced recurrence, launched the transformer era, and reshaped every corner of AI.</description>
+      <guid>https://wricktalukdar.technology/articles/rise-of-transformers-attention-is-all-you-need.html</guid>
+    </item>
+    <item>
+      <title>Self-Evolving Agents: Can AI Systems Improve Themselves Without Human Feedback?</title>
+      <link>https://wricktalukdar.technology/articles/self-evolving-agents-autonomous-learning.html</link>
+      <description>Self-play, self-critique, and autonomous skill acquisition — the research frontier where agents learn from their own experience without human-in-the-loop.</description>
+      <guid>https://wricktalukdar.technology/articles/self-evolving-agents-autonomous-learning.html</guid>
+    </item>
+    <item>
+      <title>Sequence-to-Sequence Models: The Architecture That Taught Machines to Translate</title>
+      <link>https://wricktalukdar.technology/articles/sequence-to-sequence-models-translation.html</link>
+      <description>From encoder-decoder RNNs to attention-augmented seq2seq — how neural machine translation surpassed statistical methods and redefined NLP.</description>
+      <guid>https://wricktalukdar.technology/articles/sequence-to-sequence-models-translation.html</guid>
+    </item>
+    <item>
+      <title>Small Language Models: The Case for Efficient, Specialized AI</title>
+      <link>https://wricktalukdar.technology/articles/small-language-models-efficient-ai.html</link>
+      <description>Phi, Gemma, Mistral — why smaller models fine-tuned for specific tasks are beating GPT-4 at a fraction of the cost and latency.</description>
+      <guid>https://wricktalukdar.technology/articles/small-language-models-efficient-ai.html</guid>
+    </item>
+    <item>
+      <title>Speech-to-Speech AI: The End of the Text Bottleneck</title>
+      <link>https://wricktalukdar.technology/articles/speech-to-speech-real-time-ai.html</link>
+      <description>From cascaded ASR→LLM→TTS pipelines to native speech-to-speech models — how end-to-end voice AI is achieving sub-500ms latency with emotional nuance.</description>
+      <guid>https://wricktalukdar.technology/articles/speech-to-speech-real-time-ai.html</guid>
+    </item>
+    <item>
+      <title>Synthetic Data Generation for Clinical Documentation</title>
+      <link>https://wricktalukdar.technology/articles/synthetic-data-clinical-documentation.html</link>
+      <description>How LLMs can generate high-fidelity synthetic clinical transcripts that preserve statistical properties while containing zero real patient information.</description>
+      <guid>https://wricktalukdar.technology/articles/synthetic-data-clinical-documentation.html</guid>
+    </item>
+    <item>
+      <title>Synthetic Data 2.0: The Next Frontier in Model Training</title>
+      <link>https://wricktalukdar.technology/articles/synthetic-data-next-frontier-model-training.html</link>
+      <description>We're running out of internet data. How self-play, model-generated datasets, and constitutional AI are creating the training data for the next generation of models.</description>
+      <guid>https://wricktalukdar.technology/articles/synthetic-data-next-frontier-model-training.html</guid>
+    </item>
+    <item>
+      <title>Temporal-Aware Retrieval: Beyond RAG and GraphRAG</title>
+      <link>https://wricktalukdar.technology/articles/temporal-aware-retrieval-beyond-rag-graphrag.html</link>
+      <description>RAG retrieves chunks. GraphRAG retrieves subgraphs. But neither handles temporal reasoning well. A new architecture combining episodic memory, knowledge graphs, and vector retrieval for time-sensitive</description>
+      <guid>https://wricktalukdar.technology/articles/temporal-aware-retrieval-beyond-rag-graphrag.html</guid>
+    </item>
+    <item>
+      <title>Transfer Learning Comes to NLP: From Word2Vec to BERT</title>
+      <link>https://wricktalukdar.technology/articles/transfer-learning-revolution-nlp.html</link>
+      <description>The journey from static word embeddings to contextualized representations — and why pre-training then fine-tuning became the dominant paradigm.</description>
+      <guid>https://wricktalukdar.technology/articles/transfer-learning-revolution-nlp.html</guid>
+    </item>
+    <item>
+      <title>Trust, Safety, and Ethics in LLM Development</title>
+      <link>https://wricktalukdar.technology/articles/trust-safety-ethics-llm-development.html</link>
+      <description>As LLMs grow more capable, the risks of information leakage, misinformation, and misalignment grow too. A practical framework for building trustworthy systems.</description>
+      <guid>https://wricktalukdar.technology/articles/trust-safety-ethics-llm-development.html</guid>
+    </item>
+    <item>
+      <title>Synergizing Unsupervised and Supervised Learning: When Labels Are Scarce</title>
+      <link>https://wricktalukdar.technology/articles/unsupervised-supervised-synergy-nlp.html</link>
+      <description>Supervised models need labels; unsupervised methods don't — but combining them strategically yields results neither achieves alone.</description>
+      <guid>https://wricktalukdar.technology/articles/unsupervised-supervised-synergy-nlp.html</guid>
+    </item>
+    <item>
+      <title>How Word Embeddings Changed NLP Forever</title>
+      <link>https://wricktalukdar.technology/articles/word-embeddings-changed-nlp-forever.html</link>
+      <description>From one-hot vectors to Word2Vec and GloVe — the representation revolution that made machines understand meaning, analogy, and context for the first time.</description>
+      <guid>https://wricktalukdar.technology/articles/word-embeddings-changed-nlp-forever.html</guid>
+    </item>
+  </channel>
+</rss>
