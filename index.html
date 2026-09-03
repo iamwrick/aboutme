@@ -5416,6 +5416,124 @@
             color: #60a5fa;
         }
 
+
+        /* Global Editions Carousel */
+        .global-editions {
+            margin-bottom: 2.5rem;
+        }
+
+        .ge-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .ge-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .ge-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            line-height: 1;
+        }
+
+        .ge-label {
+            font-size: 0.6rem;
+            color: var(--muted-text);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .ge-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        .ge-desc {
+            font-size: 0.78rem;
+            color: var(--secondary-text);
+            margin-top: 0.15rem;
+        }
+
+        .ge-carousel {
+            display: flex;
+            gap: 1.25rem;
+            overflow-x: auto;
+            padding: 0.5rem 0 1rem;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.15) transparent;
+            scroll-snap-type: x mandatory;
+        }
+
+        .ge-carousel::-webkit-scrollbar { height: 4px; }
+        .ge-carousel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+
+        .ge-cover {
+            min-width: 140px;
+            max-width: 140px;
+            flex-shrink: 0;
+            text-align: center;
+            scroll-snap-align: start;
+            transition: transform 0.3s;
+        }
+
+        .ge-cover:hover {
+            transform: translateY(-6px) scale(1.05);
+        }
+
+        .ge-img {
+            width: 100%;
+            height: 190px;
+            border-radius: 0.5rem;
+            object-fit: cover;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .ge-placeholder {
+            background: linear-gradient(135deg, rgba(30,30,30,1), rgba(50,50,50,1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .ge-cover-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.05rem;
+        }
+
+        .ge-flag {
+            font-size: 1.2rem;
+        }
+
+        .ge-lang {
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        .ge-pub {
+            font-size: 0.55rem;
+            color: var(--muted-text);
+        }
+
+        @media (max-width: 768px) {
+            .ge-header { flex-direction: column; align-items: flex-start; }
+            .ge-cover { min-width: 120px; max-width: 120px; }
+            .ge-img { height: 160px; }
+        }
+
     </style>
 </head>
 <body>
@@ -7002,6 +7120,49 @@
                                     <span>GenAI Thought Leader · Forbes Technology Council</span>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Global Editions -->
+                    <div class="global-editions">
+                        <div class="ge-header">
+                            <div class="ge-stat">
+                                <span class="ge-num">4+</span>
+                                <span class="ge-label">Languages</span>
+                            </div>
+                            <div class="ge-info">
+                                <h3 class="ge-title">Published Globally</h3>
+                                <p class="ge-desc">Translated and published by leading international publishers · Polski, Português, Српски editions coming soon</p>
+                            </div>
+                        </div>
+                        <div class="ge-carousel">
+
+                            <div class="ge-cover">
+                                <img src="./photos/cover1.png" alt="Taiwanese Edition" class="ge-img">
+                                <div class="ge-cover-info">
+                                    <span class="ge-flag">🇹🇼</span>
+                                    <span class="ge-lang">繁體中文</span>
+                                    <span class="ge-pub">GOTOP · Taiwan</span>
+                                </div>
+                            </div>
+                            <div class="ge-cover">
+                                <img src="./photos/cover3.jpg" alt="Korean Edition" class="ge-img">
+                                <div class="ge-cover-info">
+                                    <span class="ge-flag">🇰🇷</span>
+                                    <span class="ge-lang">한국어</span>
+                                    <span class="ge-pub">Jpub · Korea</span>
+                                </div>
+                            </div>
+                            <div class="ge-cover">
+                                <img src="./photos/cover4.jpg" alt="Chinese Edition" class="ge-img">
+                                <div class="ge-cover-info">
+                                    <span class="ge-flag">🇨🇳</span>
+                                    <span class="ge-lang">简体中文</span>
+                                    <span class="ge-pub">Tsinghua University Press</span>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
