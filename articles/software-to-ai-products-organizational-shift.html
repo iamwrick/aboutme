@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Software to AI Products: Managing the Organizational Shift | Wrick Talukdar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">AI Leadership</span>
+                <span class="article-date">July 15, 2026 · 9 min read</span>
+            </div>
+            <h1 class="article-title">From Software to AI Products: Managing the Organizational Shift</h1>
+            <p class="article-subtitle">Managing the transition from traditional software to AI first products. Technical debt, retraining loops, human in the loop design, and the stakeholder conversations most teams avoid.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">VP Engineering & AI/ML Architect</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="article-body">
+
+            <p>
+                We built the cloud migration playbook. We shipped microservices at scale. We optimized deployment pipelines until they could ship a hundred times a day. And now we're starting from scratch with AI products, and that playbook doesn't work.
+            </p>
+
+            <p>
+                The transition to AI-first products is not a technical problem, though plenty of technical problems come with it. It's an organizational problem. It's a fundamentally different way of thinking about uncertainty, about ownership, about what constitutes done. I've watched teams with impeccable engineering discipline get blindsided by this shift. Not because they couldn't build the machine learning infrastructure, but because they couldn't build the organizational structures to ship products built on probabilistic systems instead of deterministic ones.
+            </p>
+
+            <p>
+                This is what I want to talk about. The organizational shifts. The tough conversations. The things we avoid saying but know are true.
+            </p>
+
+            <h2>Why AI Products Break Your Playbook</h2>
+
+            <p>
+                Traditional software systems are deterministic. You write a function to add two numbers and it returns the same result every time. Your tests are reproducible. Your monitoring tells you when something breaks. A deployment that passes your staging environment will behave the same way in production.
+            </p>
+
+            <p>
+                AI products are not like this. A model trained on Tuesday performs slightly differently on Wednesday without any code changes. The same input sometimes generates the correct output and sometimes doesn't, and you can't predict which. Data drift means your validation metrics become stale the moment users touch your system. Monitoring tells you something went wrong, but not why or how to fix it.
+            </p>
+
+            <p>
+                This creates a cascading organizational problem. Your testing philosophy breaks because you can't write deterministic tests. Your deployment practices break because rolling back doesn't undo data corruption that happened after deployment. Your ownership models break because building an ML system now requires simultaneous expertise in data, model development, and software engineering, which doesn't map to your existing team structure.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-lightbulb"></i> The Core Insight</div>
+                <p>You can't manage probabilistic systems with deterministic processes. The moment you accept that, everything else flows from it.</p>
+            </div>
+
+            <h2>Technical Debt in AI: It's Not What You Think</h2>
+
+            <p>
+                Technical debt in traditional software is debt in code. You shipped something fast, you cut corners, now you have to pay it back by refactoring. The payback mechanism is clear. You refactor the code, deploy it, tests pass, you're done.
+            </p>
+
+            <p>
+                Technical debt in AI products lives in data pipelines, feature stores, and model versioning. It's not code debt, it's infrastructure debt. It's the schema you chose for your training data that now makes it hard to add new features. It's the lack of versioning on your feature engineering so you can't reproduce last month's model. It's the data quality issues you're aware of but can't fix because three other teams depend on that data in its current broken state.
+            </p>
+
+            <p>
+                This debt compounds faster than code debt because it couples model performance to data infrastructure in invisible ways. You optimize a model and performance actually gets worse because the data quality degraded two sprints ago and nobody noticed until someone ran an audit. Your new dataset improves model accuracy, but it's incompatible with your feature store schema so you can't actually deploy it. You want to retrain on cleaner data but you don't have a clear historical record of what training data actually produced each model version.
+            </p>
+
+            <p>
+                The uncomfortable truth: most organizations don't have clear ownership of the data infrastructure. It lives in the ML team, but it was built to serve analytics or data science. Now it needs to serve production systems and it's not designed for it. Fixing this means someone has to own the data pipeline and that responsibility tends to fall between teams. Do ML engineers own it? Data engineers? Platform engineers? Until you answer that clearly, your AI products will be brittle.
+            </p>
+
+            <h2>The Retraining Loop: Who Owns It?</h2>
+
+            <p>
+                Here's the conversation nobody wants to have. After you deploy a model, it starts degrading. Not catastrophically, but continuously. Six months in, accuracy is down three percentage points. Do you retrain automatically? Do you retrain on a schedule? Do you wait for someone to notice and raise their hand? Who decides when retraining happens? Who monitors for the need? Who does the retraining? Who validates the new model before deploying it?
+            </p>
+
+            <p>
+                If you don't have clear answers, you now have a zombie responsibility that nobody owns. The model slowly gets worse and the organization assumes someone else is handling it. The most likely outcome is that retraining happens in an ad hoc scramble when business stakeholders finally complain that accuracy has tanked. You rebuild the entire training pipeline under pressure, deploy a new model in a rush, and now you have a new version with unknown properties. Better? Worse? Faster? Slower? Unclear.
+            </p>
+
+            <p>
+                Production AI teams handle this by establishing a retraining loop as a first-class responsibility. Every model has a retraining owner. Retraining happens on a fixed schedule unless a guard rail is hit. If accuracy drops below a threshold, retraining gets triggered. If data quality metrics degrade, retraining gets triggered. The new model is validated automatically against historical test sets before deployment. The old model is kept around as a fallback. And crucially, the retraining loop itself is monitored and alerted on. If retraining fails, the team knows about it before the model's performance has degraded for weeks.
+            </p>
+
+            <p>
+                This is not a nice-to-have. This is foundational. You will not ship a successful AI product without treating retraining as a core operational responsibility.
+            </p>
+
+            <h2>Deterministic Thinking, Probabilistic Reality</h2>
+
+            <p>
+                Product managers and business leaders think deterministically. We want to know: if we build this feature, will it work? If we deploy this, will customers use it? AI products break this assumption. An AI feature might work for most users and fail silently for others. You can't answer the question "does this work?" with a simple yes or no.
+            </p>
+
+            <p>
+                This creates organizational friction. The product manager wants to know if the new ML ranking system is better than the old one. You tell them we need to run an A/B test for four weeks to build enough statistical power, and the results will show a 2-3 percent improvement in engagement with a confidence interval around that. They hear this as weakness. They want a commitment. They want certainty. They want you to tell them it's definitely better.
+            </p>
+
+            <p>
+                The best organizations accept this and embed probabilistic thinking into their decision-making. They run experiments. They understand confidence intervals. They make decisions based on effect size, not just statistical significance. But this is a learned skill, and not every leader has it. The conversations are harder because you're constantly translating between deterministic expectations and probabilistic reality.
+            </p>
+
+            <h2>Human in the Loop Design: When to Automate</h2>
+
+            <p>
+                One of the most underrated design decisions in AI products is deciding where to keep humans in the loop. Not because automation is bad, but because the wrong automation decisions create cascading problems in the system.
+            </p>
+
+            <p>
+                Here's the pattern: you build an AI system to automate something, it works decently, you gradually turn up the confidence threshold to catch more cases automatically, and suddenly you're automating cases where the model is actually uncertain and failing silently. The human never sees these failures because the human is no longer in the loop. The only sign something is wrong is when the metric tanks weeks later.
+            </p>
+
+            <p>
+                The teams that ship successful AI products do something different. They explicitly map out where humans need to stay involved, and they treat those touch points as features, not inefficiencies. They build workflows for humans to validate or override AI decisions. They monitor how often humans override the AI and treat that as a signal. If humans override the AI on 5 percent of cases, that's information about where the model is uncertain. If overrides increase over time, that's a signal to retrain.
+            </p>
+
+            <p>
+                The hard part: this means your AI product needs to be slower in some cases. The customer sees a "waiting for approval" state where a human reviewer is checking the AI decision. This is not a bug. This is intentional. This is where your model doesn't have high confidence and you've decided that getting the right answer is more important than being fast.
+            </p>
+
+            <h2>Stakeholder Management: The Conversation About Magic</h2>
+
+            <p>
+                Every organization has it. The business leader who thinks AI is magic. They saw ChatGPT, they think your team can build something similar, and they don't understand why it takes six months instead of six weeks. They think you're being pessimistic. They think you don't understand AI. They think the problem is the team, not the problem.
+            </p>
+
+            <p>
+                This is the conversation I see go wrong the most. Engineering leaders try to explain the technical challenges in technical terms. They talk about data quality and model drift and feature engineering. The business leader nods and thinks "they're using jargon to confuse me." They think you're gatekeeping complexity that doesn't actually exist.
+            </p>
+
+            <p>
+                The effective conversation is different. You talk about it in business terms. You say: "Our model will make the right decision 92 percent of the time. That means 8 out of every 100 decisions are wrong. In a high-volume system, that's thousands of wrong decisions a day. That's why we need humans in the loop for high-stakes cases. That's why we need continuous retraining. That's why we need monitoring. That's why it takes longer."
+            </p>
+
+            <p>
+                You set the expectation early that AI products are not deterministic. You show them examples of where the model fails. You make the uncertainty visible instead of hiding it. You help them understand that shipping an AI product that works 92 percent of the time is actually impressive, not a failure.
+            </p>
+
+            <h2>Team Structure: Embed or Centralize?</h2>
+
+            <p>
+                The organizational question that determines success more than most teams realize: do you embed ML engineers in product teams or do you centralize them in a platform team?
+            </p>
+
+            <p>
+                Embedded ML engineers move fast. They understand the product deeply. They can make decisions quickly about what to optimize for. The downside: they own their own data infrastructure, their own monitoring, their own retraining pipelines. By the third team doing this, you have three different approaches to the same problem, three different tech stacks, and nobody sharing learnings. You have data silos. You have duplicate work.
+            </p>
+
+            <p>
+                Centralized ML platforms move slowly. There's a shared data infrastructure, shared model serving, shared monitoring. But the platform team doesn't understand the product deeply, so they over-engineer solutions for the 20 percent of cases that don't exist yet, and they're slow to respond to product-specific needs. By the time the product team gets what they need, six months have passed.
+            </p>
+
+            <p>
+                The successful organizations do something hybrid. They have a platform team that owns data infrastructure, feature stores, and model serving. They have embedded ML engineers in product teams who do model development, feature engineering, and product-specific optimization. But they have clear interfaces between the two. The product ML engineer understands how to use the platform. The platform team understands the contract they're providing. Information flows both directions so the platform evolves based on product learnings.
+            </p>
+
+            <p>
+                This requires explicit communication and trust between teams. It requires the platform team to say no sometimes, and the product team to understand why. It requires both teams to share ownership of the outcomes.
+            </p>
+
+            <h2>Testing and QA for AI Products</h2>
+
+            <p>
+                Traditional QA is about finding the bugs. You have a spec, you verify that the system matches the spec, you find discrepancies and report them. This works for deterministic systems. You run a test case and you expect a specific output every time. If you get something different, that's a bug.
+            </p>
+
+            <p>
+                QA for AI products is about understanding the model's behavior across the distribution of inputs. You can't test every case because the model's output is probabilistic. What you can do is understand where the model fails, how often it fails, and whether the failures are acceptable or need to be fixed.
+            </p>
+
+            <p>
+                This means your QA process looks different. You're running slices of test data to understand model performance on subgroups. You're checking for bias and fairness issues. You're validating that the model's behavior is stable over time. You're looking at edge cases and understanding whether they're actually edge cases or signals that your training data is skewed.
+            </p>
+
+            <p>
+                The teams that do this well build QA as a core part of the machine learning workflow, not as a separate testing phase. They have test data that mirrors production distribution. They have automated checks that run every time a model is trained. They have manual testing that focuses on understanding model behavior, not just finding bugs. And they have processes for handling the cases where you find a model behaves badly on an important subgroup.
+            </p>
+
+            <h2>Success Metrics That Matter</h2>
+
+            <p>
+                The most dangerous mistake: optimizing for model accuracy instead of business outcomes. You build a model that's 95 percent accurate and ship it, and six months later you realize it doesn't actually move the business metric you care about. Or it moves the metric in the right direction but the side effects cost more than the improvement is worth.
+            </p>
+
+            <p>
+                Successful AI product teams separate three layers of metrics. Model metrics are what your model optimizes for in training. They're important, but they're not the full picture. Application metrics are what the system as a whole optimizes for. Latency, throughput, user-facing accuracy, things like that. And then business metrics are what actually matters. Revenue, retention, customer satisfaction, efficiency, whatever your product is trying to move.
+            </p>
+
+            <p>
+                You need all three. Model metrics tell you if your model training is working. Application metrics tell you if your system is performing as expected. Business metrics tell you if any of this matters. And crucially, you need to track the relationship between them. Does a 1 percent improvement in model accuracy translate to a 0.1 percent improvement in revenue? Does it? You should know. If it doesn't, you should be asking why you're optimizing for model accuracy.
+            </p>
+
+            <p>
+                The tricky part is that these metrics often lag. You deploy a model change and the business metric doesn't move for three weeks because that's how long it takes data to accumulate and for customers to experience the change. This creates organizational pressure to iterate based on model metrics instead of waiting for business outcomes. Resist that pressure. Slow down. Run experiments. Wait for the data. Make decisions based on what actually matters.
+            </p>
+
+            <h2>Key Takeaways</h2>
+
+            <p>
+                Shipping AI products is not harder than shipping software products because the technology is harder. It's harder because it requires thinking about uncertainty, managing probabilistic systems, and building organizations that can operate in that environment.
+            </p>
+
+            <ul>
+                <li><strong>Data infrastructure is not optional.</strong> If you don't know who owns it, it won't be maintained and your AI products will degrade over time.</li>
+                <li><strong>Retraining is a first-class responsibility.</strong> Treat it like any other operational system. Own it. Monitor it. Automate it.</li>
+                <li><strong>Human in the loop is a feature, not a weakness.</strong> Design your system so humans stay involved where uncertainty is high. Monitor where humans override AI decisions.</li>
+                <li><strong>Explain uncertainty to stakeholders early.</strong> Help them understand that 92 percent accuracy is actually impressive. Set expectations about what AI can and can't do.</li>
+                <li><strong>Embed ML engineers in products, but build shared infrastructure.</strong> Balance speed with consistency. Let products move fast, but build a platform they can depend on.</li>
+                <li><strong>QA for AI is different.</strong> You're not finding bugs, you're understanding behavior. Test against subgroups. Look for bias. Understand edge cases.</li>
+                <li><strong>Optimize for business metrics, not model accuracy.</strong> Model accuracy is a means to an end. Understand the relationship between model metrics and what actually matters to your business.</li>
+            </ul>
+
+            <p>
+                The transition from software to AI products is real. It's not just a technical shift. It's organizational. It's cultural. It requires new ways of thinking about ownership, about uncertainty, about what constitutes success. Teams that understand this move forward. Teams that ignore it spend years building increasingly elaborate AI infrastructure that doesn't ship because they never figured out the organization to go with it.
+            </p>
+
+            <p>
+                You have to do both. The technology and the organization. Neither one alone is enough.
+            </p>
+
+        </div>
+
+        <div class="article-footer">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <div class="share-links">
+                <a href="https://twitter.com/intent/tweet?url=https://wricktalukdar.com&text=From%20Software%20to%20AI%20Products" title="Share on Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://wricktalukdar.com" title="Share on LinkedIn" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="mailto:?subject=From%20Software%20to%20AI%20Products&body=Check%20this%20out" title="Share via Email"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+
+    </article>
+
+    <script>
+        // Reading progress bar
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            document.getElementById('reading-progress').style.width = scrollPercent + '%';
+        });
+    </script>
+
+</body>
+</html>

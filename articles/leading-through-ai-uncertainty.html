@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leading Through AI Uncertainty | Wrick Talukdar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">AI Leadership</span>
+                <span class="article-date">June 10, 2026 · 9 min read</span>
+            </div>
+            <h1 class="article-title">Leading Through AI Uncertainty: Decision Making When the Ground Shifts Every Quarter</h1>
+            <p class="article-subtitle">The technology changes every six months. Your team is overwhelmed by options. How do you make irreversible decisions with incomplete information and keep your organization moving forward?</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Architect & Researcher</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="article-body">
+
+            <p>
+                I spent the last three years watching AI move faster than any technology I've ever seen. From GPT-3 to GPT-4 to multimodal systems to agentic architectures, the ground literally shifts under your feet every quarter. Your engineers want to rewrite everything. Your board wants to know why you're not moving faster. Your risk team wants guarantees about reliability. And meanwhile, the model you bet the company on last year is already obsolete.
+            </p>
+
+            <p>
+                This is not a temporary condition. This is what leading in AI looks like now.
+            </p>
+
+            <p>
+                The core challenge is that AI decision-making happens under conditions of radical uncertainty. You cannot run a pilot on all possible futures. You cannot wait for perfect information, because it will never arrive. So how do you make bets that won't cripple the organization when the technology landscape shifts again in six months?
+            </p>
+
+            <p>
+                This article covers the frameworks and principles I've learned from navigating this with my teams. Not theories. Lived experience.
+            </p>
+
+            <h2>The Pace Problem: Technology Evolution as Organizational Risk</h2>
+
+            <p>
+                When I started working with large language models in 2021, GPT-3 was the frontier. Impressive, but constrained. We could debate whether to build applications on it. We had time to think.
+            </p>
+
+            <p>
+                By 2023, the pace had accelerated beyond anything I'd anticipated. GPT-4 shipped. Open source models exploded in quality. Multimodal systems arrived. Then suddenly we have agentic patterns, structured outputs, tool use APIs, and function calling as first-class capabilities. New frameworks every month. New business model implications every quarter.
+            </p>
+
+            <p>
+                The problem this creates for leaders is not just "there are too many options." It's that your previous strategic bets are depreciating in value rapidly. The architecture you designed last year is not obsolete, but it's no longer the obvious choice. The team members who built expertise in an older paradigm feel anxious. And every new architecture choice starts a clock: how long until this too becomes stale?
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-lightbulb"></i> Core Insight</div>
+                <p>Organizational anxiety about AI is not irrational. The ground genuinely is shifting fast. Your job as a leader is not to pretend the uncertainty doesn't exist. It's to build decision frameworks that move people forward despite the uncertainty.</p>
+            </div>
+
+            <h2>Two Types of Decisions: Reversible vs Irreversible</h2>
+
+            <p>
+                Not all decisions carry the same risk profile. Jeff Bezos's framework for this is one of the most useful tools I've borrowed for AI architecture choices.
+            </p>
+
+            <p>
+                <strong>Reversible decisions</strong> are those you can undo, pivot on, or change direction without major sunk cost or organizational trauma. These deserve speed and experimentation. You should make these with imperfect information, move fast, learn, and adjust.
+            </p>
+
+            <p>
+                Examples in AI context: Which evaluation framework to use for a prototype. Which prompt template to start with. Which open source model to evaluate first. Whether to run an internal AI literacy workshop. These can shift weeks or months from now without massive consequences.
+            </p>
+
+            <p>
+                <strong>Irreversible decisions</strong> are choices that commit resources, lock in architecture, create organizational dependencies, or would be painful to reverse. These need more careful analysis, stakeholder input, and risk assessment.
+            </p>
+
+            <p>
+                Examples: Building a custom model fine-tuning infrastructure vs. using managed services. Choosing a foundational framework that will shape your entire codebase for two years. Committing a large team to a particular architectural paradigm. Whether to replace a working system with an AI-powered alternative. These carry real consequences if they go wrong.
+            </p>
+
+            <p>
+                The mistake most teams make is treating everything as irreversible. We agonize over reversible decisions, get paralyzed by options, and move slowly on choices that should be fast experiments. Meanwhile, we sometimes rush into irreversible bets without proper consideration.
+            </p>
+
+            <p>
+                The corrected approach is simple: <strong>spend decision effort proportional to reversibility</strong>. Reversible decisions should move fast. Irreversible decisions should be careful and deliberate.
+            </p>
+
+            <h2>Exploration vs Exploitation: The Learning Budget</h2>
+
+            <p>
+                Every team has a finite amount of engineering time and mental energy. How much of that should go to exploring new techniques, new models, new paradigms versus exploiting the current best approach to ship product?
+            </p>
+
+            <p>
+                This is the classic exploration versus exploitation tradeoff from machine learning, but applied to how you allocate team capacity. Too much exploration and you ship nothing. Too much exploitation and you get passed by competitors using better techniques, and your team's skills atrophy.
+            </p>
+
+            <p>
+                There's no single right answer, but I've found that most technical teams intuitively operate at something like 5-10% exploration and 90-95% exploitation. That tends to work well in stable technology environments. In AI, I think the right balance is higher. Maybe 15-20% exploration, 80-85% exploitation.
+            </p>
+
+            <p>
+                The key insight is to make this explicit. Don't let exploration happen as ad hoc noise in the sprint. Give it a structured budget. One engineer on a team of five spends 20% time on learning new architectures, evaluating competing approaches, running experiments. The other four focus on shipping.
+            </p>
+
+            <p>
+                This serves multiple purposes. It satisfies your team's legitimate need to stay current. It gives you early warning when a better approach emerges. And critically, it spreads risk: you're not betting the entire team on one architecture, because some portion of your capacity is always probing the frontier.
+            </p>
+
+            <h2>When to Adopt, When to Wait: A Heuristic</h2>
+
+            <p>
+                One of my senior engineers asked me a great question about six months ago: how do I know when something is genuinely ready versus when the hype is ahead of the technology?
+            </p>
+
+            <p>
+                There's a real pattern here. Not every piece of new technology hype translates into useful tools. Some things are genuinely breakthroughs. Others are demos that don't hold up at scale. The question is: how do you tell the difference when you don't have time to wait for the five-year track record?
+            </p>
+
+            <p>
+                Here's what I've learned to look for.
+            </p>
+
+            <p>
+                <strong>Is there independent reproduction?</strong> If a new technique is only demonstrated by the company that invented it, treat it as preliminary. When multiple independent teams from different organizations get similar results, that's meaningful signal that the approach actually works, not just that the inventors know how to tune their own system.
+            </p>
+
+            <p>
+                <strong>Has it survived contact with production?</strong> Academic papers are one thing. Real products using the technique at scale are different. When you see credible companies building production systems on a new approach and reporting publicly about lessons learned and failure modes, that's validation that it works in the messy real world.
+            </p>
+
+            <p>
+                <strong>Are there multiple vendors offering similar capabilities?</strong> When every major provider (OpenAI, Anthropic, Azure, Google) is offering related functionality, the technology has crossed a threshold. Not because all vendors are always right, but because competitive dynamics mean if the technique didn't work, someone would have abandoned it by now.
+            </p>
+
+            <p>
+                <strong>Is the risk/reward profile clear?</strong> Can you articulate what the upside is and what could go wrong? If the answer is "honestly, we don't know yet," it's probably too immature. If you can say "this could reduce latency by 30% but might reduce accuracy by 2%, and we can measure both," you have enough clarity to make a reversible experiment.
+            </p>
+
+            <h2>Managing Team Anxiety: The Rewrite Impulse</h2>
+
+            <p>
+                Here's something I didn't anticipate: the psychological cost of rapid technology change on engineering teams.
+            </p>
+
+            <p>
+                Your engineers build something impressive with current best practices. Three months later, they read about a new architectural pattern or see a competitor using a more elegant approach. Suddenly the code they just shipped feels dated. They want to rewrite it. They want to pursue the newer technique. They feel like they're falling behind.
+            </p>
+
+            <p>
+                This is emotionally real and organizationally dangerous. If you indulge every impulse to rewrite, you ship nothing. If you dismiss it, you demoralize your team.
+            </p>
+
+            <p>
+                The answer is to make the exploration budget explicit and then redirect that energy. "I hear you. The newer approach looks interesting. Here's what I want to do: we're keeping the current production system as is for now because it's working. But over the next two weeks, can you run a spike to build a small prototype using the new pattern? See what the tradeoffs actually look like. Then let's decide if a refactor makes sense."
+            </p>
+
+            <p>
+                This accomplishes several things. It honors the engineer's instinct that something interesting is happening. It channels that energy into learning rather than random rewrites. And most importantly, it gives you real data: does the new approach actually work better for your specific use case, or does it just look good in the abstract?
+            </p>
+
+            <p>
+                More often than you'd expect, the spike shows that the current approach is actually better suited to your constraints. Sometimes it confirms that the new approach is worth migrating to. Either way, you have facts instead of just anxiety.
+            </p>
+
+            <h2>The Strategic Patience Principle</h2>
+
+            <p>
+                Most technology hype cycles follow a predictable pattern. Something genuinely interesting emerges. The hype inflates far beyond the current reality. Disillusionment sets in as the gap between promise and practice becomes obvious. Then, gradually, the genuinely useful core applications emerge and stabilize.
+            </p>
+
+            <p>
+                I've seen this happen with enthusiasm for neural networks in the early 2010s, with blockchain, with IoT. And I'm watching it happen with various AI techniques right now.
+            </p>
+
+            <p>
+                The strategic principle I've landed on: <strong>most hype fades in about 18 months</strong>. Not all of it, and the genuinely good ideas stabilize at a higher level of investment than they started with. But the noise, the questionable applications, the overselling that accompanies every technology wave, most of that is gone in 18 months.
+            </p>
+
+            <p>
+                This is useful because it gives you permission to move slowly on things that might be hype. You don't have to decide today whether some new architectural pattern is the future. You can say: "This looks interesting, but we're going to wait six months and see if this is still a serious thing or if it was just hype. We'll revisit."
+            </p>
+
+            <p>
+                Sometimes in the interim, the technology genuinely proves itself and you adopt it. More often, the hype dies down and you're glad you didn't commit resources to something that didn't stick. And occasionally, you find that the genuinely good ideas have crystallized and are now much clearer and more production-ready than they were during the initial hype phase.
+            </p>
+
+            <h2>Building Organizational Resilience: Modular Architecture</h2>
+
+            <p>
+                If the only constant in AI is change, then your systems need to be built to survive paradigm shifts.
+            </p>
+
+            <p>
+                The architectural pattern that has served me best is ruthless modularity. Separate the parts of your system that are stable and likely to endure from the parts where you expect technology shifts.
+            </p>
+
+            <p>
+                For example: your core business logic, your data pipelines, your user-facing abstractions, these can be relatively stable. Your choice of which foundation model to use, how you orchestrate agent workflows, the specific techniques you use for retrieval or tool selection, these are likely to shift.
+            </p>
+
+            <p>
+                If you build modular boundaries around these areas, then when the technology shifts, you're refactoring a swappable component rather than rewriting the entire system.
+            </p>
+
+            <p>
+                This is not new advice. It's good software engineering that applies extra force in rapidly-changing domains. But it means resisting the temptation to optimize too tightly, to couple things together because they're currently convenient, to build monolithic systems that are locally more efficient but globally more fragile.
+            </p>
+
+            <p>
+                The cost of that modularity is some inefficiency. The benefit is organizational survival when the next paradigm shift happens.
+            </p>
+
+            <h2>Leading with Conviction Under Uncertainty</h2>
+
+            <p>
+                Here's the hardest part of this job: you have to make decisions and commit to them even though you know the landscape will be different in six months.
+            </p>
+
+            <p>
+                Your board wants a strategy. Your team wants clarity about what they're building toward. Your customers want to know this investment will still be relevant next year. And honest answer to all of this is: I don't know for certain.
+            </p>
+
+            <p>
+                The communication framework that I've found works is this: be clear about what you believe and why, while being explicit about what you're uncertain about.
+            </p>
+
+            <p>
+                To your team: "I believe we should build modular architectures that can adapt when technologies shift, rather than betting everything on the current frontier. I'm doing this because rapid technology change is real and we need resilience. What I'm uncertain about is whether the specific architectural pattern we're using will be optimal in two years, so we're building reversibility into our design decisions."
+            </p>
+
+            <p>
+                To your board: "We're pursuing an exploration and exploitation balance where 80% of our capacity is shipping products on current best practices, and 20% is learning and prototyping new approaches. I believe this puts us in a good position to adopt beneficial new technologies without getting distracted by hype. What I can't promise is that we'll never be surprised by a paradigm shift, because nobody has that crystal ball."
+            </p>
+
+            <p>
+                To your customers: "We're building this using current architectures and best practices. We're also designing in modularity so that if better approaches emerge, we can upgrade under the hood without breaking your integration. We'll be honest with you if we need to make significant changes."
+            </p>
+
+            <p>
+                The thing that makes this work is that it's honest about the condition of radical uncertainty while still showing conviction about the principles by which you're navigating it. That's actually more reassuring to most audiences than false certainty would be.
+            </p>
+
+            <h2>Key Takeaways</h2>
+
+            <p>
+                Leading through rapid AI change is not about having perfect foresight. It's about building organizational practices that allow you to move forward despite uncertainty. Here are the principles that have shaped my thinking:
+            </p>
+
+            <ul>
+                <li><strong>Acknowledge that pace is real.</strong> The ground genuinely is shifting faster in AI than in most technology domains. Don't pretend otherwise.</li>
+                <li><strong>Separate reversible from irreversible decisions.</strong> Spend decision effort proportional to stakes. Move fast on experiments, move carefully on architecture.</li>
+                <li><strong>Build an explicit exploration budget.</strong> Allocate a percentage of your team's time to learning new techniques and evaluating new approaches. This spreads risk and keeps your team current.</li>
+                <li><strong>Use reproducibility, production evidence, and market convergence as signals.</strong> Don't wait for perfect information, but look for patterns that suggest a technique is genuinely ready rather than just hyped.</li>
+                <li><strong>Redirect team anxiety into structured spikes.</strong> When your engineers want to rewrite using a new approach, channel that energy into time-bounded experiments rather than random rewrites.</li>
+                <li><strong>Apply the 18-month hype principle.</strong> Most technology noise fades in about 18 months. You can afford to move slowly on things that might be hype.</li>
+                <li><strong>Design for modularity.</strong> Build systems that expect technology change. Separate stable components from those likely to shift.</li>
+                <li><strong>Lead with honest conviction.</strong> Be clear about what you believe and why, while being explicit about uncertainties. Audiences find this more reassuring than false certainty.</li>
+            </ul>
+
+            <p>
+                The AI landscape will look different six months from now. Your job is not to predict what it will look like. It's to build an organization that can navigate change while still shipping value today.
+            </p>
+
+        </div>
+
+        <footer class="article-footer">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <div class="share-links">
+                <a href="#" title="Share on Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="Share on LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="#" title="Copy link"><i class="fas fa-link"></i></a>
+            </div>
+        </footer>
+
+    </article>
+
+    <script>
+        // Reading progress indicator
+        function updateReadingProgress() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            document.getElementById('reading-progress').style.width = scrollPercent + '%';
+        }
+        window.addEventListener('scroll', updateReadingProgress);
+    </script>
+
+</body>
+</html>

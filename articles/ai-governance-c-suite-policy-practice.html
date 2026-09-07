@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Governance for the C Suite: From Policy to Practice | Wrick Talukdar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">AI Leadership</span>
+                <span class="article-date">August 22, 2026 · 11 min read</span>
+            </div>
+            <h1 class="article-title">AI Governance for the C Suite: From Policy to Practice</h1>
+            <p class="article-subtitle">The executive's guide to responsible AI governance. Board level accountability, risk frameworks, bias audits, and how to build regulatory readiness before the regulators come knocking.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Architect & Researcher</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="article-body">
+
+            <p>
+                You've heard governance is important. Your board has asked about it. Your risk committee wants a policy. Your general counsel is worried about liability. But when you read what exists today in your organization, it's a 40-page document sitting in a shared drive, written by someone who left the company two years ago. It talks about values and principles but not about what actually happens when an AI system goes wrong.
+            </p>
+            <p>
+                This is the governance gap, and it's real.
+            </p>
+            <p>
+                The European Union, the FDA, NIST, and state regulators are all moving in the same direction. They're not asking for perfection. They're asking for evidence that you know what your AI systems do, that you've thought about risks before deployment, and that you have accountability built into the process. This article walks you through the governance framework that actually works in practice, built from hands-on experience leading AI ethics and governance at scale. It's grounded in the principles from my book "Generative AI Ethics, Privacy, and Security" and informed by real incidents that happened to real companies.
+            </p>
+
+            <h2>Why Governance Became Non-Optional</h2>
+
+            <p>
+                Three years ago, governance was optional. Your company's AI initiatives were moving fast and the regulatory landscape was still forming. Today, it's carved into law in multiple jurisdictions, and the liability exposure is becoming clear.
+            </p>
+
+            <p>
+                The EU AI Act went into full effect. It imposes different compliance requirements based on risk level, from high-risk systems requiring extensive documentation and testing, to general purpose models with specific transparency requirements. The penalties are meaningful: up to 6 percent of annual global revenue for certain violations. The FDA issued guidance on AI and machine learning in medical devices. NIST published the AI Risk Management Framework, which is becoming the de facto standard even for companies outside the United States. And several states have passed laws around algorithmic discrimination and AI transparency.
+            </p>
+
+            <p>
+                But regulation is actually the second reason governance matters. The first is internal. Every AI system that touches a business decision carries risk. A recommendation algorithm that consistently underserves a demographic segment creates legal liability and reputational damage. A language model fine-tuned on proprietary data that leaks that data in generated output creates IP and privacy exposure. An AI system trained on biased historical data that automates hiring decisions can lock discrimination into your recruiting process at scale. These aren't theoretical edge cases anymore. They've happened. Companies have paid tens of millions in settlements. Boards have asked "why didn't we catch this before deployment?"
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-bolt"></i> The Board Question</div>
+                <p>If an AI system causes harm, your board will ask three things: Did we know this was a risk? Did we do anything to reduce it? Did we document the process so it's clear we tried? Governance exists to answer yes to all three.</p>
+            </div>
+
+            <h2>The Governance Gap: Why Policies Alone Don't Work</h2>
+
+            <p>
+                Most organizations have implemented governance at exactly one level: the policy level. Your company has a 40-page AI Ethics Policy. It talks about fairness, transparency, accountability, and responsibility. It gets signed off by the board. It gets posted on the website. And then nothing happens.
+            </p>
+
+            <p>
+                The policy says "we will conduct bias audits." But the policy doesn't say who owns bias audits, how often they happen, what triggers one, what tools you use to run them, how you interpret the results, or what you do when you find a problem. The policy says "we will ensure transparency." But it doesn't say what transparent means for a natural language model versus a recommendation system, or whether you post model cards or white papers or both, or who reviews them before publication.
+            </p>
+
+            <p>
+                This is governance theater. It creates liability rather than reducing it. If something goes wrong, the policy becomes evidence that you knew about the risk but didn't have a system to manage it. What you need is governance at three levels working together: strategic governance at the board level, operational governance through a dedicated team and governance committee, and technical governance embedded in the development process.
+            </p>
+
+            <h2>Three Levels of Governance That Actually Work</h2>
+
+            <h3>Level 1: Strategic Governance (The Board)</h3>
+
+            <p>
+                The board needs to understand AI risk at a business level and ensure the organization has the structures to manage it. Strategic governance is not about understanding transformer architectures. It's about understanding where in your business AI is creating risk, whether that risk is being actively managed, and whether you have the talent and resources to keep up with regulatory changes.
+            </p>
+
+            <p>
+                At the strategic level, the board needs to:
+            </p>
+
+            <ul>
+                <li>Maintain an AI Risk Register at the portfolio level. Which business lines use AI? What decisions do those systems make? What's the potential impact if the system fails or produces biased outputs? How much is that business line dependent on that system?</li>
+                <li>Assess the Chief Risk Officer and Chief AI Officer accountability. These roles need to have access and authority. If the Chief AI Officer reports to the CTO and the board never hears from them, governance is happening in a vacuum.</li>
+                <li>Review regulatory landscape quarterly. The AI law changed in Europe, the FDA issued new guidance, a state passed a new algorithmic transparency law. Your compliance footprint is expanding, and it needs to be tracked at board level.</li>
+                <li>Approve resource allocation for governance and testing. Governance is not free. Bias audits, red teaming, model card development, legal review, these all cost money and time. If the board doesn't approve the budget, they're approving the risk.</li>
+            </ul>
+
+            <h3>Level 2: Operational Governance (The Team)</h3>
+
+            <p>
+                This is where governance actually happens. You need a dedicated team, often called the AI Ethics Committee or the Chief Risk and Accountability Office. This team owns the governance framework, ensures that all AI initiatives go through it, and has teeth to pause or redirect a project if risk isn't being managed appropriately.
+            </p>
+
+            <p>
+                At the operational level, this team needs to:
+            </p>
+
+            <ul>
+                <li>Build an AI use case registry. Every team developing an AI system registers it. The registry captures what decision the system makes, what data it uses, who it impacts, how it will be evaluated, and what risks have been identified. This isn't bureaucracy. It's visibility. You can't manage what you don't see.</li>
+                <li>Define the governance process. What happens before a model is deployed? Bias testing? Model cards? Red teaming? Customer testing? Different risk levels trigger different requirements. A recommendation system that affects what content a user sees requires different rigor than a model that decides whether someone gets a loan. Governance should scale with risk.</li>
+                <li>Run incident response. When something goes wrong, this team coordinates across engineering, legal, communications, and business. They investigate root cause, they determine whether the system continues to operate, they plan remediation. This is not a theoretical exercise. It will happen.</li>
+                <li>Maintain relationships with regulators and legal. As regulations change, this team interprets what it means for your company. They engage with regulators when asked. They feed insights back to the business lines about what's coming.</li>
+            </ul>
+
+            <h3>Level 3: Technical Governance (In the Code)</h3>
+
+            <p>
+                This is where engineers and data scientists work. Technical governance means that building an AI system responsibly is the default path, not an extra step. It means your model development template includes a section for bias analysis. It means deployment pipelines won't let a model go to production without a model card. It means engineers have tools to run fairness audits without having to build them from scratch.
+            </p>
+
+            <p>
+                At the technical level, you need:
+            </p>
+
+            <ul>
+                <li>Standard data governance practices. Where does your training data come from? How old is it? Is it representative of your actual user base? Have you looked for data quality issues or labeling errors? What labeling process was used? This is where bias often begins, and it's easier to fix before model training than after.</li>
+                <li>Model cards and documentation templates. Every model gets a model card. The card documents what the model does, who trained it, what data was used, what performance looks like overall and broken down by demographic segments, what limitations exist, and what tests were run. The card is version controlled and updated as the model is retrained.</li>
+                <li>Bias testing as a standard practice. Before a model goes to production, it goes through bias analysis. This includes subgroup performance analysis (how does the model perform for different demographic groups?), counterfactual testing (if you change a protected attribute but keep everything else the same, do the predictions change?), and red teaming (can you deliberately cause the model to fail on certain inputs?). Tools like Fairlearn, AIF360, and others make this straightforward.</li>
+                <li>Monitoring that catches drift. Models degrade over time. The data distribution changes. Subgroup performance decays. You need monitoring that not only tracks overall model performance but also flags when the model starts performing differently for different demographic groups. Alerts trigger governance review, not just engineering fixes.</li>
+            </ul>
+
+            <h2>Building the AI Risk Register</h2>
+
+            <p>
+                One of the most practical outputs of governance is the AI Risk Register. This is a living document that captures every AI initiative in your organization, categorizes it by risk level, and tracks what governance activities are planned or completed for that initiative.
+            </p>
+
+            <p>
+                The register doesn't need to be complex. At minimum, it captures:
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Why It Matters</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>System Name</strong></td>
+                        <td>What are we tracking?</td>
+                        <td>Loan Approval Model</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Business Owner</strong></td>
+                        <td>Who is accountable?</td>
+                        <td>VP of Lending</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Key Decision</strong></td>
+                        <td>What does it decide?</td>
+                        <td>Approve or reject loan application</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Impact Scope</strong></td>
+                        <td>How many people are affected?</td>
+                        <td>100,000 loan applications per year</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Risk Category</strong></td>
+                        <td>How serious could failure be?</td>
+                        <td>High (financial, legal, reputational)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Data Sources</strong></td>
+                        <td>Where does the model learn from?</td>
+                        <td>Credit scores, income, employment history</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Governance Status</strong></td>
+                        <td>What have we done?</td>
+                        <td>Bias audit completed, model card drafted, red teaming in progress</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                Use this register to triage and allocate effort. High-risk systems that make consequential decisions about people get the most rigorous governance. Mid-risk systems that have meaningful but limited impact get a moderate approach. Low-risk systems like internal tools get a lighter touch. The point is intentionality. You're making active choices about what level of governance each system requires, not defaulting to either no governance or maximum rigor across the board.
+            </p>
+
+            <h2>Bias Audits That Actually Catch Problems</h2>
+
+            <p>
+                When people hear "bias audit," they often think of running one number and checking a box. That's not how it works. Real bias audits are multi-faceted. They ask different questions and use different methods because bias can show up in different ways.
+            </p>
+
+            <h3>Subgroup Performance Analysis</h3>
+
+            <p>
+                Start here. You take your test set and slice it by demographic characteristics. Age, gender, race, ethnicity, geography, income level, whatever's relevant to your use case. Then you run your model on each slice and compare performance metrics. If your loan approval model has an accuracy of 92 percent overall but accuracy of 85 percent for applicants over age 65, that's actionable information. The disparity might be legitimate (older applicants have different financial patterns), or it might signal a data quality issue or a proxy bias problem where the model is learning correlates of age rather than age itself.
+            </p>
+
+            <p>
+                The key insight here is that a model can have strong overall performance while performing poorly on a specific subgroup. Traditional model evaluation metrics hide this. Subgroup analysis surfaces it.
+            </p>
+
+            <h3>Counterfactual Testing</h3>
+
+            <p>
+                This is where you modify a single protected attribute and see what the model predicts. Imagine a loan application. You take a real application from someone who was denied, change only the gender on the application, keep everything else the same, and ask the model to score it again. If the model approves the modified version but denied the original, that's a red flag. The model should not be using gender as a decision signal, and if it's changing predictions based on gender alone, something is wrong.
+            </p>
+
+            <p>
+                Counterfactual testing is particularly powerful because it gets at algorithmic discrimination. Even if your training data doesn't explicitly contain gender, the model can learn proxies for gender through correlated features. Counterfactual testing catches this.
+            </p>
+
+            <h3>Red Teaming</h3>
+
+            <p>
+                This is where you deliberately try to break the model in ways that would cause harm. If you have a content moderation system, can you construct prompts that get past it? If you have a recommendation algorithm, can you construct a user profile that gets served discriminatory or dangerous content? If you have a hiring model, can you feed it resumes that trigger unfair rejections?
+            </p>
+
+            <p>
+                Red teaming is not theoretical. People will try to break your system in these ways. Better to find the problems yourself, document them, and decide whether to fix them or accept the risk.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-chart-bar"></i> Practical Auditing</div>
+                <p>Start with subgroup analysis for performance equity. Add counterfactual testing to check for proxy discrimination. Then red team for specific harm modes relevant to your use case. Combine these and you catch most bias problems before production.</p>
+            </div>
+
+            <h2>Transparency and Explainability: Know Your Audience</h2>
+
+            <p>
+                Transparency means different things to different people. Engineers want to understand how a model works. Regulators want documentation of the training process and performance metrics. Customers want to know why a decision was made about them. A governance framework that tries to be "transparent" to all audiences equally ends up serving none of them well.
+            </p>
+
+            <p>
+                What the board needs: understanding of risk exposure and confidence in governance. This is a short executive brief that talks about which systems have highest risk, what governance activities are underway, what incidents occurred in the last quarter, and what resource constraints you're facing.
+            </p>
+
+            <p>
+                What engineers need: detailed model documentation and performance breakdowns. This is your model card. It has the training process, the data sources, the performance metrics including subgroup performance, the known limitations, and recommendations for use.
+            </p>
+
+            <p>
+                What regulators need: evidence that you did the work. When they ask whether you conducted bias audits, you produce the audit report. When they ask about fairness testing, you produce the methodology and results. When they ask whether you considered the potential for harm, you produce the risk assessment and mitigation plan.
+            </p>
+
+            <p>
+                What customers need: accessible explanation of the decision that affects them. If a customer is denied a service, they should be able to understand why in plain language. What factors drove the decision? What would need to change for a different decision? This doesn't require exposing proprietary model internals. It requires thinking about explanation as a user interface problem.
+            </p>
+
+            <h2>Incident Response: When Something Goes Wrong</h2>
+
+            <p>
+                It will happen. An AI system will produce a biased decision that harms someone. A model will fail in production. A training dataset will turn out to include problematic data. Your governance framework needs an incident response process that moves quickly and systematically.
+            </p>
+
+            <p>
+                The process looks like this:
+            </p>
+
+            <ul>
+                <li>Detect and report. Someone in your organization notices something wrong. The model is failing for a specific demographic. An external party reports harmful outputs. Your monitoring system flags a significant performance drop. This triggers an escalation to the Chief Risk and Accountability Office.</li>
+                <li>Initial assessment. Is this a real problem? How many people are affected? How serious is the harm? How urgent is the response? This determines whether the system continues operating or gets taken offline immediately.</li>
+                <li>Investigation. What happened? Was it a data problem? A model problem? A deployment issue? You dig into the root cause, pulling logs and testing the model directly.</li>
+                <li>Remediation. You stop the harm. This might mean taking the system offline, rolling back to a previous version, retraining the model with corrected data, or implementing a human review step. The goal is to prevent further harm while you work on a long-term fix.</li>
+                <li>Documentation and learning. You document what happened, why it happened, how you detected it, what you did about it, and what changes you made to prevent it from happening again. This becomes part of your governance record and teaches your organization.</li>
+            </ul>
+
+            <p>
+                The key to incident response is speed without panic. You need enough process that you're making good decisions and not creating new problems. But you need to move fast enough that you're not letting harm continue while you deliberate.
+            </p>
+
+            <h2>The Regulatory Landscape: What's Here and What's Coming</h2>
+
+            <p>
+                Understanding the regulatory environment is part of strategic governance. The landscape is rapidly evolving, and different jurisdictions have different requirements.
+            </p>
+
+            <h3>EU AI Act</h3>
+
+            <p>
+                This is the most comprehensive regulation to date. It categorizes AI systems by risk level and applies different requirements. High-risk systems (those that could cause harm to fundamental rights) require extensive testing, documentation, and human oversight before deployment. General purpose models have specific transparency requirements about training data and copyright compliance. The penalties are significant: up to 6 percent of annual global revenue for violations.
+            </p>
+
+            <h3>NIST AI Risk Management Framework</h3>
+
+            <p>
+                This is a governance-oriented framework, not a regulation, but it's becoming the de facto standard globally. It articulates stages of AI system development (design, development, deployment, monitoring) and asks about risks at each stage. It's deliberately flexible and non-prescriptive, allowing organizations to tailor their approach to their context.
+            </p>
+
+            <h3>FDA Guidance on AI and Machine Learning</h3>
+
+            <p>
+                The FDA has specific guidance for AI and machine learning in medical devices. It requires documentation of the algorithm's development process, performance testing, and monitoring after deployment. It recognizes that models degrade over time and requires processes for detecting and addressing degradation.
+            </p>
+
+            <h3>State-Level Regulations</h3>
+
+            <p>
+                Several U.S. states have passed laws around algorithmic transparency and discrimination. Colorado requires impact assessments for automated employment decision systems. California requires transparency about the use of algorithmic decision tools. More are coming.
+            </p>
+
+            <p>
+                For most organizations, the safest approach is to design governance that meets the EU AI Act requirements for high-risk systems and the NIST framework more broadly. This puts you ahead of most regulatory curves and gives you a foundation to adapt to new requirements as they emerge.
+            </p>
+
+            <h2>Building Your Governance Team: Who Owns This</h2>
+
+            <p>
+                Governance is not a function that can be centralized completely or decentralized completely. It needs to be distributed across the organization with clear ownership and accountability.
+            </p>
+
+            <p>
+                The Chief Risk and Accountability Officer (CRAO) or Head of AI Ethics owns the framework. They establish the governance process, run the AI Ethics Committee, maintain the risk register, and have the authority to pause or redirect a project if risks aren't being managed appropriately. This role reports to the Chief Risk Officer or Chief Legal Officer, or sometimes directly to the CEO, depending on organizational structure. The key is that they have air cover and can't be overruled by business pressure alone.
+            </p>
+
+            <p>
+                The AI Ethics Committee meets regularly (monthly is typical) and includes representation from engineering, product, legal, compliance, security, and business teams. Their job is to review new AI initiatives, assess risk level, determine what governance requirements apply, and review incident reports. They're not a rubber stamp. They can challenge assumptions, require additional testing, and reject deployments that don't meet governance standards.
+            </p>
+
+            <p>
+                Individual teams building AI systems own the day-to-day governance. They build the model card, run the bias audits, do the red teaming, monitor for drift. They work with the governance team, but they're accountable for building responsibly.
+            </p>
+
+            <p>
+                Your legal and compliance teams own regulatory interpretation and documentation. When a regulation changes, they interpret what it means for your company. When you're audited, they coordinate the response.
+            </p>
+
+            <p>
+                This distribution of responsibility is crucial. Governance can't be something that happens to your engineering teams, something they do because a committee requires it. It has to be built into the process they follow every day.
+            </p>
+
+            <h2>Key Takeaways</h2>
+
+            <p>
+                Governance is not optional anymore. It's embedded in law in multiple jurisdictions and it's fundamental to managing organizational risk as you scale AI.
+            </p>
+
+            <p>
+                A governance framework that actually works operates at three levels simultaneously. Strategic governance ensures the board understands and approves resource allocation for risk management. Operational governance creates the structures and processes that make governance happen. Technical governance ensures that building responsibly is the default path for engineers.
+            </p>
+
+            <p>
+                Start with an AI Risk Register that gives you visibility into what systems exist, what decisions they make, and what risks they carry. Use that register to triage and allocate governance effort proportional to risk. Implement bias auditing practices that go beyond a single metric and actually catch discrimination. Build incident response processes so you can move quickly when things go wrong.
+            </p>
+
+            <p>
+                The organizations winning in the current environment are not the ones that had perfect policies written three years ago. They're the ones that have built governance into the way they actually build and deploy AI. The ones that can move fast and handle problems when they arise. The ones that when a regulator asks "what did you do?" can point to documentation and evidence that they took the work seriously.
+            </p>
+
+            <p>
+                Governance is not a constraint on innovation. It's a foundation for it. When your engineers know that building responsibly is the expectation and the process, when they have tools and frameworks to do it, when they know that shortcuts will be caught before deployment, that's when you get both responsible AI and speed.
+            </p>
+
+            <p>
+                Start with your risk register this quarter. Establish an AI Ethics Committee. Define what governance looks like for high-risk systems in your organization. It's not complex work, but it's essential work. And it becomes dramatically easier once you have the framework in place.
+            </p>
+
+        </div>
+
+        <footer class="article-footer">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <div class="share-links">
+                <a href="https://twitter.com/intent/tweet?url=https://wricktalukdar.com&text=AI%20Governance%20for%20the%20C%20Suite" title="Share on Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://wricktalukdar.com" title="Share on LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="mailto:?subject=AI%20Governance%20for%20the%20C%20Suite&body=Check%20this%20article" title="Share via Email"><i class="fas fa-envelope"></i></a>
+            </div>
+        </footer>
+
+    </article>
+
+    <script>
+        function updateReadingProgress() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            document.getElementById('reading-progress').style.width = scrollPercent + '%';
+        }
+        window.addEventListener('scroll', updateReadingProgress);
+    </script>
+
+</body>
+</html>
