@@ -1841,11 +1841,68 @@
         }
 
         /* Footer */
-        .footer {
+        .footer-statement {
             background: var(--secondary-bg);
             border-top: 1px solid var(--border-color);
-            padding: 2rem;
+            padding: 3rem 2rem 2rem;
             text-align: center;
+        }
+
+        .footer-quote {
+            font-size: 1.05rem;
+            font-style: italic;
+            color: var(--secondary-text);
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.7;
+        }
+
+        .footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            color: var(--muted-text);
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .footer-social a:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            background: rgba(255,255,255,0.04);
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-nav a {
+            font-size: 0.72rem;
+            color: var(--muted-text);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-nav a:hover {
+            color: var(--accent-color);
+        }
+
+        .footer-copy {
+            font-size: 0.65rem;
             color: var(--muted-text);
         }
         
@@ -4774,7 +4831,7 @@
             body { background: #fff !important; color: #000 !important; }
             .nav-container, .scroll-indicator, .scrubber-tooltip,
             .mobile-menu-btn, .mobile-overlay, .back-to-top,
-            #particle-canvas, .footer { display: none !important; }
+            #particle-canvas, .footer-statement { display: none !important; }
             .main-content { margin-top: 0 !important; }
             .tab-content { display: block !important; opacity: 1 !important; transform: none !important; }
             .tab-content:not(.active) { display: none !important; }
@@ -7828,15 +7885,17 @@
     </main>
 
     <!-- Footer -->
-    <footer class="footer">
-        <p>&copy; <span id="footer-year">2026</span> Wrick Talukdar. All rights reserved. <span class="footer-updated">Last updated: September 2026</span></p>
-        <div class="footer-links">
-            <a href="https://www.linkedin.com/in/wrick-talukdar/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-            <a href="https://www.researchgate.net/profile/Wrick-Talukdar-2" target="_blank"><i class="fab fa-researchgate"></i></a>
-            <a href="https://us.amazon.com/stores/author/B0F2J8S78Z" target="_blank"><i class="fab fa-amazon"></i></a>
+    <footer class="footer-statement">
+        <p class="footer-quote">"Great products are built by teams that trust each other enough to disagree."</p>
+        <div class="footer-social">
+            <a href="https://www.linkedin.com/in/wrick-talukdar/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://www.researchgate.net/profile/Wrick-Talukdar-2" target="_blank" title="ResearchGate"><i class="fab fa-researchgate"></i></a>
+            <a href="https://scholar.google.com/scholar?q=author:wrick+talukdar" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
+            <a href="https://us.amazon.com/stores/author/B0F2J8S78Z" target="_blank" title="Amazon Author"><i class="fab fa-amazon"></i></a>
             <a href="articles.xml" target="_blank" title="RSS Feed"><i class="fas fa-rss"></i></a>
-                            
         </div>
+
+        <p class="footer-copy">&copy; <span id="footer-year">2026</span> Wrick Talukdar &middot; All rights reserved &middot; Last updated September 2026</p>
     </footer>
 
 
