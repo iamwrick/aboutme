@@ -3,9 +3,9 @@
   <channel>
     <title>Wrick Talukdar — Articles &amp; Insights</title>
     <link>https://wricktalukdar.technology</link>
-    <description>Articles on AI, Machine Learning, Agentic AI, Generative AI, and emerging technology by Wrick Talukdar.</description>
+    <description>Articles on AI, Machine Learning, Agentic AI, Generative AI, Leadership, and emerging technology by Wrick Talukdar.</description>
     <language>en-us</language>
-    <lastBuildDate>Wed, 02 Sep 2026 18:46:43 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 06 Sep 2026 17:54:42 +0000</lastBuildDate>
     <atom:link href="https://wricktalukdar.technology/articles.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>How Do You Know If Your Agent Actually Works? Benchmarking Autonomy at Scale</title>
@@ -36,6 +36,18 @@
       <link>https://wricktalukdar.technology/articles/ai-code-generation-software-engineering.html</link>
       <description>Copilot, Cursor, Devin — how AI coding assistants evolved from autocomplete to autonomous software engineers, and what it means for the profession.</description>
       <guid>https://wricktalukdar.technology/articles/ai-code-generation-software-engineering.html</guid>
+    </item>
+    <item>
+      <title>AI Governance for the C Suite: From Policy to Practice</title>
+      <link>https://wricktalukdar.technology/articles/ai-governance-c-suite-policy-practice.html</link>
+      <description>The executive's guide to responsible AI governance. Board level accountability, risk frameworks, bias audits, and how to build regulatory readiness before the regulators come knocking.</description>
+      <guid>https://wricktalukdar.technology/articles/ai-governance-c-suite-policy-practice.html</guid>
+    </item>
+    <item>
+      <title>The AI Investment Decision Framework</title>
+      <link>https://wricktalukdar.technology/articles/ai-investment-decision-framework-cxo.html</link>
+      <description>How to evaluate whether an AI initiative is worth pursuing. A practical framework for executives covering ROI estimation, technical feasibility, data readiness, and organizational capacity.</description>
+      <guid>https://wricktalukdar.technology/articles/ai-investment-decision-framework-cxo.html</guid>
     </item>
     <item>
       <title>AutoML: Democratizing Machine Learning or Hiding the Hard Parts?</title>
@@ -92,6 +104,12 @@
       <guid>https://wricktalukdar.technology/articles/embodied-multimodal-agents-physical-ai.html</guid>
     </item>
     <item>
+      <title>Enterprise AI Strategy: Building a Roadmap That Survives the Hype Cycle</title>
+      <link>https://wricktalukdar.technology/articles/enterprise-ai-strategy-roadmap-hype-cycle.html</link>
+      <description>Most enterprise AI strategies are rewritten every year because they chased the latest trend instead of solving real problems. Here is how to build one that lasts.</description>
+      <guid>https://wricktalukdar.technology/articles/enterprise-ai-strategy-roadmap-hype-cycle.html</guid>
+    </item>
+    <item>
       <title>Explainable AI: Opening the Black Box</title>
       <link>https://wricktalukdar.technology/articles/explainable-ai-opening-black-box.html</link>
       <description>SHAP, LIME, attention visualization — the practical toolkit for making ML decisions interpretable when stakeholders ask 'why?'</description>
@@ -132,6 +150,12 @@
       <link>https://wricktalukdar.technology/articles/generative-adversarial-networks-creative-ai.html</link>
       <description>From mode collapse to StyleGAN — how adversarial training unlocked image synthesis and laid the groundwork for today's diffusion models.</description>
       <guid>https://wricktalukdar.technology/articles/generative-adversarial-networks-creative-ai.html</guid>
+    </item>
+    <item>
+      <title>Leading Through AI Uncertainty</title>
+      <link>https://wricktalukdar.technology/articles/leading-through-ai-uncertainty.html</link>
+      <description>The technology changes every six months. Your team is overwhelmed by options. How do you make irreversible decisions with incomplete information and keep your organization moving forward?</description>
+      <guid>https://wricktalukdar.technology/articles/leading-through-ai-uncertainty.html</guid>
     </item>
     <item>
       <title>LLMs for Healthcare Documentation: Automating the Clinical Burden</title>
@@ -216,6 +240,12 @@
       <link>https://wricktalukdar.technology/articles/small-language-models-efficient-ai.html</link>
       <description>Phi, Gemma, Mistral — why smaller models fine-tuned for specific tasks are beating GPT-4 at a fraction of the cost and latency.</description>
       <guid>https://wricktalukdar.technology/articles/small-language-models-efficient-ai.html</guid>
+    </item>
+    <item>
+      <title>From Software to AI Products: Managing the Organizational Shift</title>
+      <link>https://wricktalukdar.technology/articles/software-to-ai-products-organizational-shift.html</link>
+      <description>Managing the transition from traditional software to AI first products. Technical debt, retraining loops, human in the loop design, and the stakeholder conversations most teams avoid.</description>
+      <guid>https://wricktalukdar.technology/articles/software-to-ai-products-organizational-shift.html</guid>
     </item>
     <item>
       <title>Speech-to-Speech AI: The End of the Text Bottleneck</title>
