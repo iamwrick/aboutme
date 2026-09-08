@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="alternate" type="application/rss+xml" title="Wrick Talukdar Articles" href="https://wricktalukdar.technology/articles.xml">
     <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
@@ -346,6 +347,40 @@
             .article-container { padding: 100px 1.25rem 60px; }
             .article-nav { padding: 0 1.25rem; }
         }
+    
+        /* Audio Player */
+        .audio-player-section {
+            margin-top: 1.5rem;
+            padding: 1rem 1.25rem;
+            background: rgba(96, 165, 250, 0.04);
+            border: 1px solid rgba(96, 165, 250, 0.12);
+            border-radius: 0.75rem;
+        }
+
+        .audio-player-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #60a5fa;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .audio-player-label i {
+            font-size: 0.85rem;
+        }
+
+        .audio-player {
+            width: 100%;
+            height: 40px;
+            border-radius: 20px;
+        }
+
+        /* Dark theme for audio player */
+        .audio-player::-webkit-media-controls-panel {
+            background: rgba(20, 20, 28, 0.9);
+        }
     </style>
 </head>
 <body>
@@ -356,6 +391,7 @@
         <div class="article-nav-inner">
             <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
             <span class="logo">Wrick Talukdar</span>
+            <a href="https://wricktalukdar.technology/articles.xml" target="_blank" style="color: #f97316; font-size: 1rem; margin-left: 0.75rem; opacity: 0.8; transition: all 0.2s; padding: 0.3rem 0.6rem; border: 1px solid rgba(249,115,22,0.25); border-radius: 1rem; display: inline-flex; align-items: center; gap: 0.3rem;" onmouseover="this.style.opacity='1';this.style.borderColor='rgba(249,115,22,0.5)'" onmouseout="this.style.opacity='0.8';this.style.borderColor='rgba(249,115,22,0.25)'" title="Subscribe via RSS"><i class="fas fa-rss"></i> <span style="font-size:0.65rem;font-weight:600;letter-spacing:0.5px;">RSS</span></a>
         </div>
     </nav>
 
@@ -375,6 +411,18 @@
                     <div class="article-author-detail">AI/ML Architect & Researcher</div>
                 </div>
             </div>
+        
+            <!-- Podcast Audio Player -->
+            <div class="audio-player-section">
+                <div class="audio-player-label">
+                    <i class="fas fa-headphones"></i> Listen to this article
+                </div>
+                <audio controls preload="metadata" class="audio-player">
+                    <source src="../audio/speech_20260907192311841.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+
         </header>
 
         <div class="article-body">
@@ -1061,8 +1109,8 @@ frame = session.process_turn("What were the key decisions?")
         <footer class="article-footer">
             <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to all articles</a>
             <div class="share-links">
-                <a href="https://twitter.com/intent/tweet?text=Temporal-Aware%20Retrieval%3A%20Beyond%20RAG%20and%20GraphRAG&url=" title="Share on X"><i class="fab fa-x-twitter"></i></a>
-                <a href="https://www.linkedin.com/sharing/share-offsite/?url=" title="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://twitter.com/intent/tweet?text=Temporal-Aware%20Retrieval%3A%20Beyond%20RAG%20and%20GraphRAG&url=https://wricktalukdar.technology/articles/temporal-aware-retrieval-beyond-rag-graphrag.html" title="Share on X"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://wricktalukdar.technology/articles/temporal-aware-retrieval-beyond-rag-graphrag.html" title="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
             </div>
         </footer>
 
