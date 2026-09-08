@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="alternate" type="application/rss+xml" title="Wrick Talukdar Articles" href="https://wricktalukdar.technology/articles.xml">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1H6B706ZF8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1H6B706ZF8');
+</script>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Agent Harness: Why It Matters More Than Your Model | Wrick Talukdar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+        }
+    
+        /* Audio Player */
+        .audio-player-section {
+            margin-top: 1.5rem;
+            padding: 1rem 1.25rem;
+            background: rgba(96, 165, 250, 0.04);
+            border: 1px solid rgba(96, 165, 250, 0.12);
+            border-radius: 0.75rem;
+        }
+
+        .audio-player-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #60a5fa;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .audio-player-label i {
+            font-size: 0.85rem;
+        }
+
+        .audio-player {
+            width: 100%;
+            height: 40px;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+            <a href="https://wricktalukdar.technology/articles.xml" target="_blank" style="color: #f97316; font-size: 1rem; margin-left: 0.75rem; opacity: 0.8; transition: all 0.2s; padding: 0.3rem 0.6rem; border: 1px solid rgba(249,115,22,0.25); border-radius: 1rem; display: inline-flex; align-items: center; gap: 0.3rem;" title="Subscribe via RSS"><i class="fas fa-rss"></i> <span style="font-size:0.65rem;font-weight:600;letter-spacing:0.5px;">RSS</span></a>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">Agentic AI</span>
+                <span class="article-date">September 3, 2026 · 14 min read</span>
+            </div>
+            <h1 class="article-title">The Agent Harness: Why It Matters More Than Your Model</h1>
+            <p class="article-subtitle">Your agent demo works beautifully. Then you push it to production and watch it slowly destroy itself. The problem is not your model. The problem is everything around your model.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Architect & Researcher</div>
+                </div>
+            </div>
+        
+            <!-- Podcast Audio Player -->
+            <div class="audio-player-section">
+                <div class="audio-player-label">
+                    <i class="fas fa-headphones"></i> The Key Idea in Less Than 10 Minutes
+                </div>
+                <audio controls preload="metadata" class="audio-player">
+                    <source src="../audio/speech_20260908021008313.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+
+        </header>
+
+        <div class="article-body">
+
+            <p>
+                Your agent demo works beautifully. It calls the right tools, chains together multi-step reasoning, and generates impressive results. Then you push it to production and watch it slowly destroy itself. It calls the same tool eleven times. It confidently returns a result it never actually verified. It hangs indefinitely because a downstream API returned a 401 and nobody taught it what to do next.
+            </p>
+            <p>
+                The problem is not your model. The problem is everything <em>around</em> your model.
+            </p>
+            <p>
+                That everything has a name now: <strong>the agent harness</strong>. And understanding it is the single most important thing you can do if you are building agentic AI systems in 2026.
+            </p>
+
+            <h2>What Is an Agent Harness?</h2>
+
+            <p>
+                An agent harness is the complete software infrastructure that wraps a foundation model and transforms it from a stateless text generator into a goal-directed, tool-using, self-correcting agent. The term was formalized in early 2026 when OpenAI published a blog post explicitly titled "Harness Engineering," and it has since been adopted by Anthropic, LangChain, and the broader practitioner community.
+            </p>
+            <p>
+                The canonical formula, attributed to LangChain's Vivek Trivedy, is clean: <strong>"If you're not the model, you're the harness."</strong>
+            </p>
+            <p>
+                To make this concrete, here is what the harness controls:
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>What It Does</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Orchestration loop</strong></td>
+                        <td>The decision cycle that decides whether to call a tool, parse the result, or generate a final response</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tool management</strong></td>
+                        <td>Which tools the model can see, how they're described, what happens if the model tries to call a tool that doesn't exist</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Context management</strong></td>
+                        <td>How much of the conversation history to include; when to summarize or truncate; what to prioritize when context is scarce</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Memory</strong></td>
+                        <td>What the agent remembers across conversation turns; short-term buffers; long-term retrieval systems</td>
+                    </tr>
+                    <tr>
+                        <td><strong>State management</strong></td>
+                        <td>What the agent knows it's currently doing; how to resume from interruptions; what happened last</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Error recovery</strong></td>
+                        <td>What happens when a tool fails; when to retry vs. give up; how to signal the model that something went wrong</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Guardrails and safety</strong></td>
+                        <td>Which actions are forbidden; rate limiting; permission checks before tool execution</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Verification loops</strong></td>
+                        <td>How to know if the model's output is actually correct; when to ask for confirmation; validation checkpoints</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                Think of the model as the engine and the harness as the car. The industry has spent years arguing about who has the best engine. Almost nobody has been building a car that can stay on the road.
+            </p>
+            <p>
+                Beren Millidge made this analogy precise in his 2023 essay <em>Scaffolded LLMs as Natural Language Computers</em>: a raw LLM is a CPU with no RAM, no disk, and no I/O. The context window is RAM (fast but limited). External databases are disk (large but slow). Tool integrations are device drivers. The harness is the operating system. As Millidge wrote: "We have reinvented the Von Neumann architecture."
+            </p>
+
+            <h2>Why the Harness Matters More Than the Model</h2>
+
+            <blockquote>
+                Past a capability threshold, improving the harness yields better returns than swapping the model.
+            </blockquote>
+
+            <h3>1. Benchmark Reality: APEX-Agents</h3>
+
+            <p>
+                In late 2025, Mercor published the APEX-Agents benchmark, which evaluated a spectrum of LLMs (GPT-4, Claude 3.5, Grok-2, Llama 3.1) on realistic agent tasks: software engineering, data analysis, research, and content creation. The headline: <strong>24% pass@1, 40% pass@8 across all models</strong>. Zero-score rates (tasks that failed completely) ranged from 40% to 62%. No model crossed 50% success.
+            </p>
+            <p>
+                But here's the kicker: the teams that placed in the top 10% didn't have proprietary models. They had <em>better harnesses</em>. Tighter verification loops. Better memory management. Narrower tool sets. The difference between a 30% pass rate and a 75% pass rate was not a model upgrade—it was orchestration.
+            </p>
+
+            <h3>2. The Fewer-Tools Surprise: Vercel</h3>
+
+            <p>
+                In Q4 2025, the Vercel AI team posted a case study of their text-to-SQL agent. The obvious move: expose all 47 database tables and functions to the model. Result: high hallucination, frequent incorrect queries, 80% end-to-end task success.
+            </p>
+            <p>
+                Then they rebuilt the harness. Reduced the tool set to 2 carefully scoped, semantically rich operations. Taught the agent to reason about its own limitations. Result: <strong>80% → 100% task success</strong>. Tokens per query dropped 37%. Speed improved 3.5x. Even the worst-case error recovered gracefully.
+            </p>
+            <p>
+                They did not change the model. They changed the harness.
+            </p>
+
+            <h3>3. Four Rebuilds: Manus</h3>
+
+            <p>
+                Manus built an agentic system to generate software code autonomously. When acquired by Meta in 2025, their technical debt wasn't the model—it was the harness. The original system called tools sequentially; by task 10 it would explode in context. They rebuilt the harness four times:
+            </p>
+            <ul>
+                <li><strong>v1:</strong> Sequential orchestration. Context explodes. Pass rate crashes at task depth 5.</li>
+                <li><strong>v2:</strong> Parallel orchestration with subagents. Better. Still context pressure.</li>
+                <li><strong>v3:</strong> Filesystem-as-memory. Each subagent writes to a shared file tree. Context compaction via summarization.</li>
+                <li><strong>v4:</strong> Token-aware state machine. Context recycled per phase. Per-task tool selection.</li>
+            </ul>
+            <p>
+                The same Claude model ran through all four versions. Versions 1–3 averaged 50 tool calls per task. Version 4: 12 tool calls per task. Same outputs. Fraction of the harness overhead.
+            </p>
+
+            <h2>The Convergence: Everyone Landed in the Same Place</h2>
+
+            <p>
+                If you look at the published harness architectures from OpenAI (Codex inference stack), Anthropic (Claude in-the-loop systems), and Manus (pre-acquisition blog), they all converge on the same 5 core ideas:
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Idea</th>
+                        <th>OpenAI Codex</th>
+                        <th>Claude Code</th>
+                        <th>Manus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Tool scoping</strong></td>
+                        <td>Declare capabilities, not implementations</td>
+                        <td>Semantic tool descriptions, not raw APIs</td>
+                        <td>Task-specific tool subsets</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Context management</strong></td>
+                        <td>Token budgets per phase</td>
+                        <td>Attention-based pruning</td>
+                        <td>Filesystem checkpointing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Error recovery</strong></td>
+                        <td>Explicit error handlers</td>
+                        <td>Self-correction loops</td>
+                        <td>Rollback and retry with adapted tools</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Verification</strong></td>
+                        <td>Output validation before commit</td>
+                        <td>Multi-pass reasoning</td>
+                        <td>Execution tracing and assertion checks</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Orchestration</strong></td>
+                        <td>Explicit state machine</td>
+                        <td>Implicit (in model reasoning)</td>
+                        <td>Explicit DAG of subagents</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                From a 2025 report by UNU (a research-focused AI consulting firm): <em>"Across 50 evaluated agentic systems in production, 92% of the performance variance was explained by harness architecture, not model choice. Model choice accounted for 8%."</em>
+            </p>
+
+            <h2>The 12 Components of a Production Harness</h2>
+
+            <h3>1. Orchestration Loop</h3>
+            <p>
+                The core decision cycle. Does the model need to call a tool? If yes, which one? If the tool failed, should we retry or try a different approach? The orchestration loop is typically a state machine with explicit branches for success, failure, and edge cases. It's not implicit in the model's reasoning—it's encoded in your code.
+            </p>
+
+            <h3>2. Tools</h3>
+            <p>
+                The capabilities your agent can invoke. Production tools are not raw APIs. They're wrapped, versioned, with explicit rate limits, error handling, and fallbacks. A "get_user" tool should handle missing users gracefully, timeout, and know when to escalate vs. retry.
+            </p>
+
+            <h3>3. Memory</h3>
+            <p>
+                Short-term (conversation buffer), long-term (retrieval), and episodic (what happened last time). The harness decides what to keep, what to summarize, and when to prune. This is where most context explosion happens if you're not careful.
+            </p>
+
+            <h3>4. Context Management</h3>
+            <p>
+                A discipline around token budgets. How many tokens for the system prompt? User input? Tool results? Model generation? Production harnesses reserve tokens explicitly: "20% for system, 40% for history, 20% for tool results, 20% for generation."
+            </p>
+
+            <h3>5. Prompt Construction</h3>
+            <p>
+                How the model sees the world. What does the system prompt say about goals, constraints, and tone? How are tools described? What examples are included? Prompt construction is part of the harness, not the model.
+            </p>
+
+            <h3>6. Output Parsing</h3>
+            <p>
+                Extracting structured data from model output. Modern APIs handle this (function calling, tool use blocks). But if you're using raw text output, this is where you parse tool calls, validate JSON, and handle format errors. Most production failures live here.
+            </p>
+
+            <h3>7. State Management</h3>
+            <p>
+                Tracking what the agent is doing. What was the last action? What's the goal? What constraints apply now? A production harness maintains explicit state: (goal, history, context_used, next_action, retry_count). This enables resumption, rollback, and debugging.
+            </p>
+
+            <h3>8. Error Handling</h3>
+            <p>
+                What happens when tools fail? Timeout? Invalid input? Permission denied? The harness has explicit policies: retry vs. skip, escalate vs. assume default, log vs. ignore. Most naive agents fail silently. Production agents fail loudly and recover.
+            </p>
+
+            <h3>9. Guardrails and Safety</h3>
+            <p>
+                Permission checks before execution. Rate limits. Budget caps. Forbidden actions. The harness enforces these, not the model. A model can be tricked into generating a tool call for "delete_all_data"—the harness should reject it.
+            </p>
+
+            <h3>10. Verification Loops</h3>
+            <p>
+                How do you know the agent's output is correct? Verification can be explicit (ask the user to confirm), implicit (check the result against known properties), or delegated (run the output through a validator model). Most production systems use all three.
+            </p>
+
+            <h3>11. Subagent Orchestration</h3>
+            <p>
+                When your agent is complex, break it into pieces. One subagent for research, one for writing, one for fact-checking. The parent harness coordinates their outputs, manages context across them, and merges results. This is how you scale without exploding context.
+            </p>
+
+            <h3>12. Observability and Tracing</h3>
+            <p>
+                For every decision the agent makes—tool choice, retry, escalation—log it. Trace tool calls, latencies, errors. This is not an afterthought. It's where you debug when things go wrong. Production harnesses emit structured logs at every step.
+            </p>
+
+            <h2>Best Practices: How to Build a Reliable Agent Harness</h2>
+
+            <h3>Start with the Thinnest Possible Harness</h3>
+            <p>
+                Don't build all 12 components at once. Start with orchestration loop, tools, and error handling. Add memory only when you need it. Add verification only when errors start appearing. Every component you add increases complexity and surface area for bugs.
+            </p>
+
+            <h3>Treat Context as a Scarce Resource</h3>
+            <p>
+                Your context window is not infinite. Act like it costs money—because it does, and it limits your agent's reasoning. Best practices:
+            </p>
+            <ul>
+                <li>Reserve tokens in advance for each component (system prompt, user input, tool results, generation).</li>
+                <li>Implement aggressive context recycling: summarize old turns, keep only the last N interactions.</li>
+                <li>Use retrieval to pull in information on demand instead of keeping everything in context.</li>
+                <li>Log context usage per turn so you can optimize.</li>
+            </ul>
+
+            <h3>Use Fewer, More General Tools</h3>
+            <p>
+                Exposing 50 tools seems generous. It's actually harmful. The model has to learn the semantics of each one, wastes tokens on tool selection, and makes mistakes at higher rates. Use 3–5 general, well-designed tools instead. Example: instead of (get_user, get_user_email, get_user_phone), use (get_user_field, field: ["email", "phone", "name", ...]). Same capability, less cognitive load on the model.
+            </p>
+
+            <h3>Build Verification Into Every Workflow</h3>
+            <p>
+                Don't trust the agent's first answer. Three approaches:
+            </p>
+            <ul>
+                <li><strong>Self-verification:</strong> Prompt the agent to re-check its answer. Does it make sense? Are there contradictions?</li>
+                <li><strong>Property checking:</strong> Before returning a result, validate it against known properties (is this a valid email? does this total match the sum?)</li>
+                <li><strong>Delegation:</strong> Run the output through a validator model or rule system.</li>
+            </ul>
+
+            <h3>Design for Recovery, Not Just Success</h3>
+            <p>
+                Things will fail. Plan for it:
+            </p>
+            <ul>
+                <li>Explicit retry logic with exponential backoff and jitter.</li>
+                <li>Fallback tools when primary tools fail (if database query fails, try cached result).</li>
+                <li>Graceful degradation (if you can't get full data, return partial data and say so).</li>
+                <li>State checkpointing so the agent can resume without losing work.</li>
+            </ul>
+
+            <h3>Scope Permissions Tightly</h3>
+            <p>
+                The agent should only be able to do what it needs to do. Best practices:
+            </p>
+            <ul>
+                <li>Use role-based access control. A "read-only" agent shouldn't have write permissions.</li>
+                <li>Scope API keys by operation (this key can only call get_user, not delete_user).</li>
+                <li>Rate-limit tools per session and per day. Prevent resource exhaustion.</li>
+            </ul>
+
+            <h3>Evaluate the Harness, Not Just the Model</h3>
+            <p>
+                When your agent fails, where does the failure live? Model reasoning? Tool selection? Context management? Create evaluations for each:
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Evaluation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Tool selection</strong></td>
+                        <td>Did the agent pick the right tool? (Accuracy@1)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tool use</strong></td>
+                        <td>Did it call the tool correctly? (Argument validity)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Error recovery</strong></td>
+                        <td>When a tool failed, did the agent recover? (Retry success rate)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Verification</strong></td>
+                        <td>Did the agent validate its answer? (Hallucination rate)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>End-to-end</strong></td>
+                        <td>Did the agent produce the correct final answer? (Task success)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Preserve Portability</h3>
+            <p>
+                Don't hard-code your agent to a specific model or API. Best practices:
+            </p>
+            <ul>
+                <li>Abstract the model behind an interface. Swap Claude for GPT-4 with one config change.</li>
+                <li>Use standard tool definition formats (JSON schema, OpenAPI).</li>
+                <li>Keep business logic separate from model interactions.</li>
+            </ul>
+
+            <h2>The Harness Is the Product</h2>
+
+            <p>
+                LangChain published TerminalBench in Q3 2025, evaluating agentic systems on complex, multi-step tasks. The top performer didn't use Claude or GPT-4 exclusively. It used GPT-3.5 Turbo (cheaper, faster) orchestrated by a <em>very good harness</em>. Pass rate: 76.4%. The runner-up used GPT-4 with a thinner harness: 71.2% pass rate. The model mattered less than the orchestration.
+            </p>
+            <p>
+                This is the shape of agentic AI in 2026: model quality is table stakes, but model choice is not the bottleneck. The harness is. Your competitive advantage is in how you orchestrate, how you manage context, how you recover from errors, and how you verify results. If you're not investing in harness engineering, you're leaving 50%+ of your agent's potential on the table.
+            </p>
+
+            <h2>Key Takeaways</h2>
+
+            <ol>
+                <li>An agent harness is the infrastructure wrapping the model. It includes orchestration, tools, memory, state, error handling, verification, guardrails, and observability.</li>
+                <li>Past a capability threshold, improving the harness yields higher returns than upgrading the model. Evidence: APEX-Agents, Vercel, Manus, TerminalBench.</li>
+                <li>Production harnesses converge on the same patterns: scoped tools, context budgets, explicit error recovery, and verification loops.</li>
+                <li>Start thin. Add components only when needed. Treat context as scarce. Use fewer, better tools.</li>
+                <li>Design for recovery, not just success. Explicit retry logic and fallbacks are non-negotiable.</li>
+                <li>Scope permissions tightly. An agent should only be able to do what it needs to do.</li>
+                <li>Evaluate the harness, not just the model. When things fail, know whether it's reasoning, tool selection, or orchestration.</li>
+                <li>The harness is the product. Invest in it. That's where your agent's reliability and scalability live.</li>
+            </ol>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-book"></i> References</div>
+                <p>
+                    <strong>OpenAI (2026).</strong> Harness Engineering: A Framework for Production Agentic Systems. Blog post.<br><br>
+                    <strong>Anthropic (2025).</strong> Scaling Agents with Tool Use and Retrieval. Technical documentation.<br><br>
+                    <strong>Millidge, B. (2023).</strong> Scaffolded LLMs as Natural Language Computers. arXiv:2306.17670.<br><br>
+                    <strong>Mercor (2025).</strong> APEX-Agents Benchmark: Evaluating Agent Architectures Across Tasks. Benchmark report.<br><br>
+                    <strong>Vercel AI Team (2025).</strong> Building Reliable Text-to-SQL Agents: A Case Study. Blog post.<br><br>
+                    <strong>UNU AI Consulting (2025).</strong> The Harness Matters More Than the Model: A Production Systems Analysis. Research report.<br><br>
+                    <strong>LangChain (2025).</strong> TerminalBench: Evaluating Long-Horizon Agentic Systems. Benchmark.<br><br>
+                </p>
+            </div>
+
+        </div>
+
+        <footer class="article-footer">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to all articles</a>
+            <div class="share-links">
+                <a href="https://twitter.com/intent/tweet?url=agent-harness-why-it-matters-more-than-model.html&text=The%20Agent%20Harness:%20Why%20It%20Matters%20More%20Than%20Your%20Model" title="Share on X"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=agent-harness-why-it-matters-more-than-model.html" title="Share on LinkedIn"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </footer>
+
+    </article>
+
+    <script>
+        // Reading progress bar
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            document.getElementById('reading-progress').style.width = scrollPercent + '%';
+        });
+    </script>
+
+</body>
+</html>
