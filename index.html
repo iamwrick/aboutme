@@ -93,6 +93,8 @@
         "2025 Goody Business Book Awards \u2014 Finalist, Technology (Game Changer)"
     ]
 }
+
+
     </script>
     <script type="application/ld+json">
 {
@@ -118,7 +120,7 @@
     "url": "https://www.amazon.com/dp/1803238755",
     "award": "2025 Goody Business Book Awards \u2014 Winner, Technology (General)"
 }
-    </script>
+</script>
     <script type="application/ld+json">
 {
     "@context": "https://schema.org",
@@ -134,7 +136,7 @@
     },
     "url": "https://a.co/d/huYT2ec"
 }
-    </script>
+</script>
     <script type="application/ld+json">
 {
     "@context": "https://schema.org",
@@ -143,7 +145,8 @@
     "url": "https://wricktalukdar.technology",
     "description": "Personal website of Wrick Talukdar \u2014 Technology Leader, AI Researcher, and Bestselling Author"
 }
-    </script>
+
+</script>
 
 
 
@@ -5050,22 +5053,11 @@
             border-right: 1px solid var(--border-color);
             text-decoration: none;
             color: inherit;
-            position: relative;
-            overflow: hidden;
-            display: block;
-            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
-        .nyt-lead-main::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 2rem;
-            height: 60px;
-            background: linear-gradient(transparent, var(--primary-bg));
-            pointer-events: none;
-        }
+
 
         .nyt-lead-title {
             font-family: 'Palatino Linotype', 'Palatino', 'Book Antiqua', Georgia, serif;
@@ -5186,15 +5178,11 @@
 
 
         .nyt-lead-bottom {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.5rem 0;
-            z-index: 1;
+            padding-top: 0.75rem;
+            margin-top: 0.5rem;
         }
 
         .nyt-lead-readmore {
@@ -5591,6 +5579,18 @@
             .ge-header { flex-direction: column; align-items: flex-start; }
             .ge-cover { min-width: 120px; max-width: 120px; }
             .ge-img { height: 160px; }
+        }
+
+
+        .nyt-side-excerpt {
+            font-size: 0.68rem;
+            color: var(--muted-text);
+            line-height: 1.4;
+            margin-top: 0.15rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
     </style>
@@ -7423,6 +7423,7 @@
                     <div class="nyt-pills">
                         <button class="nyt-pill active" data-filter="all" onclick="filterArticles('all', this)">All</button>
                             <button class="nyt-pill" data-filter="AI Leadership" onclick="filterArticles('AI Leadership', this)">AI Leadership</button>
+                            <button class="nyt-pill" data-filter="AI Research" onclick="filterArticles('AI Research', this)">AI Research</button>
                             <button class="nyt-pill" data-filter="AI Engineering" onclick="filterArticles('AI Engineering', this)">AI Engineering</button>
                             <button class="nyt-pill" data-filter="AI Ethics" onclick="filterArticles('AI Ethics', this)">AI Ethics</button>
                             <button class="nyt-pill" data-filter="AI Safety" onclick="filterArticles('AI Safety', this)">AI Safety</button>
@@ -7451,399 +7452,358 @@
 
                     </div>
 
-                    <!-- Lead Section -->
-                    <div class="nyt-lead">
-                        <a href="articles/temporal-aware-retrieval-beyond-rag-graphrag.html" class="nyt-lead-main">
-                            <div class="nyt-cat">LLM Research · Latest</div>
-                            <h2 class="nyt-lead-title">Beyond RAG and GraphRAG for Time-Sensitive Knowledge</h2>
-                            <p class="nyt-lead-excerpt">Ask a production RAG system "What is our current travel policy?" and it will faithfully retrieve the five most semantically similar chunks from your document store. Three of them will be from the 2023 policy. One from the 2024 revision. One from the 2025 update that actually applies. The system will synthesize all five into a confident, coherent, and wrong answer — blending superseded rules with current ones in a way that no human would.</p>
-                            <p class="nyt-lead-excerpt">This is the temporal blindspot, and it's endemic to every retrieval-augmented generation system deployed today. Vector similarity has no concept of time. Cosine distance between a query embedding and a document embedding is computed in a space where "when" doesn't exist. A policy document from 2023 and one from 2026 are distinguished only by their content — not by the fact that one replaces the other.</p>
-                            <p class="nyt-lead-excerpt">GraphRAG introduced structural retrieval — traversing entity relationships and community summaries rather than flat chunk lists. It was a genuine step forward. But it inherited the same temporal blindspot: graph edges are typically unversioned, and a relationship created in 2023 looks identical to one created yesterday. The problem isn't retrieval architecture. It's that none of these architectures model time as a first-class dimension.</p>
-                            <p class="nyt-lead-excerpt">In this article, I propose a four-layer architecture called Temporal-Aware Retrieval (TAR) that treats temporality not as metadata to be filtered but as a core scoring dimension — on par with semantic similarity and structural relevance. This draws from my work on context-aware grounding and the agent memory architectures described in Building Agentic AI Systems.</p>
-                            <p class="nyt-lead-excerpt">Standard RAG follows a deceptively simple pipeline: embed the query, find the top-k nearest chunks by cosine similarity, stuff them into the LLM context window, and generate. The retrieval step optimizes for one thing: semantic proximity. That's it.</p>
-                            <p class="nyt-lead-excerpt">This works beautifully for factual lookups where time is irrelevant — "What does the acronym EBITDA stand for?" — but collapses for the majority of enterprise queries where temporal context is critical. Consider these real failure modes:</p>
-                            <div class="nyt-lead-bottom">
-                                <span class="nyt-meta">12 min read · August 2026</span>
-                                <span class="nyt-lead-readmore">Continue reading →</span>
-                            </div>
-                        </a>
-                        <div class="nyt-lead-side">
-                            <a href="articles/agent-harness-why-it-matters-more-than-model.html" class="nyt-side-item">
-                                <div class="nyt-cat">Agentic AI · New</div>
-                                <h3 class="nyt-h3">The Agent Harness: Why It Matters More Than Your Model</h3>
-                                <span class="nyt-meta">14 min read</span>
-                            </a>
-                            <a href="articles/navigating-ethics-generative-ai-healthcare.html" class="nyt-side-item">
-                                <div class="nyt-cat">AI Ethics</div>
-                                <h3 class="nyt-h3">Navigating the Ethics of Generative AI in Healthcare</h3>
-                                <span class="nyt-meta">10 min read</span>
-                            </a>
-                            <a href="articles/meta-reasoning-autonomous-agents.html" class="nyt-side-item">
-                                <div class="nyt-cat">Agentic AI</div>
-                                <h3 class="nyt-h3">Meta-Reasoning in Autonomous Agents: Do Self-Monitoring LLMs Actually Perform Better?</h3>
-                                <span class="nyt-meta">8 min read</span>
-                            </a>
-
-                        </div>
+                    <!-- Auto-Promoted Articles Layout -->
+                    <div class="nyt-lead" id="nyt-lead-container">
+                        <!-- JS auto-populates: item #1 = lead, items #2-4 = sidebar -->
                     </div>
 
-                    <!-- 3-Column Grid -->
-                    <div class="nyt-3col">
-                        <div class="nyt-col">
-                                <a href="articles/agentic-design-patterns-production.html" class="nyt-grid-article">
-                                    <div class="nyt-cat">Agentic AI</div>
-                                    <h3 class="nyt-h3">Agentic Design Patterns for Production Systems</h3>
-                                    <p class="nyt-excerpt">From ReAct loops to multi-agent orchestration — the design patterns that separate demo agents from production-grade autonomous systems.</p>
-                                    <span class="nyt-meta">10 min read</span>
-                                </a>
-                                <a href="articles/synthetic-data-clinical-documentation.html" class="nyt-grid-article">
-                                    <div class="nyt-cat">Healthcare AI</div>
-                                    <h3 class="nyt-h3">Synthetic Data Generation for Clinical Documentation: Bridging Privacy and Utility</h3>
-                                    <p class="nyt-excerpt">How LLMs can generate high-fidelity synthetic clinical transcripts that preserve statistical properties while containing zero real patient information.</p>
-                                    <span class="nyt-meta">9 min read</span>
-                                </a>
-
-                        </div>
-                        <div class="nyt-col">
-                                <a href="articles/multimodal-financial-document-classification.html" class="nyt-grid-article">
-                                    <div class="nyt-cat">Document AI</div>
-                                    <h3 class="nyt-h3">Cost-Effective Multi-Modal Classification for Financial Documents</h3>
-                                    <p class="nyt-excerpt">Why text-only approaches fail for financial documents, and how multi-modal methods capture layout, visual, and textual signals for robust classification.</p>
-                                    <span class="nyt-meta">7 min read</span>
-                                </a>
-                                <a href="articles/unsupervised-supervised-synergy-nlp.html" class="nyt-grid-article">
-                                    <div class="nyt-cat">Machine Learning</div>
-                                    <h3 class="nyt-h3">Synergizing Unsupervised and Supervised Learning: When Labels Are Scarce</h3>
-                                    <p class="nyt-excerpt">Supervised models need labels; unsupervised methods don't — but combining them strategically yields results neither achieves alone.</p>
-                                    <span class="nyt-meta">8 min read</span>
-                                </a>
-
-                        </div>
-                        <div class="nyt-col">
-                                <a href="articles/document-skew-multimodal-llms.html" class="nyt-grid-article">
-                                    <div class="nyt-cat">Document AI</div>
-                                    <h3 class="nyt-h3">How Document Skew Breaks Multi-Modal LLMs — and What to Do About It</h3>
-                                    <p class="nyt-excerpt">Multi-modal LLMs excel at document extraction — until the scan is tilted. Measuring and mitigating the impact of skew on extraction accuracy.</p>
-                                    <span class="nyt-meta">7 min read</span>
-                                </a>
-                                <a href="articles/context-aware-grounding-llm-fidelity.html" class="nyt-grid-article">
-                                    <div class="nyt-cat">LLM Research</div>
-                                    <h3 class="nyt-h3">Context-Aware Grounding: Keeping LLMs Faithful to the Source</h3>
-                                    <p class="nyt-excerpt">Grounding techniques that anchor LLM outputs to source documents, reducing hallucination and improving fidelity in extraction pipelines.</p>
-                                    <span class="nyt-meta">9 min read</span>
-                                </a>
-
-                        </div>
-                    </div>
-
-                    <!-- Numbered List -->
-                    <div class="nyt-numbered-list" id="articles-count-target">
-                                                        <a href="articles/agent-harness-why-it-matters-more-than-model.html" class="nyt-list-item" data-tag="Agentic AI">
-                                <div class="nyt-list-num">--</div>
+                    <!-- All Articles List (single source of truth, JS promotes top items) -->
+                    <div class="nyt-numbered-list" id="nyt-all-articles">
+                            <a href="articles/recursive-self-improvement-society-game-changer.html" class="nyt-list-item" data-long-excerpt="In early 2026, Jack Clark, co-founder of Anthropic, went on paternity leave. He was gone for a few weeks. When he came back to the office, the workflow he returned to was almost unrecognizable. His colleagues, the same people doing the same jobs in the same building, were now each managing five or six copies of Claude simultaneously. The AI was writing code, running experiments, drafting analyses, and iterating on its own outputs in parallel. The humans had become orchestrators of machine intelligence rather than individual contributors writing things line by line. Clark&#39;s experience is not a Silicon Valley curiosity. It is a signal. Something fundamental shifted in how AI systems relate to their own capabilities over the past eighteen months, and the implications reach far beyond any single company&#39;s engineering workflow. We are entering the era of recursive self-improvement, the point at which AI systems begin meaningfully contributing to the process of making AI systems better. And the speed at which this is happening has caught even the people building these systems off guard. This article is my attempt to lay out what we know, what we don&#39;t, and why this might be the most consequential technology conversation of our generation. The term &quot;recursive self-improvement&quot; sounds like science fiction, and for decades it was. The concept is simple in the abstract: an AI system that can modify, extend, or optimize its own capabilities, where those improvements then make it better at improving itself further, creating a compounding loop. The idea traces back to I.J. Good&#39;s 1965 concept of an &quot;intelligence explosion,&quot; in which a sufficiently smart machine could design an even smarter machine, which could design an even smarter one, and so on without bound. For most of AI&#39;s history, this was a thought experiment. The systems we built could barely do one thing well, let alone improve their own architectures. But the landscape has changed dramatically. A comprehensive survey published on arXiv in July 2026 (paper 2607.07663) examined 1,250 research papers and constructed a taxonomy that separates bounded self-refinement from open-ended recursive self-improvement. This distinction matters enormously for understanding where we actually are versus where people fear we might be heading. This is what most current AI systems actually do. A model generates an output, evaluates it against some criteria, and produces a revised version. Think of a coding assistant that writes" data-tag="AI Research">
+                                <div class="nyt-list-num">01</div>
                                 <div>
-                                    <div class="nyt-cat">Agentic AI · Sep 2026</div>
-                                    <h3 class="nyt-h3">The Agent Harness: Why It Matters More Than Your Model</h3>
-                                    <p class="nyt-excerpt-sm">Your agent demo works beautifully. Then you push it to production and watch it slowly destroy itself. The problem is not your model...</p>
+                                    <div class="nyt-cat">AI Research</div>
+                                    <h3 class="nyt-h3">Recursive Self Improvement: The Most Important Technology Debate of Our Time</h3>
+                                    <p class="nyt-excerpt-sm">AI systems are beginning to improve themselves. Anthropic reports 80% of their code is now written by Claude. Is society ready?</p>
                                 </div>
                             </a>
-<a href="articles/trust-safety-ethics-llm-development.html" class="nyt-list-item" data-tag="AI Ethics">
-                                <div class="nyt-list-num">01</div>
+                            <a href="articles/agent-harness-why-it-matters-more-than-model.html" class="nyt-list-item" data-long-excerpt="Your agent demo works beautifully. It calls the right tools, chains together multi-step reasoning, and generates impressive results. Then you push it to production and watch it slowly destroy itself. It calls the same tool eleven times. It confidently returns a result it never actually verified. It hangs indefinitely because a downstream API returned a 401 and nobody taught it what to do next. The problem is not your model. The problem is everything around your model. That everything has a name now: the agent harness. And understanding it is the single most important thing you can do if you are building agentic AI systems in 2026. An agent harness is the complete software infrastructure that wraps a foundation model and transforms it from a stateless text generator into a goal-directed, tool-using, self-correcting agent. The term was formalized in early 2026 when OpenAI published a blog post explicitly titled &quot;Harness Engineering,&quot; and it has since been adopted by Anthropic, LangChain, and the broader practitioner community. The canonical formula, attributed to LangChain&#39;s Vivek Trivedy, is clean: &quot;If you&#39;re not the model, you&#39;re the harness.&quot; To make this concrete, here is what the harness controls: Think of the model as the engine and the harness as the car. The industry has spent years arguing about who has the best engine. Almost nobody has been building a car that can stay on the road. Beren Millidge made this analogy precise in his 2023 essay Scaffolded LLMs as Natural Language Computers: a raw LLM is a CPU with no RAM, no disk, and no I/O. The context window is RAM (fast but limited). External databases are disk (large but slow). Tool integrations are device drivers. The harness is the operating system. As Millidge wrote: &quot;We have reinvented the Von Neumann archi" data-tag="Agentic AI">
+                                <div class="nyt-list-num">02</div>
+                                <div>
+                                    <div class="nyt-cat">Agentic AI</div>
+                                    <h3 class="nyt-h3">The Agent Harness: Why It Matters More Than Your Model</h3>
+                                </div>
+                            </a>
+                            <a href="articles/temporal-aware-retrieval-beyond-rag-graphrag.html" class="nyt-list-item" data-long-excerpt="Ask a production RAG system &quot;What is our current travel policy?&quot; and it will faithfully retrieve the five most semantically similar chunks from your document store. Three of them will be from the 2023 policy. One from the 2024 revision. One from the 2025 update that actually applies. The system will synthesize all five into a confident, coherent, and wrong answer — blending superseded rules with current ones in a way that no human would. This is the temporal blindspot, and it&#39;s endemic to every retrieval-augmented generation system deployed today. Vector similarity has no concept of time. Cosine distance between a query embedding and a document embedding is computed in a space where &quot;when&quot; doesn&#39;t exist. A policy document from 2023 and one from 2026 are distinguished only by their content — not by the fact that one replaces the other. GraphRAG introduced structural retrieval — traversing entity relationships and community summaries rather than flat chunk lists. It was a genuine step forward. But it inherited the same temporal blindspot: graph edges are typically unversioned, and a relationship created in 2023 looks identical to one created yesterday. The problem isn&#39;t retrieval architecture. It&#39;s that none of these architectures model time as a first-class dimension. In this article, I propose a four-layer architecture called Temporal-Aware Retrieval (TAR) that treats temporality not as metadata to be filtered but as a core scoring dimension — on par with semantic similarity and structural relevance. This draws from my work on context-aware grounding and the agent memory architectures described in Building Agentic AI Systems." data-tag="LLM Research">
+                                <div class="nyt-list-num">03</div>
+                                <div>
+                                    <div class="nyt-cat">LLM Research</div>
+                                    <h3 class="nyt-h3">Beyond RAG and GraphRAG for Time-Sensitive Knowledge</h3>
+                                    <p class="nyt-excerpt-sm">RAG retrieves chunks. GraphRAG retrieves subgraphs. But neither handles temporal reasoning well. A new architecture combining episodic memory, knowled...</p>
+                                </div>
+                            </a>
+                            <a href="articles/navigating-ethics-generative-ai-healthcare.html" class="nyt-list-item" data-long-excerpt="Generative AI is reshaping healthcare at a pace that outstrips our ethical frameworks. Foundation models can now draft clinical notes, synthesize radiology reports, triage patient inquiries, and generate synthetic training data for rare conditions. The potential is immense — but so are the risks. A hallucinated drug interaction, a biased triage recommendation, or a privacy leak from a model&#39;s training data can cause real patient harm. This article draws on my research in synthetic clinical data generation and responsible AI to examine the three pillars of ethical generative AI in healthcare: privacy, bias, and responsible deployment. These aren&#39;t abstract principles — they&#39;re engineering decisions you make in every pipeline, prompt, and evaluation loop. Healthcare AI has a fundamental tension: models need clinical data to be useful, but clinical data is among the most sensitive information that exists. HIPAA in the United States, GDPR in Europe, and PIPEDA in Canada all impose strict constraints on how patient data can be collected, processed, stored, and shared. Generative AI adds a new dimension to this challenge. Large language models can memorize and reproduce fragments of their training data. In a clinical context, this means a model fine-tuned on patient records could, under the right prompt, emit identifiable patient information — names, diagnosis codes, medication lists — even if the output appears to be a &quot;new&quot; generated text. Research has shown that extraction attacks can surface training data from models that were not specifically designed to memorize it." data-tag="AI Ethics">
+                                <div class="nyt-list-num">04</div>
+                                <div>
+                                    <div class="nyt-cat">AI Ethics</div>
+                                    <h3 class="nyt-h3">Navigating the Ethics of Generative AI in Healthcare</h3>
+                                </div>
+                            </a>
+                            <a href="articles/meta-reasoning-autonomous-agents.html" class="nyt-list-item" data-tag="Agentic AI">
+                                <div class="nyt-list-num">05</div>
+                                <div>
+                                    <div class="nyt-cat">Agentic AI</div>
+                                    <h3 class="nyt-h3">Meta-Reasoning in Autonomous Agents: Do Self-Monitoring LLMs Actually Perform Better?</h3>
+                                </div>
+                            </a>
+                            <a href="articles/agentic-design-patterns-production.html" class="nyt-list-item" data-tag="Agentic AI">
+                                <div class="nyt-list-num">06</div>
+                                <div>
+                                    <div class="nyt-cat">Agentic AI</div>
+                                    <h3 class="nyt-h3">Agentic Design Patterns for Production Systems</h3>
+                                </div>
+                            </a>
+                            <a href="articles/synthetic-data-clinical-documentation.html" class="nyt-list-item" data-tag="Healthcare AI">
+                                <div class="nyt-list-num">07</div>
+                                <div>
+                                    <div class="nyt-cat">Healthcare AI</div>
+                                    <h3 class="nyt-h3">Synthetic Data Generation for Clinical Documentation: Bridging Privacy and Utility</h3>
+                                </div>
+                            </a>
+                            <a href="articles/multimodal-financial-document-classification.html" class="nyt-list-item" data-tag="Document AI">
+                                <div class="nyt-list-num">08</div>
+                                <div>
+                                    <div class="nyt-cat">Document AI</div>
+                                    <h3 class="nyt-h3">Cost-Effective Multi-Modal Classification for Financial Documents</h3>
+                                </div>
+                            </a>
+                            <a href="articles/unsupervised-supervised-synergy-nlp.html" class="nyt-list-item" data-tag="Machine Learning">
+                                <div class="nyt-list-num">09</div>
+                                <div>
+                                    <div class="nyt-cat">Machine Learning</div>
+                                    <h3 class="nyt-h3">Synergizing Unsupervised and Supervised Learning: When Labels Are Scarce</h3>
+                                </div>
+                            </a>
+                            <a href="articles/document-skew-multimodal-llms.html" class="nyt-list-item" data-tag="Document AI">
+                                <div class="nyt-list-num">10</div>
+                                <div>
+                                    <div class="nyt-cat">Document AI</div>
+                                    <h3 class="nyt-h3">How Document Skew Breaks Multi-Modal LLMs — and What to Do About It</h3>
+                                </div>
+                            </a>
+                            <a href="articles/context-aware-grounding-llm-fidelity.html" class="nyt-list-item" data-tag="LLM Research">
+                                <div class="nyt-list-num">11</div>
+                                <div>
+                                    <div class="nyt-cat">LLM Research</div>
+                                    <h3 class="nyt-h3">Context-Aware Grounding: Keeping LLMs Faithful to the Source</h3>
+                                </div>
+                            </a>
+                            <a href="articles/trust-safety-ethics-llm-development.html" class="nyt-list-item" data-tag="AI Ethics">
+                                <div class="nyt-list-num">12</div>
                                 <div>
                                     <div class="nyt-cat">AI Ethics</div>
                                     <h3 class="nyt-h3">Trust, Safety, and Ethics in LLM Development: A Practitioner's Framework</h3>
                                     <p class="nyt-excerpt-sm">As LLMs grow more capable, the risks of information leakage, misinformation, and misalignment grow too. A practical fram...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/llms-healthcare-documentation-automation.html" class="nyt-list-item" data-tag="Healthcare AI">
-                                <div class="nyt-list-num">02</div>
+                                <div class="nyt-list-num">13</div>
                                 <div>
                                     <div class="nyt-cat">Healthcare AI</div>
                                     <h3 class="nyt-h3">LLMs for Healthcare Documentation: Automating the Clinical Burden</h3>
                                     <p class="nyt-excerpt-sm">Clinical documentation consumes 35% of a physician's day. How LLMs are transforming note generation, coding, and summari...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/gas-station-future-ai-iot.html" class="nyt-list-item" data-tag="IoT & AI">
-                                <div class="nyt-list-num">03</div>
+                                <div class="nyt-list-num">14</div>
                                 <div>
                                     <div class="nyt-cat">IoT & AI</div>
                                     <h3 class="nyt-h3">The Gas Station of the Future: Where AI/ML Meets IoT at the Edge</h3>
                                     <p class="nyt-excerpt-sm">Reimagining fuel retail with computer vision, predictive maintenance, and real-time IoT analytics — a case study in appl...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/edge-ai-deploying-models-resource-constrained.html" class="nyt-list-item" data-tag="Edge Computing">
-                                <div class="nyt-list-num">04</div>
+                                <div class="nyt-list-num">15</div>
                                 <div>
                                     <div class="nyt-cat">Edge Computing</div>
                                     <h3 class="nyt-h3">Edge AI: Deploying Deep Learning on Resource-Constrained Devices</h3>
                                     <p class="nyt-excerpt-sm">Model pruning, quantization, knowledge distillation, and TinyML — the techniques that shrink billion-parameter models to...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/few-shot-learning-large-language-models.html" class="nyt-list-item" data-tag="LLM Research">
-                                <div class="nyt-list-num">05</div>
+                                <div class="nyt-list-num">16</div>
                                 <div>
                                     <div class="nyt-cat">LLM Research</div>
                                     <h3 class="nyt-h3">Few-Shot Learning with Large Language Models: The GPT-3 Moment</h3>
                                     <p class="nyt-excerpt-sm">When GPT-3 showed that prompting could replace fine-tuning for many tasks, it changed the economics and accessibility of...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/mlops-bridging-gap-notebooks-production.html" class="nyt-list-item" data-tag="MLOps">
-                                <div class="nyt-list-num">06</div>
+                                <div class="nyt-list-num">17</div>
                                 <div>
                                     <div class="nyt-cat">MLOps</div>
                                     <h3 class="nyt-h3">MLOps: Bridging the Gap Between Notebooks and Production</h3>
                                     <p class="nyt-excerpt-sm">87% of ML models never reach production. Feature stores, model registries, CI/CD for ML, and monitoring — the infrastruc...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/explainable-ai-opening-black-box.html" class="nyt-list-item" data-tag="Responsible AI">
-                                <div class="nyt-list-num">07</div>
+                                <div class="nyt-list-num">18</div>
                                 <div>
                                     <div class="nyt-cat">Responsible AI</div>
                                     <h3 class="nyt-h3">Explainable AI: Opening the Black Box Before Regulators Do</h3>
                                     <p class="nyt-excerpt-sm">SHAP, LIME, attention visualization — the practical toolkit for making ML decisions interpretable when stakeholders ask ...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/federated-learning-privacy-preserving-ml.html" class="nyt-list-item" data-tag="Privacy & ML">
-                                <div class="nyt-list-num">08</div>
+                                <div class="nyt-list-num">19</div>
                                 <div>
                                     <div class="nyt-cat">Privacy & ML</div>
                                     <h3 class="nyt-h3">Federated Learning: Training Models Without Sharing Data</h3>
                                     <p class="nyt-excerpt-sm">How federated learning enables collaborative model training across hospitals, banks, and devices — without raw data ever...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/generative-adversarial-networks-creative-ai.html" class="nyt-list-item" data-tag="Generative AI">
-                                <div class="nyt-list-num">09</div>
+                                <div class="nyt-list-num">20</div>
                                 <div>
                                     <div class="nyt-cat">Generative AI</div>
                                     <h3 class="nyt-h3">GANs and the Dawn of Creative AI</h3>
                                     <p class="nyt-excerpt-sm">From mode collapse to StyleGAN — how adversarial training unlocked image synthesis and laid the groundwork for today's d...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/reinforcement-learning-beyond-games.html" class="nyt-list-item" data-tag="Reinforcement Learning">
-                                <div class="nyt-list-num">10</div>
+                                <div class="nyt-list-num">21</div>
                                 <div>
                                     <div class="nyt-cat">Reinforcement Learning</div>
                                     <h3 class="nyt-h3">Reinforcement Learning Beyond Games: From AlphaGo to Real-World Control</h3>
                                     <p class="nyt-excerpt-sm">AlphaGo captured headlines, but the real story is RL's migration to robotics, supply chain, and recommendation systems —...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/transfer-learning-revolution-nlp.html" class="nyt-list-item" data-tag="NLP">
-                                <div class="nyt-list-num">11</div>
+                                <div class="nyt-list-num">22</div>
                                 <div>
                                     <div class="nyt-cat">NLP</div>
                                     <h3 class="nyt-h3">Transfer Learning Comes to NLP: From Word2Vec to BERT</h3>
                                     <p class="nyt-excerpt-sm">The journey from static word embeddings to contextualized representations — and why pre-training then fine-tuning became...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/rise-of-transformers-attention-is-all-you-need.html" class="nyt-list-item" data-tag="Deep Learning">
-                                <div class="nyt-list-num">12</div>
+                                <div class="nyt-list-num">23</div>
                                 <div>
                                     <div class="nyt-cat">Deep Learning</div>
                                     <h3 class="nyt-h3">The Rise of Transformers: Why Attention Changed Everything</h3>
                                     <p class="nyt-excerpt-sm">How the self-attention mechanism in 'Attention Is All You Need' replaced recurrence, launched the transformer era, and r...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/convolutional-neural-networks-image-classification.html" class="nyt-list-item" data-tag="Computer Vision">
-                                <div class="nyt-list-num">13</div>
+                                <div class="nyt-list-num">24</div>
                                 <div>
                                     <div class="nyt-cat">Computer Vision</div>
                                     <h3 class="nyt-h3">CNNs at Scale: Lessons from ImageNet to Production Deployment</h3>
                                     <p class="nyt-excerpt-sm">What ResNets, batch normalization, and data augmentation taught us about training deep networks — and how those lessons ...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/word-embeddings-changed-nlp-forever.html" class="nyt-list-item" data-tag="NLP">
-                                <div class="nyt-list-num">14</div>
+                                <div class="nyt-list-num">25</div>
                                 <div>
                                     <div class="nyt-cat">NLP</div>
                                     <h3 class="nyt-h3">How Word Embeddings Changed NLP Forever</h3>
                                     <p class="nyt-excerpt-sm">From one-hot vectors to Word2Vec and GloVe — the representation revolution that made machines understand meaning and ana...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/diffusion-models-ai-image-generation.html" class="nyt-list-item" data-tag="Generative AI">
-                                <div class="nyt-list-num">15</div>
+                                <div class="nyt-list-num">26</div>
                                 <div>
                                     <div class="nyt-cat">Generative AI</div>
                                     <h3 class="nyt-h3">Diffusion Models: The Math Behind AI's Creative Explosion</h3>
                                     <p class="nyt-excerpt-sm">How denoising score matching and classifier-free guidance dethroned GANs and powered DALL-E, Stable Diffusion, and Midjo...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/financial-generative-ai-wall-street.html" class="nyt-list-item" data-tag="Financial AI">
-                                <div class="nyt-list-num">16</div>
+                                <div class="nyt-list-num">27</div>
                                 <div>
                                     <div class="nyt-cat">Financial AI</div>
                                     <h3 class="nyt-h3">Generative AI on Wall Street: From Document Parsing to Autonomous Trading Memos</h3>
                                     <p class="nyt-excerpt-sm">How investment banks and fintechs are deploying LLMs for 10-K analysis, risk summarization, and client reporting — with ...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/speech-to-speech-real-time-ai.html" class="nyt-list-item" data-tag="Speech AI">
-                                <div class="nyt-list-num">17</div>
+                                <div class="nyt-list-num">28</div>
                                 <div>
                                     <div class="nyt-cat">Speech AI</div>
                                     <h3 class="nyt-h3">Speech-to-Speech AI: The End of the Text Bottleneck</h3>
                                     <p class="nyt-excerpt-sm">From cascaded ASR→LLM→TTS pipelines to native speech-to-speech models — how end-to-end voice AI is achieving sub-500ms l...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/domain-specific-speech-recognition.html" class="nyt-list-item" data-tag="Speech AI">
-                                <div class="nyt-list-num">18</div>
+                                <div class="nyt-list-num">29</div>
                                 <div>
                                     <div class="nyt-cat">Speech AI</div>
                                     <h3 class="nyt-h3">Domain-Specific Speech Recognition: When Whisper Isn't Enough</h3>
                                     <p class="nyt-excerpt-sm">Medical dictation, legal transcription, financial earnings calls — why general-purpose ASR fails in specialized domains ...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/multimodal-foundation-models-unified-intelligence.html" class="nyt-list-item" data-tag="Multimodal AI">
-                                <div class="nyt-list-num">19</div>
+                                <div class="nyt-list-num">30</div>
                                 <div>
                                     <div class="nyt-cat">Multimodal AI</div>
                                     <h3 class="nyt-h3">Multimodal Foundation Models: Toward Unified Intelligence</h3>
                                     <p class="nyt-excerpt-sm">GPT-4o, Gemini, Claude — models that see, hear, read, and reason simultaneously. What unified multimodality means for th...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/physical-ai-robots-real-world.html" class="nyt-list-item" data-tag="Physical AI">
-                                <div class="nyt-list-num">20</div>
+                                <div class="nyt-list-num">31</div>
                                 <div>
                                     <div class="nyt-cat">Physical AI</div>
                                     <h3 class="nyt-h3">Physical AI: When Foundation Models Meet the Real World</h3>
                                     <p class="nyt-excerpt-sm">From simulation to manipulation — how vision-language-action models, world simulators, and sim-to-real transfer are fina...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/future-agentic-ai-autonomous-systems.html" class="nyt-list-item" data-tag="Agentic AI">
-                                <div class="nyt-list-num">21</div>
+                                <div class="nyt-list-num">32</div>
                                 <div>
                                     <div class="nyt-cat">Agentic AI</div>
                                     <h3 class="nyt-h3">The Future of Agentic AI: From Copilots to Fully Autonomous Systems</h3>
                                     <p class="nyt-excerpt-sm">The trajectory from tool-augmented assistants to goal-driven autonomous agents — and the trust, safety, and governance i...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/small-language-models-efficient-ai.html" class="nyt-list-item" data-tag="LLM Research">
-                                <div class="nyt-list-num">22</div>
+                                <div class="nyt-list-num">33</div>
                                 <div>
                                     <div class="nyt-cat">LLM Research</div>
                                     <h3 class="nyt-h3">Small Language Models: The Case for Efficient, Specialized AI</h3>
                                     <p class="nyt-excerpt-sm">Phi, Gemma, Mistral — why smaller models fine-tuned for specific tasks are beating GPT-4 at a fraction of the cost and l...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/rag-to-knowledge-graphs-enterprise.html" class="nyt-list-item" data-tag="Enterprise AI">
-                                <div class="nyt-list-num">23</div>
+                                <div class="nyt-list-num">34</div>
                                 <div>
                                     <div class="nyt-cat">Enterprise AI</div>
                                     <h3 class="nyt-h3">Beyond RAG: Knowledge Graphs as the Enterprise Memory Layer</h3>
                                     <p class="nyt-excerpt-sm">RAG retrieves chunks; knowledge graphs understand relationships. How enterprises are combining both for grounded, contex...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/ai-code-generation-software-engineering.html" class="nyt-list-item" data-tag="AI Engineering">
-                                <div class="nyt-list-num">24</div>
+                                <div class="nyt-list-num">35</div>
                                 <div>
                                     <div class="nyt-cat">AI Engineering</div>
                                     <h3 class="nyt-h3">AI Code Generation: Rewriting Software Engineering From the Inside</h3>
                                     <p class="nyt-excerpt-sm">Copilot, Cursor, Devin — how AI coding assistants evolved from autocomplete to autonomous software engineers, and what i...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/synthetic-data-next-frontier-model-training.html" class="nyt-list-item" data-tag="Data Engineering">
-                                <div class="nyt-list-num">25</div>
+                                <div class="nyt-list-num">36</div>
                                 <div>
                                     <div class="nyt-cat">Data Engineering</div>
                                     <h3 class="nyt-h3">Synthetic Data 2.0: The Next Frontier in Model Training</h3>
                                     <p class="nyt-excerpt-sm">We're running out of internet data. How self-play, model-generated datasets, and constitutional AI are creating the trai...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/sequence-to-sequence-models-translation.html" class="nyt-list-item" data-tag="Deep Learning">
-                                <div class="nyt-list-num">26</div>
+                                <div class="nyt-list-num">37</div>
                                 <div>
                                     <div class="nyt-cat">Deep Learning</div>
                                     <h3 class="nyt-h3">Sequence-to-Sequence Models: The Architecture That Taught Machines to Translate</h3>
                                     <p class="nyt-excerpt-sm">From encoder-decoder RNNs to attention-augmented seq2seq — how neural machine translation surpassed statistical methods ...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/automl-democratizing-machine-learning.html" class="nyt-list-item" data-tag="Data Science">
-                                <div class="nyt-list-num">27</div>
+                                <div class="nyt-list-num">38</div>
                                 <div>
                                     <div class="nyt-cat">Data Science</div>
                                     <h3 class="nyt-h3">AutoML: Democratizing Machine Learning or Hiding the Hard Parts?</h3>
                                     <p class="nyt-excerpt-sm">Google AutoML, Auto-sklearn, and H2O promised ML for everyone. What they actually delivered — and where human expertise ...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/agent-to-agent-communication-protocols.html" class="nyt-list-item" data-tag="Agentic AI">
-                                <div class="nyt-list-num">28</div>
+                                <div class="nyt-list-num">39</div>
                                 <div>
                                     <div class="nyt-cat">Agentic AI</div>
                                     <h3 class="nyt-h3">Agent-to-Agent Communication: How A2A, MCP, and ACP Are Shaping the Multi-Agent Internet</h3>
                                     <p class="nyt-excerpt-sm">How agents coordinate without a central orchestrator — A2A, MCP, ACP protocols, emergent collaboration, and the path to ...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/self-evolving-agents-autonomous-learning.html" class="nyt-list-item" data-tag="Agentic AI">
-                                <div class="nyt-list-num">29</div>
+                                <div class="nyt-list-num">40</div>
                                 <div>
                                     <div class="nyt-cat">Agentic AI</div>
                                     <h3 class="nyt-h3">Self-Evolving Agents: Can AI Systems Improve Themselves Without Human Feedback?</h3>
                                     <p class="nyt-excerpt-sm">Self-play, self-critique, and autonomous skill acquisition — the research frontier where agents learn from their own exp...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/embodied-multimodal-agents-physical-ai.html" class="nyt-list-item" data-tag="Physical AI">
-                                <div class="nyt-list-num">30</div>
+                                <div class="nyt-list-num">41</div>
                                 <div>
                                     <div class="nyt-cat">Physical AI</div>
                                     <h3 class="nyt-h3">Embodied Multimodal Agents: When Digital AI Meets the Physical World</h3>
                                     <p class="nyt-excerpt-sm">Vision-language-action models, embodied reasoning, and sim-to-real transfer — the convergence of foundation models and r...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/agent-evaluation-benchmarking-autonomy.html" class="nyt-list-item" data-tag="Agentic AI">
-                                <div class="nyt-list-num">31</div>
+                                <div class="nyt-list-num">42</div>
                                 <div>
                                     <div class="nyt-cat">Agentic AI</div>
                                     <h3 class="nyt-h3">How Do You Know If Your Agent Actually Works? Benchmarking Autonomy at Scale</h3>
                                     <p class="nyt-excerpt-sm">Beyond SWE-bench and GAIA — the emerging science of evaluating autonomous agents across reliability, safety, cost, and r...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/long-term-memory-architectures-agents.html" class="nyt-list-item" data-tag="Agentic AI">
-                                <div class="nyt-list-num">32</div>
+                                <div class="nyt-list-num">43</div>
                                 <div>
                                     <div class="nyt-cat">Agentic AI</div>
                                     <h3 class="nyt-h3">Long-Term Memory for AI Agents: Episodic Recall, Knowledge Graphs, and Persistent Context</h3>
                                     <p class="nyt-excerpt-sm">How agents remember and learn across sessions — persistent memory, episodic recall, working memory, and knowledge graph ...</p>
-                                <span class="wp-readmore">Read more →</span>
-                            </div>
+                                </div>
                             </a>
                             <a href="articles/agent-safety-alignment-trust-frameworks.html" class="nyt-list-item" data-tag="AI Safety">
-                                <div class="nyt-list-num">33</div>
+                                <div class="nyt-list-num">44</div>
                                 <div>
                                     <div class="nyt-cat">AI Safety</div>
                                     <h3 class="nyt-h3">Agent Safety and Alignment: Trust Frameworks for Autonomous Systems</h3>
                                     <p class="nyt-excerpt-sm">Sandboxing, permission models, audit trails, and adversarial robustness — the unsolved safety problem for autonomous age...</p>
                                 </div>
                             </a>
-<a href="articles/ai-investment-decision-framework-cxo.html" class="nyt-list-item" data-tag="AI Leadership">
-                                <div class="nyt-list-num">--</div>
+                            <a href="articles/ai-investment-decision-framework-cxo.html" class="nyt-list-item" data-tag="AI Leadership">
+                                <div class="nyt-list-num">45</div>
                                 <div>
                                     <div class="nyt-cat">AI Leadership</div>
                                     <h3 class="nyt-h3">The AI Investment Decision Framework: A CxO's Guide to Go or No Go</h3>
@@ -7851,7 +7811,7 @@
                                 </div>
                             </a>
                             <a href="articles/ai-governance-c-suite-policy-practice.html" class="nyt-list-item" data-tag="AI Leadership">
-                                <div class="nyt-list-num">--</div>
+                                <div class="nyt-list-num">46</div>
                                 <div>
                                     <div class="nyt-cat">AI Leadership</div>
                                     <h3 class="nyt-h3">AI Governance for the C Suite: From Policy to Practice</h3>
@@ -7859,7 +7819,7 @@
                                 </div>
                             </a>
                             <a href="articles/software-to-ai-products-organizational-shift.html" class="nyt-list-item" data-tag="AI Leadership">
-                                <div class="nyt-list-num">--</div>
+                                <div class="nyt-list-num">47</div>
                                 <div>
                                     <div class="nyt-cat">AI Leadership</div>
                                     <h3 class="nyt-h3">From Software to AI Products: Managing the Organizational Shift</h3>
@@ -7867,7 +7827,7 @@
                                 </div>
                             </a>
                             <a href="articles/leading-through-ai-uncertainty.html" class="nyt-list-item" data-tag="AI Leadership">
-                                <div class="nyt-list-num">--</div>
+                                <div class="nyt-list-num">48</div>
                                 <div>
                                     <div class="nyt-cat">AI Leadership</div>
                                     <h3 class="nyt-h3">Leading Through AI Uncertainty: Decision Making When the Ground Shifts Every Quarter</h3>
@@ -7875,15 +7835,13 @@
                                 </div>
                             </a>
                             <a href="articles/enterprise-ai-strategy-roadmap-hype-cycle.html" class="nyt-list-item" data-tag="AI Leadership">
-                                <div class="nyt-list-num">--</div>
+                                <div class="nyt-list-num">49</div>
                                 <div>
                                     <div class="nyt-cat">AI Leadership</div>
                                     <h3 class="nyt-h3">Enterprise AI Strategy: Building a Roadmap That Survives the Hype Cycle</h3>
                                     <p class="nyt-excerpt-sm">Most enterprise AI strategies are rewritten every year because they chased the latest trend instead of solving real prob...</p>
                                 </div>
                             </a>
-
-
                     </div>
 
                 </div>
@@ -8409,6 +8367,90 @@ try {
         })();
 
     
+        // Auto-promote articles: #1 = featured lead, #2-4 = sidebar, rest = numbered list
+        (function() {
+            var container = document.getElementById('nyt-all-articles');
+            var leadContainer = document.getElementById('nyt-lead-container');
+            if (!container || !leadContainer) return;
+            
+            var allItems = Array.from(container.querySelectorAll('.nyt-list-item'));
+            if (allItems.length < 4) return;
+            
+            var featured = allItems[0];
+            var fCat = (featured.querySelector('.nyt-cat') || {}).textContent || '';
+            var fTitle = (featured.querySelector('.nyt-h3') || {}).textContent || '';
+            var fExcerpt = featured.dataset.longExcerpt || (featured.querySelector('.nyt-excerpt-sm') || {}).textContent || '';
+            var fHref = featured.getAttribute('href') || '#';
+            
+            var sideHtml = '';
+            for (var i = 1; i < 4 && i < allItems.length; i++) {
+                var item = allItems[i];
+                var cat = (item.querySelector('.nyt-cat') || {}).textContent || '';
+                var title = (item.querySelector('.nyt-h3') || {}).textContent || '';
+                var href = item.getAttribute('href') || '#';
+                var excerpt = (item.querySelector('.nyt-excerpt-sm') || {}).textContent || '';
+                sideHtml += '<a href="' + href + '" class="nyt-side-item">' +
+                    '<div class="nyt-cat">' + cat + '</div>' +
+                    '<h3 class="nyt-h3">' + title + '</h3>' +
+                    (excerpt ? '<p class="nyt-side-excerpt">' + excerpt + '</p>' : '') +
+                    '</a>';
+            }
+            
+            leadContainer.innerHTML = 
+                '<a href="' + fHref + '" class="nyt-lead-main">' +
+                    '<div class="nyt-cat">' + fCat + ' \u00b7 Latest</div>' +
+                    '<h2 class="nyt-lead-title">' + fTitle + '</h2>' +
+                    '<div class="nyt-lead-body">' +
+                        '<p class="nyt-lead-excerpt">' + fExcerpt + '</p>' +
+                    '</div>' +
+                    '<div class="nyt-lead-bottom"><span class="nyt-meta">Continue reading \u2192</span></div>' +
+                '</a>' +
+                '<div class="nyt-lead-side">' + sideHtml + '</div>';
+            
+            // After rendering, match the lead height to the sidebar
+            setTimeout(function() {
+                var side = leadContainer.querySelector('.nyt-lead-side');
+                var main = leadContainer.querySelector('.nyt-lead-main');
+                if (side && main) {
+                    var sideHeight = side.offsetHeight;
+                    main.style.minHeight = sideHeight + 'px';
+                    main.style.position = 'relative';
+                    main.style.overflow = 'hidden';
+                    
+                    // Add gradient fade at the bottom of the lead body
+                    var body = main.querySelector('.nyt-lead-body');
+                    if (body) {
+                        body.style.flex = '1';
+                        body.style.overflow = 'hidden';
+                    }
+                    
+                    // Position the bottom bar at the actual bottom
+                    var bottom = main.querySelector('.nyt-lead-bottom');
+                    if (bottom) {
+                        bottom.style.position = 'absolute';
+                        bottom.style.bottom = '0';
+                        bottom.style.left = '0';
+                        bottom.style.right = '2rem';
+                        bottom.style.paddingTop = '1.5rem';
+                        bottom.style.background = 'linear-gradient(transparent, var(--primary-bg) 60%)';
+                    }
+                }
+            }, 50);
+            
+            // Hide top 4 from numbered list
+            for (var j = 0; j < 4 && j < allItems.length; j++) {
+                allItems[j].style.display = 'none';
+            }
+            
+            // Renumber remaining
+            var num = 1;
+            for (var k = 4; k < allItems.length; k++) {
+                var numEl = allItems[k].querySelector('.nyt-list-num');
+                if (numEl) numEl.textContent = String(num).padStart(2, '0');
+                num++;
+            }
+        })();
+
 } catch(e) { console.warn('Script error:', e.message); }
 </script>
 </body>
