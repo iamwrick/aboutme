@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="alternate" type="application/rss+xml" title="Wrick Talukdar Articles" href="https://wricktalukdar.technology/articles.xml">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1H6B706ZF8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1H6B706ZF8');
+</script>
+
     <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
@@ -346,6 +356,43 @@
             .article-container { padding: 100px 1.25rem 60px; }
             .article-nav { padding: 0 1.25rem; }
         }
+    
+        /* Read Aloud Button */
+        .read-aloud-bar {
+            margin: 1rem 0 1.5rem;
+        }
+
+        .read-aloud-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 2rem;
+            color: var(--secondary-text);
+            font-family: inherit;
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .read-aloud-btn:hover {
+            border-color: rgba(255,255,255,0.25);
+            color: var(--primary-text);
+            background: rgba(255,255,255,0.06);
+        }
+
+        .read-aloud-btn.active {
+            border-color: #60a5fa;
+            color: #60a5fa;
+            background: rgba(96,165,250,0.06);
+        }
+
+        .read-aloud-btn i {
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
@@ -360,6 +407,7 @@
                 }
             "><i class="fas fa-arrow-left"></i> Back to Articles</a>
             <span class="logo">Wrick Talukdar</span>
+            <a href="https://wricktalukdar.technology/articles.xml" target="_blank" style="color: #f97316; font-size: 1rem; margin-left: 0.75rem; opacity: 0.8; transition: all 0.2s; padding: 0.3rem 0.6rem; border: 1px solid rgba(249,115,22,0.25); border-radius: 1rem; display: inline-flex; align-items: center; gap: 0.3rem;" onmouseover="this.style.opacity='1';this.style.borderColor='rgba(249,115,22,0.5)'" onmouseout="this.style.opacity='0.8';this.style.borderColor='rgba(249,115,22,0.25)'" title="Subscribe via RSS"><i class="fas fa-rss"></i> <span style="font-size:0.65rem;font-weight:600;letter-spacing:0.5px;">RSS</span></a>
         </div>
     </nav>
 
@@ -380,6 +428,15 @@
                 </div>
             </div>
         </header>
+
+        
+            <!-- Read Aloud Button -->
+            <div class="read-aloud-bar">
+                <button class="read-aloud-btn" onclick="toggleReadAloud()" id="read-aloud-btn">
+                    <i class="fas fa-volume-up" id="read-aloud-icon"></i>
+                    <span id="read-aloud-text">Read Full Article Aloud</span>
+                </button>
+            </div>
 
         <div class="article-body">
 
@@ -810,5 +867,62 @@ visual_embeddings = visual_model(**image_inputs).last_hidden_state[:, 0]  # CLS 
         });
     </script>
 
+
+    <script>
+        var readAloudUtterance = null;
+        var readAloudActive = false;
+
+        function toggleReadAloud() {
+            var btn = document.getElementById('read-aloud-btn');
+            var icon = document.getElementById('read-aloud-icon');
+            var label = document.getElementById('read-aloud-text');
+
+            if (readAloudActive) {
+                window.speechSynthesis.cancel();
+                readAloudActive = false;
+                btn.classList.remove('active');
+                icon.className = 'fas fa-volume-up';
+                label.textContent = 'Read Full Article Aloud';
+                return;
+            }
+
+            var body = document.querySelector('.article-body');
+            if (!body) return;
+
+            var text = body.innerText;
+            if (!text) return;
+
+            readAloudUtterance = new SpeechSynthesisUtterance(text);
+            readAloudUtterance.rate = 1.0;
+            readAloudUtterance.pitch = 1.0;
+            readAloudUtterance.lang = 'en-US';
+
+            var voices = window.speechSynthesis.getVoices();
+            var preferred = voices.find(function(v) { return v.name.indexOf('Samantha') > -1; }) ||
+                           voices.find(function(v) { return v.name.indexOf('Google') > -1 && v.lang === 'en-US'; }) ||
+                           voices.find(function(v) { return v.lang === 'en-US'; });
+            if (preferred) readAloudUtterance.voice = preferred;
+
+            readAloudUtterance.onend = function() {
+                readAloudActive = false;
+                btn.classList.remove('active');
+                icon.className = 'fas fa-volume-up';
+                label.textContent = 'Read Full Article Aloud';
+            };
+
+            window.speechSynthesis.speak(readAloudUtterance);
+            readAloudActive = true;
+            btn.classList.add('active');
+            icon.className = 'fas fa-pause';
+            label.textContent = 'Stop Reading';
+        }
+
+        if (window.speechSynthesis) {
+            window.speechSynthesis.getVoices();
+            if (window.speechSynthesis.onvoiceschanged !== undefined) {
+                window.speechSynthesis.onvoiceschanged = function() { window.speechSynthesis.getVoices(); };
+            }
+        }
+    </script>
 </body>
 </html>
