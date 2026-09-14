@@ -5803,7 +5803,7 @@
         }
 
         body.light-mode #particle-canvas {
-            opacity: 0.15;
+            opacity: 0.7;
         }
 
         body.light-mode .nyt-cat,
@@ -5816,6 +5816,13 @@
         body.light-mode .subscribe-popup {
             background: #ffffff;
             border-color: rgba(0,0,0,0.1);
+        }
+
+        body.light-mode::before {
+            background:
+                linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%),
+                radial-gradient(circle at 20% 80%, rgba(37, 99, 235, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(37, 99, 235, 0.02) 0%, transparent 50%);
         }
 
         /* Reading Progress Bar on Main Site */
@@ -8529,7 +8536,7 @@ try {
                 draw() {
                     ctx.beginPath();
                     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                    ctx.fillStyle = document.body.classList.contains('light-mode') ? 'rgba(30, 64, 175, 0.7)' : 'rgba(255, 255, 255, 0.5)';
                     ctx.fill();
                 }
             }
@@ -8552,7 +8559,7 @@ try {
                             ctx.beginPath();
                             ctx.moveTo(particles[i].x, particles[i].y);
                             ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+                            ctx.strokeStyle = document.body.classList.contains('light-mode') ? `rgba(30, 64, 175, ${alpha * 2})` : `rgba(255, 255, 255, ${alpha})`;
                             ctx.lineWidth = 0.6;
                             ctx.stroke();
                         }
