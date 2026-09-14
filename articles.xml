@@ -5,7 +5,7 @@
     <link>https://wricktalukdar.technology</link>
     <description>Articles on AI, Machine Learning, Agentic AI, Generative AI, Leadership, and emerging technology by Wrick Talukdar.</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 07 Sep 2026 19:08:35 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 14 Sep 2026 07:44:53 +0000</lastBuildDate>
     <atom:link href="https://wricktalukdar.technology/articles.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>How Do You Know If Your Agent Actually Works? Benchmarking Autonomy at Scale</title>
@@ -216,6 +216,12 @@
       <link>https://wricktalukdar.technology/articles/rag-to-knowledge-graphs-enterprise.html</link>
       <description>RAG retrieves chunks; knowledge graphs understand relationships. How enterprises are combining both for grounded, context-aware AI that actually knows the org.</description>
       <guid>https://wricktalukdar.technology/articles/rag-to-knowledge-graphs-enterprise.html</guid>
+    </item>
+    <item>
+      <title>Recursive Self Improvement: The Most Important Technology Debate of Our Time</title>
+      <link>https://wricktalukdar.technology/articles/recursive-self-improvement-society-game-changer.html</link>
+      <description>AI systems are beginning to improve themselves. This changes everything about how we build, govern, and think about artificial intelligence. Is society ready?</description>
+      <guid>https://wricktalukdar.technology/articles/recursive-self-improvement-society-game-changer.html</guid>
     </item>
     <item>
       <title>Reinforcement Learning Beyond Games</title>
