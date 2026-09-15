@@ -397,6 +397,50 @@
         .read-aloud-btn i {
             font-size: 0.85rem;
         }
+    
+        /* Light Mode */
+        body.light-mode {
+            --primary-bg: #ffffff;
+            --secondary-bg: #f8f9fa;
+            --accent-bg: #f0f0f0;
+            --card-bg: #ffffff;
+            --primary-text: #1a1a1a;
+            --secondary-text: #4a4a4a;
+            --muted-text: #888888;
+            --accent-color: #1a1a1a;
+            --accent-secondary: #333333;
+            --border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .article-nav {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        body.light-mode .reading-progress {
+            background: linear-gradient(90deg, #2563eb, #3b82f6);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle-article {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--muted-text);
+            font-size: 0.7rem;
+            transition: all 0.3s;
+            margin-left: auto;
+        }
+
+        .theme-toggle-article:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
     </style>
 </head>
 <body>
@@ -1023,6 +1067,30 @@ print(f"Cost per task: ${cost:.2f}")  # Cost per task: $1.90</code></pre>
                 window.speechSynthesis.onvoiceschanged = function() { window.speechSynthesis.getVoices(); };
             }
         }
+    </script>
+
+    <script>
+        function toggleArticleTheme() {
+            var body = document.body;
+            var icon = document.getElementById('article-theme-icon');
+            body.classList.toggle('light-mode');
+            if (body.classList.contains('light-mode')) {
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        // Restore saved theme from main site
+        (function() {
+            var saved = localStorage.getItem('theme');
+            if (saved === 'light') {
+                document.body.classList.add('light-mode');
+                var icon = document.getElementById('article-theme-icon');
+                if (icon) icon.className = 'fas fa-moon';
+            }
+        })();
     </script>
 </body>
 </html>
