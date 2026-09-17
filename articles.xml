@@ -5,7 +5,7 @@
     <link>https://wricktalukdar.technology</link>
     <description>Articles on AI, Machine Learning, Agentic AI, Generative AI, Leadership, and emerging technology by Wrick Talukdar.</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 14 Sep 2026 07:44:53 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 16 Sep 2026 10:32:32 +0000</lastBuildDate>
     <atom:link href="https://wricktalukdar.technology/articles.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>How Do You Know If Your Agent Actually Works? Benchmarking Autonomy at Scale</title>
@@ -36,6 +36,12 @@
       <link>https://wricktalukdar.technology/articles/agentic-design-patterns-production.html</link>
       <description>From ReAct loops to multi-agent orchestration — the design patterns that separate demo agents from production-grade autonomous systems.</description>
       <guid>https://wricktalukdar.technology/articles/agentic-design-patterns-production.html</guid>
+    </item>
+    <item>
+      <title>AI as Scientist: When Machines Design Their Own Experiments</title>
+      <link>https://wricktalukdar.technology/articles/ai-as-scientist-machines-design-experiments.html</link>
+      <description>From hypothesis generation to autonomous lab execution, AI systems are beginning to do what only human researchers could do before. The implications for science, industry, and society are profound.</description>
+      <guid>https://wricktalukdar.technology/articles/ai-as-scientist-machines-design-experiments.html</guid>
     </item>
     <item>
       <title>AI Code Generation: Rewriting Software Engineering From the Inside</title>
