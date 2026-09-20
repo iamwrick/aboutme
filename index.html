@@ -1856,6 +1856,45 @@
             border-top: 1px solid var(--border-color);
             padding: 3rem 2rem 2rem;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-statement::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 45%;
+            background-image: url('./photos/footer-bg.png');
+            background-size: cover;
+            background-position: center left;
+            opacity: 0.25;
+            mask-image: linear-gradient(to left, transparent 0%, black 40%);
+            -webkit-mask-image: linear-gradient(to left, transparent 0%, black 40%);
+            z-index: 0;
+        }
+
+        .footer-statement::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 45%;
+            background-image: url('./photos/footer-bg.png');
+            background-size: cover;
+            background-position: center right;
+            opacity: 0.25;
+            mask-image: linear-gradient(to right, transparent 0%, black 40%);
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 40%);
+            z-index: 0;
+        }
+
+        .footer-statement > * {
+            position: relative;
+            z-index: 1;
         }
 
         .footer-quote {
@@ -7735,7 +7774,15 @@
 
                     <!-- All Articles List (single source of truth, JS promotes top items) -->
                     <div class="nyt-numbered-list" id="nyt-all-articles">
-                                                        <a href="articles/ai-as-scientist-machines-design-experiments.html" class="nyt-list-item" data-tag="AI Research" data-long-excerpt="In October 2024, the Nobel Prize in Chemistry was awarded to Demis Hassabis, John Jumper, and David Baker for protein structure prediction and computational protein design. This was a watershed moment. For the first time in the Nobel Prize&#39;s 123 year history, an AI system&#39;s work was recognized at the highest level of scientific achievement. AlphaFold didn&#39;t just assist researchers. It fundamentally reshaped what protein science could do. But the story doesn&#39;t end with prediction. The real inflection point is happening now. AI systems are moving beyond analysis into active experimentation. They&#39;re proposing hypotheses, designing experiments, executing them in autonomous laboratories, analyzing results, and iterating on new hypotheses. We&#39;re watching the birth of a new kind of scientist: one made of mathematics, running on silicon, and scaling at the speed of compute. This isn&#39;t speculative. The evidence is concrete and accelerating. What was impossible two years ago is being done routinely today. And what seems wild today will be commonplace within five years. Before diving into the breakthroughs, it&#39;s useful to map the landscape. AI&#39;s role in science exists on a spectrum, from passive to active. We&#39;re still predominantly at L1 and L2. But systems at L4 exist now. And there&#39;s serious work toward L5. In May 2026, Google DeepMind published a landmark paper in Nature describing Robin, an AI agent that proposes research hypotheses and autonomously executes experiments. Robin reads the scientific literature, generates novel hypotheses about how proteins can be targeted, designs wet lab experiments to test them, executes those experiments in an actual autonomous laboratory, analyzes the results, and generates updated hypotheses based on what it learned. The truly remarkable claim: Robin is the first AI system to autonomously discover and validate a novel therapeutic candidate within an iterative lab in the loop framework. This isn&#39;t simulation. This isn&#39;t a thought experiment. This is an actual AI system that moved molecules around in physical space and found something clinically relevant. The implications are staggering. Drug discovery typically takes 10 to 15 years. Robin is compressing stages of that timeline into weeks. In March 2026, a paper appeared in Nature describing a system called The AI Scientist. This pipeline automates the entire research process from start to finish. It creates research ideas from a corpus of papers. It writes Python code to implem">
+                                                                                    <a href="articles/shrinking-model-revolution-smaller-ai-beats-bigger.html" class="nyt-list-item" data-tag="LLM Research" data-long-excerpt="I spent a week last quarter benchmarking a 3.8B model against a GPT-4 pipeline for a task. The results genuinely surprised me. Not mildly. The kind of surprised that makes you stop, rerun the evaluation, and then go back to check whether you set up the comparison correctly. The small model was within two percentage points on the primary metric. At one hundred times lower cost per token. That experience sits at the center of a much larger shift now underway in applied AI. The field spent five years learning that more parameters, more compute, more data produced more capable models. That was true. It remains true for certain tasks. But a set of findings, some surprising engineering results, and plain economics are reshaping the answer to the question every engineering team eventually faces: which model do I actually use in production? For a long time, the answer was obvious. Scale up. The 2020 Kaplan et al. scaling laws paper gave the field a clean predictive framework: loss decreases as a power law with compute, dataset size, and model parameters. Bigger models trained on more data with more compute were reliably better. The empirical record backed it up. GPT-3 at 175B parameters landed like a detonation. GPT-4 landed like another one. The lesson was internalized broadly: if you want capability, you need scale. But scale requires resources most organizations do not have. And then something unexpected happened. In 2023, Microsoft Research published a paper called Textbooks Are All You Need. The central claim was uncomfortable for the orthodoxy: a 1.3 billion parameter model trained on carefully curated, high-quality synthetic data outperformed models ten times its size on coding benchmarks. Not by a little. By a meaningful margin on standard evaluations. The research team called their model Phi-1. The insight driving it was simple in statement, radical in implication: data quality beats data quantity. If you train a small model on textbook-quality content rather than a raw internet scrape, you can compress a disproportionate amount of capability into far fewer parameters. This overturned a significant piece of scaling laws orthodoxy. Scale still matters. But the composition of what you scale matters just as much, possibly more, for many practical tasks. The Phi family iterated rapidly. Phi-2, Phi-3, and then Phi-4 at 3.8B parameters. By the time Phi-4 appeared, it was outperforming GPT-4o on MATH and GPQA benchmarks, not on all tasks, but on the tasks that r">
+                                <div class="nyt-list-num">01</div>
+                                <div>
+                                    <div class="nyt-cat">LLM Research · New</div>
+                                    <h3 class="nyt-h3">The Shrinking Model Revolution</h3>
+                                    <p class="nyt-excerpt-sm">Phi-4 at 3.8B parameters beats GPT-4o on MATH benchmarks. Small models cost 100x less. The "bigger is better" orthodoxy is breaking down.</p>
+                                </div>
+                            </a>
+<a href="articles/ai-as-scientist-machines-design-experiments.html" class="nyt-list-item" data-tag="AI Research" data-long-excerpt="In October 2024, the Nobel Prize in Chemistry was awarded to Demis Hassabis, John Jumper, and David Baker for protein structure prediction and computational protein design. This was a watershed moment. For the first time in the Nobel Prize&#39;s 123 year history, an AI system&#39;s work was recognized at the highest level of scientific achievement. AlphaFold didn&#39;t just assist researchers. It fundamentally reshaped what protein science could do. But the story doesn&#39;t end with prediction. The real inflection point is happening now. AI systems are moving beyond analysis into active experimentation. They&#39;re proposing hypotheses, designing experiments, executing them in autonomous laboratories, analyzing results, and iterating on new hypotheses. We&#39;re watching the birth of a new kind of scientist: one made of mathematics, running on silicon, and scaling at the speed of compute. This isn&#39;t speculative. The evidence is concrete and accelerating. What was impossible two years ago is being done routinely today. And what seems wild today will be commonplace within five years. Before diving into the breakthroughs, it&#39;s useful to map the landscape. AI&#39;s role in science exists on a spectrum, from passive to active. We&#39;re still predominantly at L1 and L2. But systems at L4 exist now. And there&#39;s serious work toward L5. In May 2026, Google DeepMind published a landmark paper in Nature describing Robin, an AI agent that proposes research hypotheses and autonomously executes experiments. Robin reads the scientific literature, generates novel hypotheses about how proteins can be targeted, designs wet lab experiments to test them, executes those experiments in an actual autonomous laboratory, analyzes the results, and generates updated hypotheses based on what it learned. The truly remarkable claim: Robin is the first AI system to autonomously discover and validate a novel therapeutic candidate within an iterative lab in the loop framework. This isn&#39;t simulation. This isn&#39;t a thought experiment. This is an actual AI system that moved molecules around in physical space and found something clinically relevant. The implications are staggering. Drug discovery typically takes 10 to 15 years. Robin is compressing stages of that timeline into weeks. In March 2026, a paper appeared in Nature describing a system called The AI Scientist. This pipeline automates the entire research process from start to finish. It creates research ideas from a corpus of papers. It writes Python code to implem">
                                 <div class="nyt-list-num">01</div>
                                 <div>
                                     <div class="nyt-cat">AI Research · New</div>
