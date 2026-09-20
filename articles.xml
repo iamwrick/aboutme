@@ -5,7 +5,7 @@
     <link>https://wricktalukdar.technology</link>
     <description>Articles on AI, Machine Learning, Agentic AI, Generative AI, Leadership, and emerging technology by Wrick Talukdar.</description>
     <language>en-us</language>
-    <lastBuildDate>Wed, 16 Sep 2026 10:32:32 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 19 Sep 2026 19:52:11 +0000</lastBuildDate>
     <atom:link href="https://wricktalukdar.technology/articles.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>How Do You Know If Your Agent Actually Works? Benchmarking Autonomy at Scale</title>
@@ -248,10 +248,22 @@
       <guid>https://wricktalukdar.technology/articles/self-evolving-agents-autonomous-learning.html</guid>
     </item>
     <item>
+      <title>Self-Evolving Multi-Agent Systems: When Agents Learn to Collaborate Without Human Design</title>
+      <link>https://wricktalukdar.technology/articles/self-evolving-multi-agent-systems-without-human-design.html</link>
+      <description>What happens when you stop manually designing agent architectures and let the agents figure out how to work together on their own? The answer is more interesting, and more unsettling, than you might e</description>
+      <guid>https://wricktalukdar.technology/articles/self-evolving-multi-agent-systems-without-human-design.html</guid>
+    </item>
+    <item>
       <title>Sequence-to-Sequence Models: The Architecture That Taught Machines to Translate</title>
       <link>https://wricktalukdar.technology/articles/sequence-to-sequence-models-translation.html</link>
       <description>From encoder-decoder RNNs to attention-augmented seq2seq — how neural machine translation surpassed statistical methods and redefined NLP.</description>
       <guid>https://wricktalukdar.technology/articles/sequence-to-sequence-models-translation.html</guid>
+    </item>
+    <item>
+      <title>The Shrinking Model Revolution</title>
+      <link>https://wricktalukdar.technology/articles/shrinking-model-revolution-smaller-ai-beats-bigger.html</link>
+      <description>The dominant narrative says bigger is better. That narrative is incomplete. For a growing class of applications, it is just wrong.</description>
+      <guid>https://wricktalukdar.technology/articles/shrinking-model-revolution-smaller-ai-beats-bigger.html</guid>
     </item>
     <item>
       <title>Small Language Models: The Case for Efficient, Specialized AI</title>
