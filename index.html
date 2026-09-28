@@ -7747,6 +7747,7 @@
                             <button class="nyt-pill" data-filter="Data Engineering" onclick="filterArticles('Data Engineering', this)">Data Engineering</button>
                             <button class="nyt-pill" data-filter="Data Science" onclick="filterArticles('Data Science', this)">Data Science</button>
                             <button class="nyt-pill" data-filter="Deep Learning" onclick="filterArticles('Deep Learning', this)">Deep Learning</button>
+                            <button class="nyt-pill" data-filter="AI Architecture" onclick="filterArticles(&#39;AI Architecture&#39;, this)">AI Architecture</button>
                             <button class="nyt-pill" data-filter="Document AI" onclick="filterArticles('Document AI', this)">Document AI</button>
                             <button class="nyt-pill" data-filter="Edge Computing" onclick="filterArticles('Edge Computing', this)">Edge Computing</button>
                             <button class="nyt-pill" data-filter="Enterprise AI" onclick="filterArticles('Enterprise AI', this)">Enterprise AI</button>
@@ -7774,6 +7775,14 @@
 
                     <!-- All Articles List (single source of truth, JS promotes top items) -->
                     <div class="nyt-numbered-list" id="nyt-all-articles">
+                                                                                                                <a href="articles/reasoning-in-the-dark-efficient-vs-auditable-thought.html" class="nyt-list-item" data-tag="AI Architecture" data-long-excerpt="Can a model think in a language you cannot read? That question sounds abstract until you watch it happen. A few weeks ago I was reviewing a reasoning trace from a model that had been fine-tuned to compress its chain of thought. The visible output was clean: a short, confident answer with a tidy three-line justification. But the internal logs told a different story. The model had run something closer to a breadth-first search over half a dozen competing hypotheses, collapsed them into a single latent representation, and only then emitted the human-readable summary. The summary was not the reasoning. It was a press release written after the reasoning had already happened somewhere I could not see. In my experience building AI systems at scale, that gap between what a model shows you and what it actually did is the thing that quietly breaks trust. And right now, the entire field is racing to widen it. Not maliciously. For a very good reason: reasoning in natural language is slow and expensive, and reasoning in continuous latent space is fast and cheap. The problem is that the token trace we are throwing away is also the only real window we have ever had into how these systems think. This is the trade I want to sit with in this article. We are moving from models that reason out loud to models that reason in the dark, and we are calling it progress. Some of it genuinely is. Some of it is going to cost us more than we currently admit. Let me start by taking the optimists seriously, because the architectural shift here is substantive. This is not a rebranding of prompt engineering. It is a coherent research program with a shared premise: natural language may be a suboptimal medium for reasoning. The canonical example is Meta FAIR&#39;s Coconut, short for Chain of Continuous Thought. Instead of decoding each intermediate reasoning step into words and feeding those words back in, Coconut takes the model&#39;s last hidden state and feeds it directly back as the next input embedding. The reasoning never leaves continuous space. The paper describes it plainly: the method uses the last hidden state as a representation of the reasoning state, and instead of decoding it into words, feeds it back to the model as the next input embedding directly in the continuous space. Why does that matter? Because a token is a commitment. When a model writes the word &quot;therefore,&quot; it has collapsed a distribution over possible next thoughts into a single discrete choice. A continuous thought does">
+                                <div class="nyt-list-num">01</div>
+                                <div>
+                                    <div class="nyt-cat">AI Architecture · New</div>
+                                    <h3 class="nyt-h3">Reasoning in the Dark: The Coming Trade Between Efficient Thought and Auditable Thought</h3>
+                                    <p class="nyt-excerpt-sm">The field is quietly moving reasoning off human-readable tokens and into latent space. It is faster and cheaper. It also throws away the only real window we have into how a model thinks.</p>
+                                </div>
+                            </a>
                                                                                                                 <a href="articles/self-evolving-multi-agent-systems-without-human-design.html" class="nyt-list-item" data-tag="Agentic AI" data-long-excerpt="I recently spent an afternoon tracing through a multi-agent workflow that had 47 handoffs. It was chaos. Not chaotic in the sense that it was broken, it was producing correct results most of the time. But the coordination logic was a thicket of hand-coded routing rules, manually specified agent roles, and carefully tuned prompts for every transition. Change one agent&#39;s responsibilities slightly, and three other agents would start producing subtly wrong outputs because their prompts had been written with the original role definitions baked in. The whole system was brittle by design, because it had been designed by humans who could not anticipate every possible coordination pattern the system would need. In my experience building multi-agent systems, the hardest part has never been the individual agents. It has been getting them to coordinate. A single capable agent is tractable. Two agents that need to negotiate subtask ownership, synchronize intermediate state, and recover gracefully from partial failures is genuinely hard. Scale that to ten or twenty agents working on a complex, dynamically unfolding task, and the coordination problem dwarfs the capability problem. That afternoon tracing the 47-handoff workflow was the moment I became genuinely interested in a question that, until recently, seemed almost too speculative to take seriously: what if the agents designed the coordination themselves? Not a human writing routing rules. Not a systems architect mapping out the workflow in advance. The agents, observing their own task performance, iteratively refining who does what, how they communicate, and when they hand off. Three research papers published in 2026 suggest this is no longer speculative. It is working, it is surpassing hand-designed baselines, and the implications run deeper than most practitioners have appreciated. Before getting into the new paradigm, it is worth being precise about why the old one fails. Hand-designed multi-agent systems have three structural weaknesses. First, they are configuration-brittle. The agent roles, communication topology, and task-routing logic are defined at design time by a human who is reasoning about what the system will need. But real tasks are unpredictable. A legal review workflow designed for standard contracts will start misbehaving the first time it encounters an unusual indemnity clause that does not fit the assumed routing pattern. The system has no way to recognize that the configuration is wrong, let al">
                                 <div class="nyt-list-num">01</div>
                                 <div>
@@ -8877,6 +8886,50 @@ try {
                 }
             }
         });
+
+
+        // Auto-update Research Impact from Semantic Scholar API
+        (function() {
+            var AUTHOR_ID = '2303464555';
+            var API_URL = 'https://api.semanticscholar.org/graph/v1/author/' + AUTHOR_ID + '?fields=citationCount,hIndex,paperCount';
+            
+            fetch(API_URL)
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (data && data.citationCount) {
+                        // Update citations number wherever it appears
+                        var citationEls = document.querySelectorAll('.impact-number');
+                        citationEls.forEach(function(el) {
+                            if (el.textContent.trim().indexOf('1,112') > -1 || el.textContent.trim().indexOf('1,076') > -1) {
+                                el.textContent = data.citationCount.toLocaleString();
+                            }
+                        });
+                        
+                        // Also update in the Research section if visible
+                        var researchMetrics = document.querySelectorAll('.articles-metric-num');
+                        researchMetrics.forEach(function(el) {
+                            if (el.textContent.trim().indexOf('1,112') > -1) {
+                                el.textContent = data.citationCount.toLocaleString();
+                            }
+                        });
+                        
+                        // Update h-index if present
+                        if (data.hIndex) {
+                            var hIndexEls = document.querySelectorAll('.impact-number');
+                            hIndexEls.forEach(function(el) {
+                                if (el.textContent.trim() === '6') {
+                                    el.textContent = data.hIndex.toString();
+                                }
+                            });
+                        }
+                        
+                        console.log('Research Impact updated from Semantic Scholar: ' + data.citationCount + ' citations, h-index ' + data.hIndex);
+                    }
+                })
+                .catch(function(err) {
+                    console.log('Semantic Scholar API unavailable, using hardcoded values');
+                });
+        })();
 
 
 } catch(e) { console.warn('Script error:', e.message); }
