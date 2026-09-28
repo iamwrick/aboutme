@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="alternate" type="application/rss+xml" title="Wrick Talukdar Articles" href="https://wricktalukdar.technology/articles.xml">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1H6B706ZF8"></script>
+<script>
+  try {
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1H6B706ZF8');
+  } catch(e) {}
+</script>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reasoning in the Dark: The Coming Trade Between Efficient Thought and Auditable Thought | Wrick Talukdar</title>
+    <meta name="description" content="The field is quietly moving reasoning off human-readable tokens and into continuous latent space. It is faster and cheaper. It also throws away the one window we had into how a model thinks.">
+    <meta property="og:title" content="Reasoning in the Dark: The Coming Trade Between Efficient Thought and Auditable Thought">
+    <meta property="og:description" content="The field is quietly moving reasoning off human-readable tokens and into continuous latent space. It is faster and cheaper. It also throws away the one window we had into how a model thinks.">
+    <meta property="og:type" content="article">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Takeaways list */
+        .takeaways-list {
+            list-style: none;
+            margin: 1rem 0 1.25rem 0;
+            padding: 0;
+        }
+
+        .takeaways-list li {
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            position: relative;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 1.02rem;
+            line-height: 1.7;
+            color: var(--secondary-text);
+        }
+
+        .takeaways-list li:last-child {
+            border-bottom: none;
+        }
+
+        .takeaways-list li::before {
+            content: counter(takeaway-counter);
+            counter-increment: takeaway-counter;
+            position: absolute;
+            left: 0;
+            top: 0.75rem;
+            width: 1.6rem;
+            height: 1.6rem;
+            background: rgba(255,255,255,0.07);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            text-align: center;
+            line-height: 1.6rem;
+        }
+
+        .takeaways-wrapper {
+            counter-reset: takeaway-counter;
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+            .comparison-table { font-size: 0.82rem; }
+            .comparison-table th, .comparison-table td { padding: 0.6rem 0.7rem; }
+        }
+
+        /* Read Aloud Button */
+        .read-aloud-bar {
+            margin: 1rem 0 1.5rem;
+        }
+
+        .read-aloud-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 2rem;
+            color: var(--secondary-text);
+            font-family: inherit;
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .read-aloud-btn:hover {
+            border-color: rgba(255,255,255,0.25);
+            color: var(--primary-text);
+            background: rgba(255,255,255,0.06);
+        }
+
+        .read-aloud-btn.active {
+            border-color: #60a5fa;
+            color: #60a5fa;
+            background: rgba(96,165,250,0.06);
+        }
+
+        .read-aloud-btn i {
+            font-size: 0.85rem;
+        }
+
+        /* Light Mode */
+        body.light-mode {
+            --primary-bg: #ffffff;
+            --secondary-bg: #f8f9fa;
+            --accent-bg: #f0f0f0;
+            --card-bg: #ffffff;
+            --primary-text: #1a1a1a;
+            --secondary-text: #4a4a4a;
+            --muted-text: #888888;
+            --accent-color: #1a1a1a;
+            --accent-secondary: #333333;
+            --border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .article-nav {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        body.light-mode .reading-progress {
+            background: linear-gradient(90deg, #2563eb, #3b82f6);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle-article {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--muted-text);
+            font-size: 0.7rem;
+            transition: all 0.3s;
+            margin-left: auto;
+        }
+
+        .theme-toggle-article:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+    
+        .audio-player-section {
+            margin: 1rem 0 1.5rem;
+            padding: 1rem 1.25rem;
+            background: rgba(96, 165, 250, 0.04);
+            border: 1px solid rgba(96, 165, 250, 0.12);
+            border-radius: 0.75rem;
+        }
+        .audio-player-label {
+            font-size: 0.75rem; font-weight: 600; color: #60a5fa;
+            margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem;
+        }
+        .audio-player-label i { font-size: 0.85rem; }
+        .audio-player { width: 100%; height: 40px; border-radius: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+            <button class="theme-toggle-article" onclick="toggleArticleTheme()" title="Toggle light/dark mode"><i class="fas fa-sun" id="article-theme-icon"></i></button>
+            <a href="https://wricktalukdar.technology/articles.xml" target="_blank" style="color: #f97316; font-size: 1rem; margin-left: 0.75rem; opacity: 0.8; transition: all 0.2s; padding: 0.3rem 0.6rem; border: 1px solid rgba(249,115,22,0.25); border-radius: 1rem; display: inline-flex; align-items: center; gap: 0.3rem;" onmouseover="this.style.opacity='1';this.style.borderColor='rgba(249,115,22,0.5)'" onmouseout="this.style.opacity='0.8';this.style.borderColor='rgba(249,115,22,0.25)'" title="Subscribe via RSS"><i class="fas fa-rss"></i> <span style="font-size:0.65rem;font-weight:600;letter-spacing:0.5px;">RSS</span></a>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">AI Architecture</span>
+                <span class="article-date">September 24, 2026 · 14 min read</span>
+            </div>
+            <h1 class="article-title">Reasoning in the Dark: The Coming Trade Between Efficient Thought and Auditable Thought</h1>
+            <p class="article-subtitle">The field is quietly moving reasoning off human-readable tokens and into continuous latent space. It is faster and cheaper. It also throws away the one window we had into how a model thinks.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Technology Leader &amp; Architect</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Read Aloud Button -->
+        
+            <div class="read-aloud-bar">
+            <button class="read-aloud-btn" onclick="toggleReadAloud()" id="read-aloud-btn">
+                <i class="fas fa-volume-up" id="read-aloud-icon"></i>
+                <span id="read-aloud-text">Read Full Article Aloud</span>
+            </button>
+        </div>
+
+        <div class="article-body">
+
+            <!-- SECTION 1: OPENING -->
+
+            <p>
+                Can a model think in a language you cannot read?
+            </p>
+
+            <p>
+                That question sounds abstract until you watch it happen. A few weeks ago I was reviewing a reasoning trace from a model that had been fine-tuned to compress its chain of thought. The visible output was clean: a short, confident answer with a tidy three-line justification. But the internal logs told a different story. The model had run something closer to a breadth-first search over half a dozen competing hypotheses, collapsed them into a single latent representation, and only then emitted the human-readable summary. The summary was not the reasoning. It was a press release written after the reasoning had already happened somewhere I could not see.
+            </p>
+
+            <p>
+                In my experience building AI systems at scale, that gap between what a model shows you and what it actually did is the thing that quietly breaks trust. And right now, the entire field is racing to widen it. Not maliciously. For a very good reason: reasoning in natural language is slow and expensive, and reasoning in continuous latent space is fast and cheap. The problem is that the token trace we are throwing away is also the only real window we have ever had into how these systems think.
+            </p>
+
+            <p>
+                This is the trade I want to sit with in this article. We are moving from models that reason out loud to models that reason in the dark, and we are calling it progress. Some of it genuinely is. Some of it is going to cost us more than we currently admit.
+            </p>
+
+            <!-- SECTION 2: THE SHIFT IS REAL -->
+
+            <h2>The Shift Is Real, Not Hype</h2>
+
+            <p>
+                Let me start by taking the optimists seriously, because the architectural shift here is substantive. This is not a rebranding of prompt engineering. It is a coherent research program with a shared premise: <strong>natural language may be a suboptimal medium for reasoning.</strong>
+            </p>
+
+            <p>
+                The canonical example is Meta FAIR's Coconut, short for Chain of Continuous Thought. Instead of decoding each intermediate reasoning step into words and feeding those words back in, Coconut takes the model's last hidden state and feeds it directly back as the next input embedding. The reasoning never leaves continuous space. The paper describes it plainly: the method uses the last hidden state as a representation of the reasoning state, and instead of decoding it into words, feeds it back to the model as the next input embedding directly in the continuous space.
+            </p>
+
+            <p>
+                Why does that matter? Because a token is a commitment. When a model writes the word "therefore," it has collapsed a distribution over possible next thoughts into a single discrete choice. A continuous thought does not have to commit. The Coconut authors point out that a continuous thought can encode multiple alternative next steps at once, letting the model perform something like a breadth-first search rather than locking prematurely onto one deterministic path. On logical reasoning tasks that require real search during planning, Coconut outperforms chain-of-thought while using fewer thinking tokens at inference.
+
+            <p>
+                Coconut is not alone. It sits inside a family of architectures all pushing reasoning off of discrete tokens and into richer latent units:
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Architecture</th>
+                        <th>The unit of "thought"</th>
+                        <th>Core claim</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Coconut (Chain of Continuous Thought)</td>
+                        <td>Fed-back hidden state</td>
+                        <td>Reasoning stays in continuous space; encodes multiple paths at once</td>
+                    </tr>
+                    <tr>
+                        <td>Large Concept Models (LCM)</td>
+                        <td>Sentence embedding (a "concept")</td>
+                        <td>Predict the next concept, not the next token</td>
+                    </tr>
+                    <tr>
+                        <td>Dynamic LCM</td>
+                        <td>Learned semantic boundary</td>
+                        <td>Discover where concepts begin and end, then compress</td>
+                    </tr>
+                    <tr>
+                        <td>Byte Latent Transformer (BLT)</td>
+                        <td>Entropy-based byte patch</td>
+                        <td>Tokenizer-free; allocate compute where data is complex</td>
+                    </tr>
+                    <tr>
+                        <td>Recurrent-Depth (Huginn)</td>
+                        <td>Iterations of a recurrent block</td>
+                        <td>Scale test-time compute by unrolling depth, not emitting tokens</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                The Large Concept Model is the most conceptually aggressive of these. It moves the atomic unit of prediction from the token all the way up to the sentence, represented as an embedding in a space called SONAR, and trains the model to autoregressively predict the next concept. The motivation, as the LCM literature frames it, is to reason over higher-level semantic entities as atomic units, in contrast with traditional models that operate at the lexical token level. Dynamic LCM then removes the assumption that concepts conveniently align with sentence boundaries, learning where the boundaries actually fall and shifting computation into a compressed concept space where reasoning is cheaper.
+            </p>
+
+            <p>
+                Then there is the Byte Latent Transformer, which I find the most quietly important of the group. BLT is tokenizer-free. It groups raw bytes into dynamically sized patches based on next-byte entropy, spending more compute where the data is genuinely complex and less where it is predictable. The headline result is the one that should make anyone paying attention sit up: <strong>at fixed inference cost, BLT shows significantly better scaling than tokenization-based models.</strong> That is not an efficiency footnote. That is a claim that the token, the fundamental unit we have built every large language model around, may itself be the bottleneck.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-flask"></i> The Core Result Worth Remembering</div>
+                <p>Across Coconut, LCM, BLT, and recurrent-depth models, the through-line is consistent: reasoning is genuinely relocating off natural-language tokens and into continuous or latent units, and the efficiency wins are real. BLT's demonstration that entropy-based patches out-scale tokens at fixed inference cost is the strongest single piece of evidence that this is a paradigm shift, not a trend.</p>
+            </div>
+
+            <!-- SECTION 3: THE ECONOMICS -->
+
+            <h2>The Economics Problem Latent Reasoning Is Trying to Solve</h2>
+
+            <p>
+                To understand why anyone would abandon a perfectly readable reasoning trace, you have to understand what the industry has been doing to squeeze more reasoning out of existing models. The dominant strategy of the last two years has a name: test-time scaling. Spend more compute at inference, and the model reasons better.
+            </p>
+
+            <p>
+                It works. It also does not scale the way the marketing implies. "Test-time scaling" is not one technique, it is a family of them: extending deliberation along a single trajectory, sampling many candidate answers and voting, searching over partial solution states. They differ in cost and, importantly, in failure modes. And when you look at the actual return on compute at the frontier, the picture gets uncomfortable.
+            </p>
+
+            <p>
+                Here is the number that reframed the whole thing for me. In one 2026 analysis, inference scaling improved accuracy by up to 7.1 points over chain-of-thought, but only at the highest evaluated budget, which was roughly 20 times the compute of ordinary chain-of-thought, on MMLU-Pro. Twenty times the compute for seven points. That is not a curve you extrapolate happily. An infrastructure-level study of dynamic reasoning put it bluntly: agents improve accuracy with more compute but suffer from rapidly diminishing returns, widening latency variance, and unsustainable infrastructure costs.
+            </p>
+
+            <p>
+                So the economic logic of latent reasoning becomes obvious. If most of your inference cost is spent emitting and re-ingesting reasoning tokens, and those tokens are just a lossy serialization of a computation happening inside the model anyway, why pay for the serialization? Keep the reasoning in latent space. Iterate a recurrent block to arbitrary depth, as Huginn does, and scale test-time compute without producing a single extra visible token. The recurrent-depth work makes this explicit, contrasting itself with mainstream reasoning models that scale compute by producing more tokens.
+            </p>
+
+            <p>
+                I want to be fair here: this is a legitimately elegant answer to a real cost problem. There is even evidence that test-time compute, spent well, beats raw model scaling on the accuracy-per-unit-energy trade-off for genuinely reasoning-heavy tasks. If your only concern were the compute bill, latent reasoning would be an easy call.
+            </p>
+
+            <p>
+                But the compute bill is not the only concern. And this is where I part ways with the consensus.
+            </p>
+
+            <!-- SECTION 4: THE TWIST -->
+
+            <h2>The Twist: What We Lose When Reasoning Goes Dark</h2>
+
+            <p>
+                Here is the uncomfortable part. The chain-of-thought trace we are optimizing away is not just a computational artifact. For the last two years it has quietly been one of the most important safety tools we have, and almost nobody was treating it as one.
+            </p>
+
+            <p>
+                Think about what an explicit reasoning trace gives you. When a model reasons in readable text, you get a window, imperfect but real, into its cognition. You can inspect it for deceptive intent, for misaligned goals, for the moment a model decides to pursue an objective you did not sanction. The safety literature is explicit that generating intermediate reasoning steps provides a human-readable window into a model's cognition, enabling monitoring for deceptive or misaligned behavior.
+            </p>
+
+            <p>
+                Latent reasoning closes that window. And the subtle point, the one I think is most often missed, is what kind of thing the latent trace actually is. A recent causal-geometric analysis of latent reasoning models put it in a way that has stuck with me: latent thoughts should be treated as <em>hidden computation, not hidden explanation.</em> The fact that you can sometimes decode a latent vector into something that looks like a thought proves nothing about whether that decoded thought is actually driving the model's behavior. Decodability is not mechanism.
+            </p>
+
+            <p>
+                That distinction matters enormously. With chain-of-thought, at least in principle, the text the model produces is on the causal path to its answer, so reading it tells you something. With latent reasoning, you might decode a plausible-looking explanation from the hidden state that has nothing to do with the computation that produced the output. You would be reading tea leaves and calling it interpretability.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-triangle-exclamation"></i> The Trade, Stated Plainly</div>
+                <p>Latent reasoning solves the economic problem of test-time compute by discarding the artifact that safety and interpretability tooling depends on: the token-level trace. You can have efficient reasoning, or you can have auditable reasoning. The field has not yet shown you can have both.</p>
+            </div>
+
+            <p>
+                Now, the honest counterargument, and I want to give it real weight, is that chain-of-thought was never as trustworthy as its defenders claim. This is true. Models do not always faithfully represent their internal decision-making in the reasoning they generate. There is a whole literature on chain-of-thought unfaithfulness showing that the stated reasoning and the actual computation can diverge. So one could argue we are giving up a window that was already smudged and cracked.
+            </p>
+
+            <p>
+                I hear that, but I do not find it reassuring, and here is why. A smudged window is still a window. The research on when chain-of-thought is necessary found that when a task genuinely requires serial reasoning, models struggle to evade a monitor watching their chain of thought, which means the monitoring offers a substantial, if imperfect, layer of defense that is worth actively protecting. A cracked window you can still occasionally see through beats a wall. Latent reasoning does not clean the window. It bricks it up.
+            </p>
+
+            <p>
+                There is a sliver of hope in the details. Early work on detecting misaligned reasoning in continuous-thought models suggests that misalignment tends to concentrate in the early "planning" latent tokens, which hints that monitoring could target that phase specifically. That is a real research direction and I am glad people are pursuing it. But it is a long way from a deployable safety guarantee, and we are shipping latent-reasoning architectures now, not after that research matures.
+            </p>
+
+            <!-- SECTION 5: WHAT PRACTITIONERS SHOULD DO -->
+
+            <h2>What This Means If You Are Building With These Models</h2>
+
+            <p>
+                It would be easy to read this as a case against latent reasoning. It is not. The efficiency gains are real, the research is good, and the direction of travel is not going to reverse because a blog post raised concerns. The useful question is not whether to adopt these architectures but how to adopt them without walking blind into the interpretability gap.
+            </p>
+
+            <p>
+                A few things I have come to believe matter.
+            </p>
+
+            <h3>Treat the reasoning trace as a feature, not a byproduct</h3>
+
+            <p>
+                When you evaluate a reasoning model for production, do not just measure accuracy and latency. Measure how much of the model's actual decision process is inspectable. If you are choosing between a latent-reasoning model that is two points more accurate and a chain-of-thought model whose reasoning you can audit, the audit-ability has a dollar value, and in regulated domains it may dominate the accuracy difference. Most current evaluation harnesses do not measure this at all. That is a gap worth closing before you need it, not after.
+            </p>
+
+            <h3>Match the architecture to the stakes</h3>
+
+            <p>
+                Latent reasoning is a great fit for tasks where the output is cheaply verifiable and the cost of a wrong answer is low: search-heavy planning, code that either passes tests or does not, tasks with a hard external check. It is a much worse fit for high-stakes, low-verifiability decisions where you would want to understand the reasoning precisely because you cannot easily check the answer. The mistake I expect to see repeatedly over the next 18 months is teams adopting latent reasoning uniformly, for the efficiency, and then discovering they have deployed it in exactly the places where auditability mattered most.
+            </p>
+
+            <h3>Invest in mechanistic checks, not decoded narratives</h3>
+
+            <p>
+                If you are going to run latent-reasoning models in production, the interpretability work you fund should be causal and mechanistic, not the comforting kind that decodes a hidden state into a nice-sounding explanation and calls it a day. Ask whether an intervention on the latent state actually changes the output in the way the decoded narrative predicts. If it does not, you do not have an explanation. You have a story.
+            </p>
+
+            <p>
+                None of this is a reason to sit out the shift. It is a reason to go into it with your eyes open, which is harder than it sounds when the efficiency numbers are this seductive.
+            </p>
+
+            <!-- SECTION 6: CLOSING -->
+
+            <h2>Where This Leaves Us</h2>
+
+            <p>
+                The arc of this research is one of the more consequential things happening in AI architecture right now, and it is happening quietly, under headlines dominated by model releases and benchmark records. Reasoning is migrating off of human-readable tokens because tokens are expensive and, it turns out, may not even be the best substrate for thought. Coconut, Large Concept Models, the Byte Latent Transformer, recurrent-depth models: these are not incremental. They are a bet that the next generation of reasoning happens in a space we cannot natively read.
+            </p>
+
+            <p>
+                I think that bet is going to pay off on efficiency. I am much less sure it is going to pay off on trust. The last two years gave us a rare gift in AI safety, which is that our most capable reasoning models happened to think in a language we could read. That was never guaranteed, and it appears to have been temporary. We are trading it away for speed.
+            </p>
+
+            <p>
+                Maybe that trade is worth it. Maybe the interpretability research catches up and we learn to monitor latent reasoning as well as we ever monitored chain-of-thought. But I would rather the field make that trade deliberately, with a clear-eyed accounting of what is being given up, than sleepwalk into it because the compute savings were too tempting to question. Efficient thought and auditable thought are both worth having. The uncomfortable truth of this moment is that, for now, we are being asked to choose.
+            </p>
+
+            <!-- KEY TAKEAWAYS -->
+
+            <h2>Key Takeaways</h2>
+
+            <div class="takeaways-wrapper">
+                <ol class="takeaways-list">
+                    <li><strong>The shift is real and coherent.</strong> Coconut, Large Concept Models, Dynamic LCM, the Byte Latent Transformer, and recurrent-depth models all move reasoning off discrete tokens and into continuous or latent units. This is a genuine architectural program, not a rebranding.</li>
+                    <li><strong>The Byte Latent Transformer's scaling result is the strongest signal.</strong> At fixed inference cost, entropy-based byte patches out-scale tokenization. That suggests the token itself may be a bottleneck, not just an implementation detail.</li>
+                    <li><strong>Latent reasoning is an answer to a real economics problem.</strong> Test-time scaling delivers diminishing returns, roughly 20x the compute for a 7-point gain at the frontier on MMLU-Pro, with unsustainable infrastructure costs. Keeping reasoning in latent space sidesteps the token serialization tax.</li>
+                    <li><strong>The cost is interpretability.</strong> Chain-of-thought quietly became one of our best safety tools by giving a human-readable window into model cognition. Latent reasoning closes that window.</li>
+                    <li><strong>Latent thoughts are hidden computation, not hidden explanation.</strong> Being able to decode a latent vector into a plausible thought proves nothing about whether that thought drove the output. Decodability is not mechanism.</li>
+                    <li><strong>Chain-of-thought was imperfect but not worthless.</strong> Models do not always reason faithfully, but when a task truly requires serial reasoning, monitoring the trace remains a substantial layer of defense. A cracked window still beats a wall.</li>
+                    <li><strong>Adopt by stakes, not by default.</strong> Latent reasoning fits cheaply-verifiable, low-stakes tasks. For high-stakes, low-verifiability decisions, auditability may matter more than a couple points of accuracy. Measure inspectability, fund causal interpretability, and do not deploy uniformly.</li>
+                </ol>
+            </div>
+
+            <!-- REFERENCES -->
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-book-open"></i> References</div>
+                <p style="margin-bottom: 0.5rem;"><strong>[1]</strong> Hao et al., "Training Large Language Models to Reason in a Continuous Latent Space" (Coconut), arXiv:2412.06769. Meta FAIR.</p>
+                <p style="margin-bottom: 0.5rem;"><strong>[2]</strong> "Large Concept Models: Language Modeling in a Sentence Representation Space," arXiv:2412.08821. Meta.</p>
+                <p style="margin-bottom: 0.5rem;"><strong>[3]</strong> "Dynamic Large Concept Models: Latent Reasoning in an Adaptive Semantic Space," arXiv:2512.24617.</p>
+                <p style="margin-bottom: 0.5rem;"><strong>[4]</strong> "Byte Latent Transformer: Patches Scale Better Than Tokens," arXiv:2412.09871. Meta FAIR, ACL 2025.</p>
+                <p style="margin-bottom: 0.5rem;"><strong>[5]</strong> "Scaling up Test-Time Compute with Latent Reasoning: A Recurrent Depth Approach" (Huginn), arXiv:2502.05171.</p>
+                <p style="margin-bottom: 0.5rem;"><strong>[6]</strong> "Multi-Agent Reasoning Improves Compute Efficiency," arXiv:2605.01566. (20x compute for +7.1 pts on MMLU-Pro.)</p>
+                <p style="margin-bottom: 0.5rem;"><strong>[7]</strong> "The Cost of Dynamic Reasoning: Demystifying AI Agents and Test-Time Scaling," arXiv:2506.04301.</p>
+                <p style="margin-bottom: 0.5rem;"><strong>[8]</strong> "A Causal-Geometric Analysis of Latent Reasoning Models," arXiv:2606.12689.</p>
+                <p style="margin-bottom: 0.5rem;"><strong>[9]</strong> "Ulterior Motives: Detecting Misaligned Reasoning in Continuous Thought Models," arXiv:2604.23460.</p>
+                <p style="margin-bottom: 0.5rem;"><strong>[10]</strong> "Investigating CoT Monitorability in Large Reasoning Models," arXiv:2511.08525.</p>
+                <p style="margin-bottom: 0;"><strong>[11]</strong> "When Chain of Thought is Necessary, Language Models Struggle to Evade Monitors," arXiv:2507.05246.</p>
+            </div>
+
+
+        </div>
+
+    <footer class="article-footer">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to all articles</a>
+            <div class="share-links">
+                <a href="https://twitter.com/intent/tweet?text=Reasoning%20in%20the%20Dark%3A%20The%20Coming%20Trade%20Between%20Efficient%20Thought%20and%20Auditable%20Thought&url=https://wricktalukdar.technology/articles/reasoning-in-the-dark-efficient-vs-auditable-thought.html" title="Share on X"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://wricktalukdar.technology/articles/reasoning-in-the-dark-efficient-vs-auditable-thought.html" title="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </footer>
+
+    </article>
+
+    <script>
+        try {
+            window.addEventListener('scroll', function() {
+                var bar = document.getElementById('reading-progress');
+                var scrollTop = window.pageYOffset;
+                var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                if (docHeight > 0) {
+                    bar.style.width = (scrollTop / docHeight) * 100 + '%';
+                }
+            });
+        } catch(e) {}
+    </script>
+
+    <script>
+        try {
+            var readAloudUtterance = null;
+            var readAloudActive = false;
+
+            function toggleReadAloud() {
+                var btn = document.getElementById('read-aloud-btn');
+                var icon = document.getElementById('read-aloud-icon');
+                var label = document.getElementById('read-aloud-text');
+
+                if (readAloudActive) {
+                    window.speechSynthesis.cancel();
+                    readAloudActive = false;
+                    btn.classList.remove('active');
+                    icon.className = 'fas fa-volume-up';
+                    label.textContent = 'Read Full Article Aloud';
+                    return;
+                }
+
+                var body = document.querySelector('.article-body');
+                if (!body) return;
+
+                var text = body.innerText;
+                if (!text) return;
+
+                readAloudUtterance = new SpeechSynthesisUtterance(text);
+                readAloudUtterance.rate = 1.0;
+                readAloudUtterance.pitch = 1.0;
+                readAloudUtterance.lang = 'en-US';
+
+                var voices = window.speechSynthesis.getVoices();
+                var preferred = voices.find(function(v) { return v.name.indexOf('Samantha') > -1; }) ||
+                               voices.find(function(v) { return v.name.indexOf('Google') > -1 && v.lang === 'en-US'; }) ||
+                               voices.find(function(v) { return v.lang === 'en-US'; });
+                if (preferred) readAloudUtterance.voice = preferred;
+
+                readAloudUtterance.onend = function() {
+                    readAloudActive = false;
+                    btn.classList.remove('active');
+                    icon.className = 'fas fa-volume-up';
+                    label.textContent = 'Read Full Article Aloud';
+                };
+
+                window.speechSynthesis.speak(readAloudUtterance);
+                readAloudActive = true;
+                btn.classList.add('active');
+                icon.className = 'fas fa-pause';
+                label.textContent = 'Stop Reading';
+            }
+
+            if (window.speechSynthesis) {
+                window.speechSynthesis.getVoices();
+                if (window.speechSynthesis.onvoiceschanged !== undefined) {
+                    window.speechSynthesis.onvoiceschanged = function() { window.speechSynthesis.getVoices(); };
+                }
+            }
+        } catch(e) {}
+    </script>
+
+    <script>
+        try {
+            function toggleArticleTheme() {
+                var body = document.body;
+                var icon = document.getElementById('article-theme-icon');
+                body.classList.toggle('light-mode');
+                if (body.classList.contains('light-mode')) {
+                    icon.className = 'fas fa-moon';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    icon.className = 'fas fa-sun';
+                    localStorage.setItem('theme', 'dark');
+                }
+            }
+            // Restore saved theme from main site
+            (function() {
+                var saved = localStorage.getItem('theme');
+                if (saved === 'light') {
+                    document.body.classList.add('light-mode');
+                    var icon = document.getElementById('article-theme-icon');
+                    if (icon) icon.className = 'fas fa-moon';
+                }
+            })();
+        } catch(e) {}
+    </script>
+</body>
+</html>
