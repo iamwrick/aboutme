@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="alternate" type="application/rss+xml" title="Wrick Talukdar Articles" href="https://wricktalukdar.technology/articles.xml">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1H6B706ZF8"></script>
+<script>
+  try {
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1H6B706ZF8');
+  } catch(e) {}
+</script>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Identity Layer Nobody Built | Wrick Talukdar</title>
+    <meta name="description" content="Prompt injection is permanently the number one risk, and no filter will ever fix it. The real exposure is not whether a model gets fooled. It is what a fooled agent is allowed to reach.">
+    <meta property="og:title" content="The Identity Layer Nobody Built">
+    <meta property="og:description" content="Prompt injection is permanently the number one risk, and no filter will ever fix it. The real exposure is not whether a model gets fooled. It is what a fooled agent is allowed to reach.">
+    <meta property="og:type" content="article">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+
+        /* Top bar */
+        .article-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .article-nav-inner {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .article-nav a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .article-nav a:hover { color: var(--primary-text); }
+
+        .article-nav .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-text);
+        }
+
+        /* Reading progress */
+        .reading-progress {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            width: 0;
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+
+        /* Article layout */
+        .article-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .article-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--primary-text);
+            margin-bottom: 1.25rem;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-author-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .article-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .article-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-text);
+        }
+
+        .article-author-detail {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Article body */
+        .article-body h2 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-text);
+            margin: 2rem 0 0.75rem;
+        }
+
+        .article-body p {
+            color: var(--secondary-text);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+
+        .article-body strong {
+            color: var(--primary-text);
+            font-weight: 600;
+        }
+
+        .article-body em {
+            color: var(--accent-secondary);
+        }
+
+        .article-body ul, .article-body ol {
+            margin: 1rem 0 1.25rem 1.5rem;
+            color: var(--secondary-text);
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .article-body blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-style: italic;
+            color: var(--secondary-text);
+        }
+
+        .article-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-secondary);
+        }
+
+        .article-body pre {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+
+        .article-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--primary-text);
+        }
+
+        .callout {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout p { margin-bottom: 0; }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--secondary-text);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Takeaways list */
+        .takeaways-list {
+            list-style: none;
+            margin: 1rem 0 1.25rem 0;
+            padding: 0;
+        }
+
+        .takeaways-list li {
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            position: relative;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 1.02rem;
+            line-height: 1.7;
+            color: var(--secondary-text);
+        }
+
+        .takeaways-list li:last-child {
+            border-bottom: none;
+        }
+
+        .takeaways-list li::before {
+            content: counter(takeaway-counter);
+            counter-increment: takeaway-counter;
+            position: absolute;
+            left: 0;
+            top: 0.75rem;
+            width: 1.6rem;
+            height: 1.6rem;
+            background: rgba(255,255,255,0.07);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            text-align: center;
+            line-height: 1.6rem;
+        }
+
+        .takeaways-wrapper {
+            counter-reset: takeaway-counter;
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s;
+        }
+
+        .article-footer a:hover { gap: 0.7rem; }
+
+        .share-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .share-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .share-links a:hover {
+            background: rgba(255,255,255,0.12);
+            color: var(--primary-text);
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 100px 1.25rem 60px; }
+            .article-nav { padding: 0 1.25rem; }
+            .comparison-table { font-size: 0.82rem; }
+            .comparison-table th, .comparison-table td { padding: 0.6rem 0.7rem; }
+        }
+
+        /* Read Aloud Button */
+        .read-aloud-bar {
+            margin: 1rem 0 1.5rem;
+        }
+
+        .read-aloud-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 2rem;
+            color: var(--secondary-text);
+            font-family: inherit;
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .read-aloud-btn:hover {
+            border-color: rgba(255,255,255,0.25);
+            color: var(--primary-text);
+            background: rgba(255,255,255,0.06);
+        }
+
+        .read-aloud-btn.active {
+            border-color: #60a5fa;
+            color: #60a5fa;
+            background: rgba(96,165,250,0.06);
+        }
+
+        .read-aloud-btn i {
+            font-size: 0.85rem;
+        }
+
+        /* Light Mode */
+        body.light-mode {
+            --primary-bg: #ffffff;
+            --secondary-bg: #f8f9fa;
+            --accent-bg: #f0f0f0;
+            --card-bg: #ffffff;
+            --primary-text: #1a1a1a;
+            --secondary-text: #4a4a4a;
+            --muted-text: #888888;
+            --accent-color: #1a1a1a;
+            --accent-secondary: #333333;
+            --border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .article-nav {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        body.light-mode .reading-progress {
+            background: linear-gradient(90deg, #2563eb, #3b82f6);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle-article {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--muted-text);
+            font-size: 0.7rem;
+            transition: all 0.3s;
+            margin-left: auto;
+        }
+
+        .theme-toggle-article:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+    
+        .audio-player-section {
+            margin: 1rem 0 1.5rem;
+            padding: 1rem 1.25rem;
+            background: rgba(96, 165, 250, 0.04);
+            border: 1px solid rgba(96, 165, 250, 0.12);
+            border-radius: 0.75rem;
+        }
+        .audio-player-label {
+            font-size: 0.75rem; font-weight: 600; color: #60a5fa;
+            margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem;
+        }
+        .audio-player-label i { font-size: 0.85rem; }
+        .audio-player { width: 100%; height: 40px; border-radius: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+            <button class="theme-toggle-article" onclick="toggleArticleTheme()" title="Toggle light/dark mode"><i class="fas fa-sun" id="article-theme-icon"></i></button>
+            <a href="https://wricktalukdar.technology/articles.xml" target="_blank" style="color: #f97316; font-size: 1rem; margin-left: 0.75rem; opacity: 0.8; transition: all 0.2s; padding: 0.3rem 0.6rem; border: 1px solid rgba(249,115,22,0.25); border-radius: 1rem; display: inline-flex; align-items: center; gap: 0.3rem;" onmouseover="this.style.opacity='1';this.style.borderColor='rgba(249,115,22,0.5)'" onmouseout="this.style.opacity='0.8';this.style.borderColor='rgba(249,115,22,0.25)'" title="Subscribe via RSS"><i class="fas fa-rss"></i> <span style="font-size:0.65rem;font-weight:600;letter-spacing:0.5px;">RSS</span></a>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">AI Security</span>
+                <span class="article-date">October 2, 2026 &middot; 14 min read</span>
+            </div>
+            <h1 class="article-title">The Identity Layer Nobody Built</h1>
+            <p class="article-subtitle">Prompt injection is permanently the number one risk, and no filter will ever fix it. The real exposure is not whether a model gets fooled. It is what a fooled agent is allowed to reach.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Technology Leader &amp; Architect</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Read Aloud Button -->
+        
+            <div class="read-aloud-bar">
+            <button class="read-aloud-btn" onclick="toggleReadAloud()" id="read-aloud-btn">
+                <i class="fas fa-volume-up" id="read-aloud-icon"></i>
+                <span id="read-aloud-text">Read Full Article Aloud</span>
+            </button>
+        </div>
+
+        <div class="article-body">
+
+            <!-- SECTION 1: OPENING -->
+
+            <p>
+                We have spent two years and a staggering amount of money teaching models not to get fooled. I want to argue that this was mostly the wrong fight.
+            </p>
+
+            <p>
+                Here is what finally convinced me. I was reviewing an agent deployment where the credential handling looked, on paper, airtight. The secrets lived in a proper vault, encrypted at rest, encrypted on the wire, never written to the agent's own state. And it did not matter. The agent had a general-purpose tool with wide reach, and the moment a credential had to be used it was resolved into plaintext in a process that tool could read. A single injected instruction, hidden in a document the agent ingested, was enough to turn that reach into an exfiltration path. The vault did everything right. It just could not help once the secret had to go to work.
+            </p>
+
+            <p>
+                In my experience building AI systems at scale, the failures that actually hurt you are almost never the ones you were staring at. We were all staring at the prompt. The damage was happening one layer down, at the question of what a fooled agent is actually allowed to touch.
+            </p>
+
+            <p>
+                So let me make the case plainly. Prompt injection is the number one risk in AI security, it is going to stay number one, and no filter you buy will ever change that. The useful question is not how to stop the model from being fooled. It is how little an attacker gets when it inevitably is. That is an identity and authorization problem, and it is the layer almost nobody has actually built.
+            </p>
+
+            <!-- SECTION 2: WHY INJECTION IS PERMANENT -->
+
+            <h2>The Model Will Be Fooled</h2>
+
+            <p>
+                Start with the uncomfortable fact that anchors everything else. When OWASP published the 2026 edition of its Top 10 for LLM Applications in August, prompt injection was still sitting at number one, the slot it has held in every edition the project has ever produced <a href="https://hackerdna.com/blog/owasp-llm-top-10" target="_blank" rel="noopener" style="color: var(--accent-secondary); text-decoration: none; border-bottom: 1px solid rgba(96,165,250,0.3);">OWASP LLM Top 10 2026</a>. The 2026 scope was widened specifically to account for agents, adding language about cross-modal attacks, persistent memory, and what OWASP calls agentic blast radius <a href="https://www.invicti.com/blog/web-security/owasp-llm-top-10-2026-whats-new" target="_blank" rel="noopener" style="color: var(--accent-secondary); text-decoration: none; border-bottom: 1px solid rgba(96,165,250,0.3);">OWASP LLM Top 10 2026</a>. In the same cycle, Excessive Agency, which is just a precise way of saying an agent can take consequential actions, jumped from sixth to third <a href="https://hackerdna.com/blog/owasp-llm-top-10" target="_blank" rel="noopener" style="color: var(--accent-secondary); text-decoration: none; border-bottom: 1px solid rgba(96,165,250,0.3);">OWASP LLM Top 10 2026</a>.
+            </p>
+
+            <p>
+                Why does injection never get dethroned? Because there is no architectural fix at the layer everyone is defending. A language model cannot reliably separate instructions from data. Every piece of text it reads, a document, an email, a web page, a tool description, is a potential instruction, and the model has no robust way to decide which text it should obey and which it should merely process <a href="https://nhimg.org/complete-guide-to-the-2026-owasp-top-10-risks-for-agentic-applications" target="_blank" rel="noopener" style="color: var(--accent-secondary); text-decoration: none; border-bottom: 1px solid rgba(96,165,250,0.3);">OWASP Top 10 Risks For Agentic Applications</a>. Filtering raises the odds you catch a given malicious string. It does not change the fact that the model will eventually be fooled.
+            </p>
+
+            <p>
+                There is a strange statistical tell buried in the OWASP data that I keep coming back to. The 2026 list was rebuilt on an evidence base of 7,714 real incidents, and prompt injection held the top spot despite a comparatively thin public incident record <a href="https://www.giskard.ai/knowledge/owasp-top-10-for-llm-2026" target="_blank" rel="noopener" style="color: var(--accent-secondary); text-decoration: none; border-bottom: 1px solid rgba(96,165,250,0.3);">OWASP Top 10 for LLM 2026</a>. OWASP has a name for why. They call it the defense effect. Organizations spend so heavily blocking injection that successful blocks are never written up as incidents, so the public record undercounts the real base rate <a href="http://helpnetsecurity.com/2026/08/06/owasp-2026-llm-top-10-released/" target="_blank" rel="noopener" style="color: var(--accent-secondary); text-decoration: none; border-bottom: 1px solid rgba(96,165,250,0.3);">OWASP 2026 LLM Top 10</a>. The attacks you see in the news are the failures. The spend is enormous and the risk is still there, just quieter.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-triangle-exclamation"></i> The Fact to Sit With</div>
+                <p>A language model cannot tell instructions from data. That is not a bug a vendor will patch. It is the medium. Every dollar spent making the model harder to fool buys you a probability, not a guarantee, and it does nothing to limit the damage when the guarantee fails.</p>
+            </div>
+
+            <!-- SECTION 3: CREDENTIALS IN USE -->
+
+            <h2>A Vault Cannot Protect a Secret in Use</h2>
+
+            <p>
+                Let me sit with the mechanism that I think the whole industry keeps glossing over, because it is where the real exposure lives.
+            </p>
+
+            <p>
+                Credential vaults are good, genuinely good, at two of the three states a secret can be in. They protect a secret at rest, encrypted in storage, and they protect it in transit, encrypted on the wire. Most agent platforms now ship exactly this, and store the credential by reference so the raw secret never sits in the agent's own state. On paper that is serious security engineering. The problem is the third state, and it is the one that matters most for an agent.
+            </p>
+
+            <p>
+                A credential has to become plaintext to be used. There is no way around it. The moment an agent actually calls a downstream service, the secret is resolved into a usable, readable form inside a running process. In-use protection is a separate problem, and the vault does not solve it. If any tool the agent can invoke, a shell, a file reader, a code interpreter, can see that process memory, the vault was never really in the fight. It protected the secret right up until the instant the secret had to work.
+            </p>
+
+            <p>
+                Now layer the injection problem on top. The agent cannot reliably tell a legitimate instruction from a malicious one, so you have to assume an attacker can, sooner or later, get the agent to run a command of their choosing. If that command runs with broad reach, a general-purpose shell, a tool with wide filesystem or network access, then the attacker inherits whatever that tool can touch, including a freshly resolved credential sitting in plaintext. The determining factor is not whether the injection slipped past a filter. It is what the compromised tool was allowed to reach.
+            </p>
+
+            <p>
+                This is the sentence I wish every team building agents would tape to their monitor. The attacker's blast radius is bounded by the tool's reach, not by the model's judgment. Read that again. Not the model's judgment. The tool's reach. And the credential most worth stealing is rarely the end user's own session token. It is the long-lived service account the agent uses to talk to its backends, authority the person invoking the agent never personally had. A single over-scoped service credential, resolved into memory and readable by an over-powered tool, is the whole ballgame.
+            </p>
+
+            <p>
+                The uncomfortable confirmation is that the frameworks are not closing this gap on their own. An audit of three widely used agent frameworks checked them against a set of basic containment principles and found no native compliance in any of them, with memory integrity, the property that would stop a tool from reading another component's secrets, absent across all three. The containment layer is not merely weak. In the default building blocks most teams reach for, it is simply not there.
+            </p>
+
+
+            <!-- SECTION 4: ALREADY HAPPENING -->
+
+            <h2>This Is Already Happening in the Wild</h2>
+
+            <p>
+                If that sounds like a lab exercise, here is the one that should bother you more, because it was real traffic.
+            </p>
+
+            <p>
+                In July 2026, Zscaler's ThreatLabz documented two live campaigns using indirect prompt injection against AI agents, one a payment scam and one a typosquatting operation impersonating a crypto platform <a href="https://www.zscaler.com/fr/blogs/security-research/indirect-prompt-injection-web-content-targets-ai-agents" target="_blank" rel="noopener" style="color: var(--accent-secondary); text-decoration: none; border-bottom: 1px solid rgba(96,165,250,0.3);">Indirect Prompt Injection in Web Content</a>. The first dressed itself up as documentation for a Python library and told any coding agent that landed on it that it needed to buy a three dollar API license key to fix an error, then walked the agent through paying an attacker's crypto wallet <a href="https://www.infosecurity-magazine.com/news/indirect-prompt-injection-web/" target="_blank" rel="noopener" style="color: var(--accent-secondary); text-decoration: none; border-bottom: 1px solid rgba(96,165,250,0.3);">Indirect Prompt Injection in Web Content</a>. The malicious instructions were hidden off-screen with CSS so a human reviewer saw clean documentation while scrapers and agents saw the payload <a href="https://www.zscaler.com/fr/blogs/security-research/indirect-prompt-injection-web-content-targets-ai-agents" target="_blank" rel="noopener" style="color: var(--accent-secondary); text-decoration: none; border-bottom: 1px solid rgba(96,165,250,0.3);">Indirect Prompt Injection in Web Content</a>.
+            </p>
+
+            <p>
+                And it worked. Across 26 models tested, four actually executed the fraudulent payment <a href="https://www.zscaler.com/fr/blogs/security-research/indirect-prompt-injection-web-content-targets-ai-agents" target="_blank" rel="noopener" style="color: var(--accent-secondary); text-decoration: none; border-bottom: 1px solid rgba(96,165,250,0.3);">Indirect Prompt Injection in Web Content</a>. Now, you could read that as good news. Twenty-two models resisted. But look at what separated the ones that caused harm from the ones that did not. It was not better judgment that saved the day. It was that Zscaler had deliberately run the agent with no spending limits to measure the maximum exploitation surface <a href="https://www.zscaler.com/fr/blogs/security-research/indirect-prompt-injection-web-content-targets-ai-agents" target="_blank" rel="noopener" style="color: var(--accent-secondary); text-decoration: none; border-bottom: 1px solid rgba(96,165,250,0.3);">Indirect Prompt Injection in Web Content</a>. A payment cap would have bounded the loss to near nothing no matter which model was driving and no matter whether the injection parsed. That is an authorization control, not a text filter.
+            </p>
+
+            <p>
+                I will admit I am not fully convinced the industry has even noticed the pattern yet. We keep reporting these incidents as model failures, as if the fix is a smarter model. The PocketOS case from April 2026 is the one that makes the point without any injection at all. An agent with write access to a production database and no human confirmation step was given a perfectly legitimate task and permanently deleted a production table <a href="https://www.speakeasy.com/blog/owasp-agentic-top-10-explained" target="_blank" rel="noopener" style="color: var(--accent-secondary); text-decoration: none; border-bottom: 1px solid rgba(96,165,250,0.3);">The OWASP Agentic Top 10, explained</a>. No attacker. No malicious prompt. Just an agent with more reach than it should have had and nothing standing between it and an irreversible action.
+            </p>
+
+            <!-- SECTION 5: MCP -->
+
+            <h2>The Tool Layer Widens the Hole</h2>
+
+            <p>
+                The Model Context Protocol has become the standard way agents discover and call external tools, and it is worth understanding because it introduces an attack surface that older threat models simply do not describe <a href="https://arxiv.org/html/2603.18063" target="_blank" rel="noopener" style="color: var(--accent-secondary); text-decoration: none; border-bottom: 1px solid rgba(96,165,250,0.3);">MCP attack surface</a>.
+            </p>
+
+            <p>
+                The sharpest example is almost funny once you see it. In MCP, a tool advertises itself with a description field, and the agent reads that description to decide how to use the tool. That description is unsanitized text. A malicious server can embed instructions inside what looks like innocent help text, and the agent will follow them with no user ever seeing it happen <a href="https://labs.cloudsecurityalliance.org/wp-content/uploads/2026/07/CSA_research_note_mcp_tool_poisoning_auto_execution_20260701-csa-styled.pdf" target="_blank" rel="noopener" style="color: var(--accent-secondary); text-decoration: none; border-bottom: 1px solid rgba(96,165,250,0.3);">CSA research note: MCP tool poisoning</a>. The help text is the injection vector. And in September 2026 the official MCP Python SDK disclosed a flaw that let a malicious server trick a client into handing over the OAuth credentials it uses to log into a real service <a href="https://thehackernews.com/2026/09/official-mcp-python-sdk-flaw-can-let.html" target="_blank" rel="noopener" style="color: var(--accent-secondary); text-decoration: none; border-bottom: 1px solid rgba(96,165,250,0.3);">MCP Python SDK Flaw</a>.
+            </p>
+
+            <p>
+                There is a genuinely counterintuitive finding here too. When researchers benchmarked tool-poisoning attacks, they found that more capable models were often more susceptible, not less, because the attack exploits exactly the instruction-following ability that makes those models good <a href="https://arxiv.org/abs/2508.14925" target="_blank" rel="noopener" style="color: var(--accent-secondary); text-decoration: none; border-bottom: 1px solid rgba(96,165,250,0.3);">Tool Poisoning Attack benchmark</a>. Attack success hit 72.8 percent against one capable model. Think about what that means for the roadmap. Making the model smarter can make this particular problem worse. You cannot buy your way out at the model layer.
+            </p>
+
+            <!-- SECTION 6: THE ARGUMENT -->
+
+            <h2>We Are Defending the Wrong Layer</h2>
+
+            <p>
+                Put the cases side by side and the pattern is impossible to miss. In every single one, the consequence was set at the identity and authorization layer, not the text layer.
+            </p>
+
+            <p>
+                In the credential case, the determining factor was that a broad-reach tool ran in the same memory as a resolved, long-lived service credential. In the Zscaler case, it was that the agent had unconstrained payment authority. In the PocketOS case, it was write access to production with no confirmation gate. Not one of these outcomes turned on whether a filter caught the malicious string. Every one of them turned on what the agent could reach after it was already compromised.
+            </p>
+
+            <p>
+                This is the contrarian position I have landed on, and I hold it with some conviction. Prompt-injection filtering is largely theater. I do not mean it is useless. I mean it is pointed at a target that cannot be eliminated, and the money we pour into it is money we are not spending on the thing that actually bounds the damage. The real unsolved problem is containment. Can a compromised agent reach secrets, tokens, and privileged actions at all? That is a question of identity and least privilege, scoping each agent's credentials and tool reach so that a successful injection, which you should treat as inevitable, buys the attacker as little as possible.
+            </p>
+
+            <p>
+                Microsoft, to its credit, names the gap directly. Without a first-class identity model, explicit scoping, and enforceable authorization, agents accumulate excessive permissions and end up operating outside their intended boundaries <a href="https://learn.microsoft.com/en-us/security/zero-trust/sfi/least-privilege-for-ai-agents" target="_blank" rel="noopener" style="color: var(--accent-secondary); text-decoration: none; border-bottom: 1px solid rgba(96,165,250,0.3);">Least privilege for AI agents</a>. That sentence describes the layer the industry has been talking about and has not actually built.
+            </p>
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-shield-halved"></i> The Thesis, Stated Plainly</div>
+                <p>Assume the model will be fooled, because it will. Then the only variable you control is reach. Security for agents is not about making the model harder to trick. It is about making a tricked agent harmless. That is identity and least privilege, and it is the layer nobody has finished building.</p>
+            </div>
+
+            <!-- SECTION 7: WHAT TO DO -->
+
+            <h2>What This Means If You Are Building Agents</h2>
+
+            <p>
+                If you take one thing from this, let it be a reordering of where your effort goes. Here is how I would approach it.
+            </p>
+
+            <h3>Treat every agent as a principal with its own scoped identity</h3>
+
+            <p>
+                An agent should have a first-class identity, not borrow a human's or share an operator's. Microsoft's Entra Agent ID work is built around exactly this, giving agents a dedicated identity type so they can be governed, authenticated, and authorized like any other principal <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/agent-identity" target="_blank" rel="noopener" style="color: var(--accent-secondary); text-decoration: none; border-bottom: 1px solid rgba(96,165,250,0.3);">Agent identity concepts</a>. The model deliberately prevents users and admins from consenting to the most powerful permissions on an agent's behalf, so an agent cannot quietly accumulate the authority to escalate <a href="https://learn.microsoft.com/en-us/entra/agent-id/authorization-agent-id" target="_blank" rel="noopener" style="color: var(--accent-secondary); text-decoration: none; border-bottom: 1px solid rgba(96,165,250,0.3);">Authorization in Entra Agent ID</a>.
+            </p>
+
+            <h3>Prefer delegated access, and scope the tools before you ship</h3>
+
+            <p>
+                Where you can, give the agent delegated access so it can never exceed what the invoking user is already allowed to do, and for background automation use app-only access with the smallest possible permission set. The hard-won lesson across platforms is that the right controls often exist but are off by default. Tool scoping is frequently something you opt into at invoke time, easy to miss if you do not know to go looking for it, so the dangerous wide-open configuration is the one most teams get simply by not touching anything. Off by default is the same as absent for most teams.
+            </p>
+
+            <h3>Put hard authorization gates on irreversible actions</h3>
+
+            <p>
+                Spending, deletion, and privileged writes should sit behind caps and human confirmation that live outside the model entirely. The Zscaler agents moved real money because nothing but the model stood between the injection and the payment. A spending limit would have made the exact same injection a non-event. Design so that the worst an injected instruction can do is bounded by a control the model cannot talk its way past.
+            </p>
+
+            <p>
+                None of this is exotic. It is the least-privilege discipline security engineers have practiced for decades, applied to a new kind of principal. The reason it feels hard is that we got excited about agent capability first and are retrofitting the authorization model second.
+            </p>
+
+            <!-- SECTION 8: CLOSING -->
+
+            <h2>The Honest Part: Even the Right Layer Is Unfinished</h2>
+
+            <p>
+                I want to end with a caveat, because I distrust any security argument that ends too cleanly, and this one does not deserve to.
+            </p>
+
+            <p>
+                Containment is the right layer, but it is genuinely unsolved at its edges, and that is precisely why it is the interesting frontier. Vaults protect credentials at rest and in transit but not in use, and any secret the agent actually uses has to become plaintext in a process its tools may be able to read. There is a real tension between flexibility and safety, because a general-purpose tool like a shell is valuable exactly because it can reach anything the runtime can, and scoping it down to prevent exfiltration strips away the flexibility that justified using it in the first place. And an agent endpoint that does not require authentication is a reachable, unauthenticated surface that an attacker can simply find and enumerate. None of these have clean, settled answers yet.
+            </p>
+
+            <p>
+                So I am not claiming the identity layer is a solved thing we have all neglected to switch on. I am claiming something a little more pointed. The industry has standardized the vocabulary of agent identity and least privilege, the OWASP categories, the Entra Agent ID concepts, far faster than it has shipped containment that actually holds when an agent is compromised. We have the words. We mostly do not have the walls.
+            </p>
+
+            <p>
+                The title of this piece is a small provocation, and I mean it as one. The identity layer is not literally unbuilt. But measured against the confidence with which we are deploying agents into production with real credentials and real reach, it might as well be. We spent two years trying to make the model impossible to fool. The next two should go to making a fooled model harmless. That is the layer that decides whether any of this is safe, and it is the one still waiting to be built.
+            </p>
+
+            <!-- KEY TAKEAWAYS -->
+
+            <h2>Key Takeaways</h2>
+
+            <div class="takeaways-wrapper">
+                <ol class="takeaways-list">
+                    <li><strong>Prompt injection is permanently number one.</strong> It has topped every OWASP LLM Top 10, including the August 2026 edition, which widened its scope to cover agentic blast radius. There is no fix at the text layer because models cannot separate instructions from data.</li>
+                    <li><strong>The "defense effect" hides the real rate.</strong> Successful blocks are never reported as incidents, so the public record undercounts injection. Heavy filtering spend suppresses the visible count without eliminating the risk.</li>
+                    <li><strong>A vault cannot protect a secret in use.</strong> Credentials are safe at rest and in transit, but the moment an agent uses one it becomes plaintext in a process a broad-reach tool may be able to read. The secret worth stealing is the long-lived service account, and reach, not judgment, sets the blast radius.</li>
+                    <li><strong>It is already happening in the wild.</strong> Zscaler caught live indirect-injection campaigns moving real crypto in July 2026. The agents that caused harm did so because they had unconstrained payment authority, not because they lacked a filter.</li>
+                    <li><strong>MCP widens the surface.</strong> Unsanitized tool descriptions carry injections, a disclosed MCP Python SDK flaw leaked OAuth credentials, and tool-poisoning success hit 72.8 percent, with more capable models often more vulnerable.</li>
+                    <li><strong>Containment is the real work.</strong> Give every agent a scoped first-class identity, prefer delegated access, scope tools before shipping rather than relying on defaults, and gate irreversible actions behind caps and confirmation the model cannot bypass.</li>
+                    <li><strong>The right layer is still unfinished.</strong> Credentials are exposed in use, flexibility trades against containment, and unauthenticated agent endpoints remain discoverable. The field has the vocabulary of agent identity but has not shipped containment that holds under compromise.</li>
+                </ol>
+            </div>
+
+            <!-- REFERENCES -->
+
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-book-open"></i> References</div>
+                <p style="margin-bottom: 0.5rem;"><strong>[1]</strong> "How Deployed Agentic AI Frameworks Fail Public-Facing Safety Requirements" (containment audit of LangChain, AutoGPT, and the OpenAI Agents SDK), arXiv:2606.12797, 2026.</p>
+                <p style="margin-bottom: 0.5rem;"><strong>[2]</strong> OWASP, "Top 10 for LLM Applications 2026," published August 4, 2026.</p>
+                <p style="margin-bottom: 0.5rem;"><strong>[3]</strong> OWASP, "Top 10 for Agentic Applications 2026" (ASI01-ASI10).</p>
+                <p style="margin-bottom: 0.5rem;"><strong>[4]</strong> Zscaler ThreatLabz, "Indirect Prompt Injection in Web Content Targets AI Agents," July 2026.</p>
+                <p style="margin-bottom: 0.5rem;"><strong>[5]</strong> The Hacker News, "Official MCP Python SDK Flaw Can Let Malicious Servers Steal OAuth Credentials," September 2026.</p>
+                <p style="margin-bottom: 0.5rem;"><strong>[6]</strong> Cloud Security Alliance, "MCP Tool Poisoning and Auto-Execution," research note, July 2026.</p>
+                <p style="margin-bottom: 0.5rem;"><strong>[7]</strong> "A Benchmark for Tool Poisoning Attack on Real-World MCP Servers," arXiv:2508.14925.</p>
+                <p style="margin-bottom: 0.5rem;"><strong>[8]</strong> Speakeasy, "The OWASP Agentic Top 10, explained" (PocketOS production-database deletion, April 2026).</p>
+                <p style="margin-bottom: 0.5rem;"><strong>[9]</strong> Microsoft Learn, "Least privilege for AI agents" and "Authorization in Microsoft Entra Agent ID."</p>
+                <p style="margin-bottom: 0;"><strong>[10]</strong> Microsoft Learn, "Agent identity concepts in Microsoft Foundry" and "Access patterns and controls for AI agents."</p>
+            </div>
+
+
+        </div>
+
+    <footer class="article-footer">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to all articles</a>
+            <div class="share-links">
+                <a href="https://twitter.com/intent/tweet?text=The%20Identity%20Layer%20Nobody%20Built&url=https://wricktalukdar.technology/articles/the-identity-layer-nobody-built.html" title="Share on X"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://wricktalukdar.technology/articles/the-identity-layer-nobody-built.html" title="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </footer>
+
+    </article>
+
+    <script>
+        try {
+            window.addEventListener('scroll', function() {
+                var bar = document.getElementById('reading-progress');
+                var scrollTop = window.pageYOffset;
+                var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                if (docHeight > 0) {
+                    bar.style.width = (scrollTop / docHeight) * 100 + '%';
+                }
+            });
+        } catch(e) {}
+    </script>
+
+    <script>
+        try {
+            var readAloudUtterance = null;
+            var readAloudActive = false;
+
+            function toggleReadAloud() {
+                var btn = document.getElementById('read-aloud-btn');
+                var icon = document.getElementById('read-aloud-icon');
+                var label = document.getElementById('read-aloud-text');
+
+                if (readAloudActive) {
+                    window.speechSynthesis.cancel();
+                    readAloudActive = false;
+                    btn.classList.remove('active');
+                    icon.className = 'fas fa-volume-up';
+                    label.textContent = 'Read Full Article Aloud';
+                    return;
+                }
+
+                var body = document.querySelector('.article-body');
+                if (!body) return;
+
+                var text = body.innerText;
+                if (!text) return;
+
+                readAloudUtterance = new SpeechSynthesisUtterance(text);
+                readAloudUtterance.rate = 1.0;
+                readAloudUtterance.pitch = 1.0;
+                readAloudUtterance.lang = 'en-US';
+
+                var voices = window.speechSynthesis.getVoices();
+                var preferred = voices.find(function(v) { return v.name.indexOf('Samantha') > -1; }) ||
+                               voices.find(function(v) { return v.name.indexOf('Google') > -1 && v.lang === 'en-US'; }) ||
+                               voices.find(function(v) { return v.lang === 'en-US'; });
+                if (preferred) readAloudUtterance.voice = preferred;
+
+                readAloudUtterance.onend = function() {
+                    readAloudActive = false;
+                    btn.classList.remove('active');
+                    icon.className = 'fas fa-volume-up';
+                    label.textContent = 'Read Full Article Aloud';
+                };
+
+                window.speechSynthesis.speak(readAloudUtterance);
+                readAloudActive = true;
+                btn.classList.add('active');
+                icon.className = 'fas fa-pause';
+                label.textContent = 'Stop Reading';
+            }
+
+            if (window.speechSynthesis) {
+                window.speechSynthesis.getVoices();
+                if (window.speechSynthesis.onvoiceschanged !== undefined) {
+                    window.speechSynthesis.onvoiceschanged = function() { window.speechSynthesis.getVoices(); };
+                }
+            }
+        } catch(e) {}
+    </script>
+
+    <script>
+        try {
+            function toggleArticleTheme() {
+                var body = document.body;
+                var icon = document.getElementById('article-theme-icon');
+                body.classList.toggle('light-mode');
+                if (body.classList.contains('light-mode')) {
+                    icon.className = 'fas fa-moon';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    icon.className = 'fas fa-sun';
+                    localStorage.setItem('theme', 'dark');
+                }
+            }
+            // Restore saved theme from main site
+            (function() {
+                var saved = localStorage.getItem('theme');
+                if (saved === 'light') {
+                    document.body.classList.add('light-mode');
+                    var icon = document.getElementById('article-theme-icon');
+                    if (icon) icon.className = 'fas fa-moon';
+                }
+            })();
+        } catch(e) {}
+    </script>
+</body>
+</html>
