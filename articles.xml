@@ -5,9 +5,21 @@
     <link>https://wricktalukdar.technology</link>
     <description>Articles on AI, Machine Learning, Agentic AI, Generative AI, Leadership, and emerging technology by Wrick Talukdar.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 24 Sep 2026 20:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 02 Oct 2026 20:00:00 +0000</lastBuildDate>
     <atom:link href="https://wricktalukdar.technology/articles.xml" rel="self" type="application/rss+xml"/>
 <item>
+      <title>The Identity Layer Nobody Built</title>
+      <link>https://wricktalukdar.technology/articles/the-identity-layer-nobody-built.html</link>
+      <description>Prompt injection is permanently the number one risk, and no filter will ever fix it. The real exposure is not whether a model gets fooled. It is what a fooled agent is allowed to reach.</description>
+      <guid>https://wricktalukdar.technology/articles/the-identity-layer-nobody-built.html</guid>
+    </item>
+    <item>
+      <title>Attention Didn't Die, It Just Got Outnumbered</title>
+      <link>https://wricktalukdar.technology/articles/attention-didnt-die-it-just-got-outnumbered.html</link>
+      <description>Everyone keeps announcing the end of the Transformer. Yet every frontier model that claims to move past attention quietly keeps it. The real story of 2026 is not replacement. It is a truce.</description>
+      <guid>https://wricktalukdar.technology/articles/attention-didnt-die-it-just-got-outnumbered.html</guid>
+    </item>
+    <item>
       <title>Reasoning in the Dark: The Coming Trade Between Efficient Thought and Auditable Thought</title>
       <link>https://wricktalukdar.technology/articles/reasoning-in-the-dark-efficient-vs-auditable-thought.html</link>
       <description>The field is quietly moving reasoning off human-readable tokens and into continuous latent space. It is faster and cheaper. It also throws away the one window we had into how a model thinks.</description>

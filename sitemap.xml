@@ -7,6 +7,20 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://wricktalukdar.technology/articles/the-identity-layer-nobody-built.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://wricktalukdar.technology/articles/attention-didnt-die-it-just-got-outnumbered.html</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
     <loc>https://wricktalukdar.technology/articles/agent-evaluation-benchmarking-autonomy.html</loc>
     <lastmod>2026-09-19</lastmod>
     <changefreq>monthly</changefreq>
