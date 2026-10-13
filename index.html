@@ -8624,78 +8624,208 @@ try {
         })();
 
 
-        // Neural Net Particle Background
+        // Starfield + Constellation Background (matches footer-bg aesthetic)
         (function() {
             const canvas = document.getElementById('particle-canvas');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
-            let particles = [];
-            const maxParticles = 70;
-            const connectionDistance = 200;
+            let W = 0, H = 0, DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+            let stars = [];        // dense background starfield (twinkle + slow drift)
+            let brightStars = [];  // hero stars with glow, joined by constellation lines
+            let constellations = [];
+            let shootingStars = [];
+
+            function rand(a, b) { return a + Math.random() * (b - a); }
 
             function resize() {
                 const hero = canvas.parentElement;
-                canvas.width = hero.offsetWidth;
-                canvas.height = hero.offsetHeight;
+                W = hero.offsetWidth; H = hero.offsetHeight;
+                canvas.width = W * DPR; canvas.height = H * DPR;
+                canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+                ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+                build();
             }
-            resize();
-            window.addEventListener('resize', resize);
 
-            class Particle {
-                constructor() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = Math.random() * canvas.height;
-                    this.vx = (Math.random() - 0.5) * 0.4;
-                    this.vy = (Math.random() - 0.5) * 0.4;
-                    this.radius = Math.random() * 2.2 + 1;
+            // Density falls off toward the horizontal center (like the footer image)
+            function edgeBias() {
+                // pick an x with higher probability near the two edges
+                let r = Math.random();
+                let x = Math.random() * W;
+                const centerPull = 1 - Math.abs((x / W) - 0.5) * 2; // 1 at center, 0 at edges
+                // reject some central picks to thin the middle
+                if (Math.random() < centerPull * 0.55) x = Math.random() * W;
+                return x;
+            }
+
+            function build() {
+                // Background starfield — scaled to area
+                const count = Math.round(W * H / 2600);
+                stars = [];
+                for (let i = 0; i < count; i++) {
+                    const x = edgeBias();
+                    const edge = 1 - Math.abs((x / W) - 0.5) * 2; // 0..1, higher at edges
+                    stars.push({
+                        x, y: Math.random() * H,
+                        r: rand(0.3, 1.5) + (Math.random() < 0.08 ? rand(0.5, 1.2) : 0),
+                        base: rand(0.25, 0.75) + edge * 0.2,
+                        tw: rand(0.004, 0.02),      // twinkle speed
+                        ph: rand(0, Math.PI * 2),   // twinkle phase
+                        drift: rand(0.01, 0.06),    // slow horizontal drift
+                        blue: Math.random() < 0.5
+                    });
                 }
-                update() {
-                    this.x += this.vx;
-                    this.y += this.vy;
-                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                // Bright "hero" stars, clustered near left and right thirds
+                brightStars = [];
+                const nBright = Math.max(10, Math.round(W / 150));
+                for (let i = 0; i < nBright; i++) {
+                    const leftSide = i % 2 === 0;
+                    const bx = leftSide ? rand(0.02, 0.26) * W : rand(0.74, 0.98) * W;
+                    const by = rand(0.12, 0.88) * H;
+                    brightStars.push({
+                        x: bx, y: by,
+                        r: rand(1.6, 3.2),
+                        base: rand(0.75, 1.0),
+                        tw: rand(0.003, 0.012),
+                        ph: rand(0, Math.PI * 2)
+                    });
                 }
-                draw() {
+
+                // Constellation lines: connect each bright star to its 1-2 nearest bright neighbors on the same side
+                constellations = [];
+                for (let i = 0; i < brightStars.length; i++) {
+                    const a = brightStars[i];
+                    const sideA = a.x < W / 2;
+                    let cand = [];
+                    for (let j = 0; j < brightStars.length; j++) {
+                        if (i === j) continue;
+                        const b = brightStars[j];
+                        if ((b.x < W / 2) !== sideA) continue;
+                        const d = Math.hypot(a.x - b.x, a.y - b.y);
+                        if (d < W * 0.14) cand.push({ j, d });
+                    }
+                    cand.sort((p, q) => p.d - q.d);
+                    cand.slice(0, 2).forEach(c => {
+                        if (i < c.j) constellations.push([i, c.j]);
+                    });
+                }
+
+                shootingStars = [];
+            }
+
+            function spawnShootingStar() {
+                // start upper area, travel down-left or down-right, short-lived
+                const fromRight = Math.random() < 0.5;
+                const x = fromRight ? rand(0.7, 0.95) * W : rand(0.05, 0.3) * W;
+                const y = rand(0.05, 0.4) * H;
+                const ang = fromRight ? rand(Math.PI * 0.78, Math.PI * 0.92) : rand(Math.PI * 0.08, Math.PI * 0.22);
+                const spd = rand(6, 10);
+                shootingStars.push({
+                    x, y, vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
+                    life: 0, max: rand(28, 46), len: rand(60, 140)
+                });
+            }
+
+            let t = 0;
+            function animate() {
+                t += 1;
+                const light = document.body.classList.contains('light-mode');
+                ctx.clearRect(0, 0, W, H);
+
+                // faint central nebula haze
+                const neb = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W, H) * 0.42);
+                if (light) {
+                    neb.addColorStop(0, 'rgba(37, 99, 235, 0.05)');
+                    neb.addColorStop(1, 'rgba(37, 99, 235, 0)');
+                } else {
+                    neb.addColorStop(0, 'rgba(40, 90, 160, 0.10)');
+                    neb.addColorStop(0.6, 'rgba(30, 60, 120, 0.04)');
+                    neb.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                }
+                ctx.fillStyle = neb;
+                ctx.beginPath();
+                ctx.ellipse(W/2, H/2, Math.max(W,H)*0.42, H*0.42, 0, 0, Math.PI*2);
+                ctx.fill();
+
+                // constellation lines (behind stars)
+                for (const [i, j] of constellations) {
+                    const a = brightStars[i], b = brightStars[j];
+                    const al = 0.18 + 0.10 * Math.sin(t * 0.01 + i);
                     ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = document.body.classList.contains('light-mode') ? 'rgba(30, 64, 175, 0.7)' : 'rgba(255, 255, 255, 0.5)';
+                    ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+                    ctx.strokeStyle = light
+                        ? `rgba(37, 99, 235, ${al * 1.4})`
+                        : `rgba(120, 170, 240, ${al})`;
+                    ctx.lineWidth = 0.6;
+                    ctx.stroke();
+                }
+
+                // background starfield
+                for (const s of stars) {
+                    s.x += s.drift;
+                    if (s.x > W + 2) s.x = -2;
+                    const tw = s.base * (0.6 + 0.4 * Math.sin(t * s.tw * 6 + s.ph));
+                    const a = Math.max(0, Math.min(1, tw));
+                    if (light) {
+                        ctx.fillStyle = `rgba(30, 64, 175, ${a * 0.8})`;
+                    } else {
+                        ctx.fillStyle = s.blue
+                            ? `rgba(150, 190, 255, ${a})`
+                            : `rgba(255, 255, 255, ${a})`;
+                    }
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
                     ctx.fill();
                 }
-            }
 
-            for (let i = 0; i < maxParticles; i++) {
-                particles.push(new Particle());
-            }
+                // bright hero stars with glow bloom
+                for (const b of brightStars) {
+                    const tw = b.base * (0.75 + 0.25 * Math.sin(t * b.tw * 6 + b.ph));
+                    const a = Math.max(0, Math.min(1, tw));
+                    const glowR = b.r * 6;
+                    const g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, glowR);
+                    if (light) {
+                        g.addColorStop(0, `rgba(37, 99, 235, ${a * 0.5})`);
+                        g.addColorStop(1, 'rgba(37, 99, 235, 0)');
+                    } else {
+                        g.addColorStop(0, `rgba(140, 190, 255, ${a * 0.55})`);
+                        g.addColorStop(1, 'rgba(140, 190, 255, 0)');
+                    }
+                    ctx.fillStyle = g;
+                    ctx.beginPath(); ctx.arc(b.x, b.y, glowR, 0, Math.PI * 2); ctx.fill();
+                    // core
+                    ctx.fillStyle = light ? `rgba(20, 50, 150, ${a})` : `rgba(240, 248, 255, ${a})`;
+                    ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fill();
+                }
 
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                // Draw connections
-                for (let i = 0; i < particles.length; i++) {
-                    for (let j = i + 1; j < particles.length; j++) {
-                        const dx = particles[i].x - particles[j].x;
-                        const dy = particles[i].y - particles[j].y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < connectionDistance) {
-                            const alpha = (1 - dist / connectionDistance) * 0.25;
-                            ctx.beginPath();
-                            ctx.moveTo(particles[i].x, particles[i].y);
-                            ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.strokeStyle = document.body.classList.contains('light-mode') ? `rgba(30, 64, 175, ${alpha * 2})` : `rgba(255, 255, 255, ${alpha})`;
-                            ctx.lineWidth = 0.6;
-                            ctx.stroke();
-                        }
+                // shooting stars
+                if (Math.random() < 0.004 && shootingStars.length < 2) spawnShootingStar();
+                for (let k = shootingStars.length - 1; k >= 0; k--) {
+                    const sh = shootingStars[k];
+                    sh.x += sh.vx; sh.y += sh.vy; sh.life += 1;
+                    const prog = sh.life / sh.max;
+                    const a = Math.sin(Math.PI * prog); // fade in and out
+                    const tailX = sh.x - sh.vx / Math.hypot(sh.vx, sh.vy) * sh.len;
+                    const tailY = sh.y - sh.vy / Math.hypot(sh.vx, sh.vy) * sh.len;
+                    const grad = ctx.createLinearGradient(sh.x, sh.y, tailX, tailY);
+                    grad.addColorStop(0, `rgba(240, 248, 255, ${a})`);
+                    grad.addColorStop(1, 'rgba(240, 248, 255, 0)');
+                    ctx.strokeStyle = grad; ctx.lineWidth = 1.6;
+                    ctx.beginPath(); ctx.moveTo(sh.x, sh.y); ctx.lineTo(tailX, tailY); ctx.stroke();
+                    // bright head
+                    ctx.fillStyle = `rgba(255, 255, 255, ${a})`;
+                    ctx.beginPath(); ctx.arc(sh.x, sh.y, 1.6, 0, Math.PI * 2); ctx.fill();
+                    if (sh.life >= sh.max || sh.x < -20 || sh.x > W + 20 || sh.y > H + 20) {
+                        shootingStars.splice(k, 1);
                     }
                 }
 
-                // Update and draw particles
-                particles.forEach(p => {
-                    p.update();
-                    p.draw();
-                });
-
                 requestAnimationFrame(animate);
             }
+
+            resize();
+            window.addEventListener('resize', resize);
             animate();
         })();
 
