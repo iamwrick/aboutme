@@ -5,9 +5,15 @@
     <link>https://wricktalukdar.technology</link>
     <description>Articles on AI, Machine Learning, Agentic AI, Generative AI, Leadership, and emerging technology by Wrick Talukdar.</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 12 Oct 2026 20:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 15 Oct 2026 20:00:00 +0000</lastBuildDate>
     <atom:link href="https://wricktalukdar.technology/articles.xml" rel="self" type="application/rss+xml"/>
 <item>
+      <title>The Voice Was Never the Breakthrough</title>
+      <link>https://wricktalukdar.technology/articles/the-voice-was-never-the-breakthrough.html</link>
+      <description>Speech-to-speech AI turned voice agents from scripted phone trees into real-time, tool-calling systems. But the hard problem has quietly shifted, from sounding human to staying trustworthy and contained when the user cannot see what the agent is doing.</description>
+      <guid>https://wricktalukdar.technology/articles/the-voice-was-never-the-breakthrough.html</guid>
+    </item>
+    <item>
       <title>The Model That Refuses to Talk</title>
       <link>https://wricktalukdar.technology/articles/the-model-that-refuses-to-talk.html</link>
       <description>A new class of model stopped generating text and started scoring a fixed menu of answers instead. That one mechanical choice is what makes it cheap, fast, and honest about what it does not know. It is also what caps it.</description>
