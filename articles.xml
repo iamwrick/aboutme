@@ -5,9 +5,15 @@
     <link>https://wricktalukdar.technology</link>
     <description>Articles on AI, Machine Learning, Agentic AI, Generative AI, Leadership, and emerging technology by Wrick Talukdar.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 15 Oct 2026 20:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 23 Oct 2026 16:00:00 +0000</lastBuildDate>
     <atom:link href="https://wricktalukdar.technology/articles.xml" rel="self" type="application/rss+xml"/>
 <item>
+      <title>Governance Is the Accelerator, Not the Brake</title>
+      <link>https://wricktalukdar.technology/articles/governance-is-the-accelerator-not-the-brake.html</link>
+      <description>Agentic AI adoption is near universal, yet most agents never reach production and governance is the top reason they stall. The contrarian case that governance is not a cost center or a brake, it is the lever that decides which deployments scale and return value.</description>
+      <guid>https://wricktalukdar.technology/articles/governance-is-the-accelerator-not-the-brake.html</guid>
+    </item>
+    <item>
       <title>The Voice Was Never the Breakthrough</title>
       <link>https://wricktalukdar.technology/articles/the-voice-was-never-the-breakthrough.html</link>
       <description>Speech-to-speech AI turned voice agents from scripted phone trees into real-time, tool-calling systems. But the hard problem has quietly shifted, from sounding human to staying trustworthy and contained when the user cannot see what the agent is doing.</description>
