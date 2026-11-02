@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="alternate" type="application/rss+xml" title="Wrick Talukdar Articles" href="https://wricktalukdar.technology/articles.xml">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1H6B706ZF8"></script>
+<script>
+  try {
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1H6B706ZF8');
+  } catch(e) {}
+</script>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../photos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../photos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../photos/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stop Paying Your Model to Overthink | Wrick Talukdar</title>
+    <meta name="description" content="More reasoning is not more intelligence. The cheapest win in AI engineering right now is a thinking budget you actually measure.">
+    <meta property="og:title" content="Stop Paying Your Model to Overthink">
+    <meta property="og:description" content="More reasoning is not more intelligence. The cheapest win in AI engineering right now is a thinking budget you actually measure.">
+    <meta property="og:type" content="article">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --primary-text: #d1d5db;
+            --secondary-text: #9ca3af;
+            --muted-text: #6b7280;
+            --accent-color: #f3f4f6;
+            --accent-secondary: #e5e7eb;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--primary-text);
+            line-height: 1.75;
+        }
+        .article-nav { position: fixed; top: 0; left: 0; width: 100%; height: 64px; background: rgba(0,0,0,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color); z-index: 1000; display: flex; align-items: center; padding: 0 2rem; }
+        .article-nav-inner { max-width: 800px; width: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+        .article-nav a { color: var(--secondary-text); text-decoration: none; font-size: 0.9rem; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; transition: color 0.2s; }
+        .article-nav a:hover { color: var(--primary-text); }
+        .article-nav .logo { font-family: 'Crimson Text', serif; font-size: 1.2rem; font-weight: 600; color: var(--primary-text); }
+        .reading-progress { position: fixed; top: 64px; left: 0; height: 3px; background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary)); width: 0; z-index: 1001; transition: width 0.1s ease; }
+        .article-container { max-width: 760px; margin: 0 auto; padding: 120px 2rem 80px; }
+        .article-header { margin-bottom: 3rem; }
+        .article-meta-top { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .article-tag { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent-color); background: rgba(255,255,255,0.08); padding: 0.3rem 0.9rem; border-radius: 2rem; }
+        .article-date { font-size: 0.85rem; color: var(--muted-text); }
+        .article-title { font-family: 'Crimson Text', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 600; line-height: 1.15; color: var(--primary-text); margin-bottom: 1.25rem; }
+        .article-subtitle { font-size: 1.2rem; color: var(--secondary-text); line-height: 1.6; margin-bottom: 1.5rem; }
+        .article-author-row { display: flex; align-items: center; gap: 0.75rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); }
+        .article-author-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+        .article-author-name { font-weight: 600; font-size: 0.9rem; color: var(--primary-text); }
+        .article-author-detail { font-size: 0.8rem; color: var(--muted-text); }
+        .article-body h2 { font-family: 'Crimson Text', serif; font-size: 1.75rem; font-weight: 600; color: var(--primary-text); margin: 2.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
+        .article-body h3 { font-size: 1.25rem; font-weight: 600; color: var(--primary-text); margin: 2rem 0 0.75rem; }
+        .article-body p { color: var(--secondary-text); font-size: 1.05rem; line-height: 1.85; margin-bottom: 1.25rem; }
+        .article-body strong { color: var(--primary-text); font-weight: 600; }
+        .article-body em { color: var(--accent-secondary); }
+        .article-body ul, .article-body ol { margin: 1rem 0 1.25rem 1.5rem; color: var(--secondary-text); }
+        .article-body li { margin-bottom: 0.5rem; font-size: 1.05rem; line-height: 1.7; }
+        .ref-link { color: #60a5fa; text-decoration: none; font-size: 0.75rem; font-weight: 600; vertical-align: super; padding: 0 1px; }
+        .ref-link:hover { text-decoration: underline; }
+        .callout { background: rgba(255,255,255,0.04); border: 1px solid var(--border-color); border-radius: 0.75rem; padding: 1.25rem 1.5rem; margin: 1.5rem 0; }
+        .callout-title { font-weight: 600; color: var(--accent-color); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .callout p { margin-bottom: 0; }
+        .callout a { color: var(--accent-secondary); border-bottom: 1px solid rgba(96,165,250,0.3); text-decoration: none; }
+        @media (max-width: 768px) { .article-container { padding: 100px 1.25rem 60px; } .article-nav { padding: 0 1.25rem; } }
+        .read-aloud-bar { margin: 1rem 0 1.5rem; }
+        .read-aloud-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1.25rem; background: rgba(255,255,255,0.04); border: 1px solid var(--border-color); border-radius: 2rem; color: var(--secondary-text); font-family: inherit; font-size: 0.78rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .read-aloud-btn:hover { border-color: rgba(255,255,255,0.25); color: var(--primary-text); background: rgba(255,255,255,0.06); }
+        .read-aloud-btn.active { border-color: #60a5fa; color: #60a5fa; background: rgba(96,165,250,0.06); }
+        .read-aloud-btn i { font-size: 0.85rem; }
+        body.light-mode { --primary-bg: #ffffff; --secondary-bg: #f8f9fa; --accent-bg: #f0f0f0; --card-bg: #ffffff; --primary-text: #1a1a1a; --secondary-text: #4a4a4a; --muted-text: #888888; --accent-color: #1a1a1a; --accent-secondary: #333333; --border-color: rgba(0,0,0,0.1); }
+        body.light-mode .article-nav { background: rgba(255,255,255,0.95); }
+        body.light-mode .reading-progress { background: linear-gradient(90deg, #2563eb, #3b82f6); }
+        body.light-mode .ref-link { color: #2563eb; }
+        .theme-toggle-article { background: none; border: 1px solid var(--border-color); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted-text); font-size: 0.7rem; transition: all 0.3s; margin-left: auto; }
+        .theme-toggle-article:hover { border-color: var(--accent-color); color: var(--accent-color); }
+        .article-footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .article-footer a { color: var(--accent-color); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 0.4rem; transition: gap 0.2s; }
+        .article-footer a:hover { gap: 0.7rem; }
+        .share-links { display: flex; gap: 0.75rem; }
+        .share-links a { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(255,255,255,0.06); color: var(--secondary-text); font-size: 0.9rem; transition: all 0.2s; }
+        .share-links a:hover { background: rgba(255,255,255,0.12); color: var(--primary-text); }
+
+        .audio-player-section {
+            margin: 1rem 0 1.5rem;
+            padding: 1rem 1.25rem;
+            background: rgba(96, 165, 250, 0.04);
+            border: 1px solid rgba(96, 165, 250, 0.12);
+            border-radius: 0.75rem;
+        }
+        .audio-player-label {
+            font-size: 0.75rem; font-weight: 600; color: #60a5fa;
+            margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem;
+        }
+        .audio-player-label i { font-size: 0.85rem; }
+        .audio-player { width: 100%; height: 40px; border-radius: 20px; }
+        .comparison-table { width:100%; border-collapse:collapse; margin:1.5rem 0; font-size:0.9rem; }
+        .comparison-table th { text-align:left; padding:0.7rem 0.9rem; background:rgba(255,255,255,0.06); color:var(--accent-color); font-weight:600; border-bottom:1px solid var(--border-color); }
+        .comparison-table td { padding:0.7rem 0.9rem; border-bottom:1px solid rgba(255,255,255,0.05); color:var(--secondary-text); vertical-align:top; }
+        .article-body code { font-family:'JetBrains Mono',monospace; background:rgba(255,255,255,0.08); padding:0.1rem 0.4rem; border-radius:4px; font-size:0.85rem; }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <nav class="article-nav">
+        <div class="article-nav-inner">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+            <span class="logo">Wrick Talukdar</span>
+            <button class="theme-toggle-article" onclick="toggleArticleTheme()" title="Toggle light/dark mode"><i class="fas fa-sun" id="article-theme-icon"></i></button>
+            <a href="https://wricktalukdar.technology/articles.xml" target="_blank" style="color: #f97316; font-size: 1rem; margin-left: 0.75rem; opacity: 0.8; transition: all 0.2s; padding: 0.3rem 0.6rem; border: 1px solid rgba(249,115,22,0.25); border-radius: 1rem; display: inline-flex; align-items: center; gap: 0.3rem;" onmouseover="this.style.opacity='1';this.style.borderColor='rgba(249,115,22,0.5)'" onmouseout="this.style.opacity='0.8';this.style.borderColor='rgba(249,115,22,0.25)'" title="Subscribe via RSS"><i class="fas fa-rss"></i> <span style="font-size:0.65rem;font-weight:600;letter-spacing:0.5px;">RSS</span></a>
+        </div>
+    </nav>
+
+    <article class="article-container">
+
+        <header class="article-header">
+            <div class="article-meta-top">
+                <span class="article-tag">AI Engineering</span>
+                <span class="article-date">November 2, 2026 &middot; 12 min read</span>
+            </div>
+            <h1 class="article-title">Stop Paying Your Model to Overthink</h1>
+            <p class="article-subtitle">More reasoning is not more intelligence. The cheapest win in AI engineering right now is a thinking budget you actually measure.</p>
+            <div class="article-author-row">
+                <img src="../photos/wrick.jpg" alt="Wrick Talukdar" class="article-author-avatar" onerror="this.style.display='none'">
+                <div>
+                    <div class="article-author-name">Wrick Talukdar</div>
+                    <div class="article-author-detail">AI/ML Technology Leader &amp; Architect</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="read-aloud-bar">
+            <button class="read-aloud-btn" onclick="toggleReadAloud()" id="read-aloud-btn">
+                <i class="fas fa-volume-up" id="read-aloud-icon"></i>
+                <span id="read-aloud-text">Read Full Article Aloud</span>
+            </button>
+        </div>
+
+
+            <!-- Podcast Audio Player -->
+            <div class="audio-player-section">
+                <div class="audio-player-label">
+                    <i class="fas fa-headphones"></i> The Key Idea in Less Than 10 Minutes
+                </div>
+                <audio controls preload="metadata" class="audio-player">
+                    <source src="../audio/stop-paying-your-model-to-overthink-podcast.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+
+        <div class="article-body">
+
+            <p>The first time I saw it happen, I assumed it was a bug in our code. A reasoning model came back with a perfectly valid response object, a full bill for its output tokens, and no answer at all. Not a wrong answer. An empty one.</p>
+
+            <p>It was not a bug. The model had spent its entire output allowance thinking. One practitioner describes the same failure exactly, a response that reports the full output budget as consumed and carries not one character of an answer <a href="https://www.ml4devs.com/articles/llm-reasoning-model-output-token-budget/" target="_blank" rel="noopener" class="ref-link">[1]</a>. Researchers now have a name for the mechanism. When reasoning traces and final answers share one output budget, long traces can crowd out the very answer they were meant to support <a href="https://arxiv.org/abs/2605.07686" target="_blank" rel="noopener" class="ref-link">[2]</a>.</p>
+
+            <p>That small failure is a good door into a bigger argument. Most teams treat maximum reasoning as the safe default. The evidence says it is neither safe nor cheap, and the budget you give a model to think is a product decision, not a model setting you leave alone.</p>
+
+            <h2>What a Thinking Budget Actually Is</h2>
+
+            <p>Reasoning models spend hidden tokens before they answer. OpenAI describes these internal reasoning tokens as the way a model plans, uses tools, inspects alternatives and recovers from ambiguity on harder multi-step tasks <a href="https://platform.openai.com/docs/guides/reasoning?example=research" target="_blank" rel="noopener" class="ref-link">[3]</a>. A thinking budget is the control you hold over how much of that hidden work happens.</p>
+
+            <p>Every vendor exposes it a little differently, and that difference matters when you migrate.</p>
+
+            <table class="comparison-table">
+                <thead><tr><th>Platform</th><th>Control</th><th>What it does</th></tr></thead>
+                <tbody>
+                    <tr><td>Anthropic Claude</td><td><code>budget_tokens</code> (manual) or adaptive thinking</td><td>Thinks against a set budget before answering <a href="https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking?q=extended%20output" target="_blank" rel="noopener" class="ref-link">[4]</a></td></tr>
+                    <tr><td>Amazon Bedrock</td><td>Adaptive thinking for Claude</td><td>Model decides when and how much to think <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-adaptive-thinking.html" target="_blank" rel="noopener" class="ref-link">[5]</a></td></tr>
+                    <tr><td>Google Gemini 2.5</td><td><code>thinkingBudget</code></td><td>0 disables thinking, minus 1 lets the model choose <a href="https://vercel.com/docs/ai-gateway/capabilities/reasoning/google" target="_blank" rel="noopener" class="ref-link">[6]</a></td></tr>
+                    <tr><td>Google Gemini 3.1</td><td><code>thinkingLevel</code></td><td>Named levels replace the token number <a href="https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-live-preview" target="_blank" rel="noopener" class="ref-link">[7]</a></td></tr>
+                    <tr><td>Open models (Qwen3 on vLLM)</td><td><code>thinking_token_budget</code></td><td>Forces the end of thinking once spent <a href="https://github.com/vllm-project/vllm/issues/55382" target="_blank" rel="noopener" class="ref-link">[8]</a></td></tr>
+                </tbody>
+            </table>
+
+            <p>One detail trips people up. The budget is a ceiling, not a prepayment. You are charged for what the model actually uses <a href="https://community.openai.com/t/how-are-reasoning-tokens-cached-tokens-input-tokens-and-output-tokens-counted-for-billing/1386849/2" target="_blank" rel="noopener" class="ref-link">[9]</a>. And the output limit includes the reasoning, which is exactly how you end up with the empty answer above <a href="https://community.openai.com/t/how-are-reasoning-tokens-cached-tokens-input-tokens-and-output-tokens-counted-for-billing/1386849/2" target="_blank" rel="noopener" class="ref-link">[9]</a>.</p>
+
+            <h2>The Reasoning Tax on Your Invoice</h2>
+
+            <p>Here is the part finance teams find out about late. Reasoning tokens never appear as answer text, yet they are billed as output tokens <a href="https://help.openai.com/en/articles/4936856-understanding-and-counting-tokens" target="_blank" rel="noopener" class="ref-link">[10]</a>. A secondary comparison reports the same pattern across OpenAI, Anthropic and Google, with none publishing a separate reasoning price <a href="https://www.aifreeapi.com/en/posts/reasoning-token-billing" target="_blank" rel="noopener" class="ref-link">[11]</a>.</p>
+
+            <p>Output is the expensive side of the meter. One 2026 pricing survey lists a flagship reasoning tier at 50 dollars per million output tokens, five times its input price <a href="https://intuitionlabs.ai/articles/llm-api-pricing-cost-per-task-comparison" target="_blank" rel="noopener" class="ref-link">[12]</a>. Treat that as one source's snapshot, but the ratio is the point.</p>
+
+            <p>How much of output is thinking? Gateway data from Requesty for April 2026 put reasoning at roughly a third of output on frontier routes, and 82 percent on the heaviest route <a href="https://requesty.ai/data/reasoning-token-share-by-provider-april-2026" target="_blank" rel="noopener" class="ref-link">[13]</a>. That is vendor-reported traffic, not a controlled study. An academic analysis reaches a similar conclusion through a different lens, finding that inference spend is often dominated by internal thinking <a href="https://arxiv.org/pdf/2608.26235v1" target="_blank" rel="noopener" class="ref-link">[14]</a>.</p>
+
+            <p>The spread between effort settings can be huge. One blog estimate puts a single complex query at about 45 times the cost on high effort versus minimal <a href="https://chatgptaihub.com/why-reasoning-effort-matters-tuning-gpt-5-1-reasoning-effort-for-cost-vs-quality/" target="_blank" rel="noopener" class="ref-link">[15]</a>. I would not put that number in a business case, because it is an estimate and not a measurement. But I have seen the shape of it in real bills, and it is never small. And cost is only half of it, since a bigger budget also raises latency <a href="https://firebase.google.com/docs/reference/js/ai.thinkingconfig.md" target="_blank" rel="noopener" class="ref-link">[16]</a>.</p>
+
+            <h2>When More Thinking Makes the Answer Worse</h2>
+
+            <p>So you pay more. Surely you get better answers?</p>
+
+            <p>Not reliably. Researchers have built tasks where extending reasoning length makes performance worse, an inverse scaling relationship between test-time compute and accuracy <a href="https://arxiv.org/html/2507.14417" target="_blank" rel="noopener" class="ref-link">[17]</a>. A 2026 study found that 3 to 19 percent of benchmark items get worse as the budget grows, even after controlling for truncation, and which items do so differs by model <a href="https://arxiv.org/abs/2608.12150" target="_blank" rel="noopener" class="ref-link">[18]</a>. The Reasoning Tax paper adds systematic diminishing returns at the higher effort levels <a href="https://arxiv.org/pdf/2608.26235v1" target="_blank" rel="noopener" class="ref-link">[14]</a>.</p>
+
+            <p>The most practical finding is about cutoffs. On gpt-oss, answers from completed low and medium effort runs were 14.5 to 26.3 points more accurate than high effort runs stopped at the same length <a href="https://arxiv.org/pdf/2608.03401" target="_blank" rel="noopener" class="ref-link">[19]</a>. In plain terms, a finished short thought beats an interrupted long one. If you cap a high effort model to save money, you may get the worst of both worlds.</p>
+
+            <p>And then there is the absurd end. Two well-known reasoning models were observed generating over 10,000 tokens to answer what 2 plus 3 equals <a href="https://arxiv.org/html/2506.05256v1" target="_blank" rel="noopener" class="ref-link">[20]</a>.</p>
+
+            <p>Thinking does pay where the work is genuinely sequential. Tasks like AIME 2025 and LiveCodeBench reward it, while knowledge recall tasks like MMLU-Pro gain little despite being hard <a href="https://arxiv.org/abs/2608.26235" target="_blank" rel="noopener" class="ref-link">[21]</a>. That distinction is the whole game. A model cannot reason its way to a fact it does not know.</p>
+
+            <h2>Your Leaderboard Has a Hidden Budget</h2>
+
+            <p>This is where I part ways with how most teams pick models. We read a leaderboard, take the top name and move on. But the same study found that model rankings reverse across budgets on every benchmark it tested, with the result significant at p below 0.01 <a href="https://arxiv.org/abs/2608.12150" target="_blank" rel="noopener" class="ref-link">[18]</a>.</p>
+
+            <p>Think about what that means for procurement. The model that wins at a generous budget may lose at the budget you can afford. The inverse scaling authors make the same plea from a different angle, arguing models must be evaluated across diverse reasoning lengths <a href="https://arxiv.org/abs/2507.14417" target="_blank" rel="noopener" class="ref-link">[22]</a>. Agent benchmarks have a related blind spot, since most use independent per-task budgets rather than one shared budget across a whole job <a href="https://arxiv.org/abs/2608.16033v1" target="_blank" rel="noopener" class="ref-link">[23]</a>.</p>
+
+            <p>My rule now is simple. A model comparison without a stated budget is not a comparison. It is an anecdote.</p>
+
+            <h2>What the Research Says Works</h2>
+
+            <p>The research community has been busy, and the headline is encouraging. Several independent methods report cutting roughly half the reasoning tokens with accuracy held flat or slightly better.</p>
+
+            <table class="comparison-table">
+                <thead><tr><th>Method</th><th>Reported token cut</th><th>Accuracy effect</th><th>Needs training</th></tr></thead>
+                <tbody>
+                    <tr><td>SelfBudgeter</td><td>48 to 61 percent <a href="https://arxiv.org/pdf/2505.11274v3" target="_blank" rel="noopener" class="ref-link">[24]</a></td><td>Nearly unchanged</td><td>Yes</td></tr>
+                    <tr><td>BET (solve or fold)</td><td>54 percent <a href="https://arxiv.org/abs/2605.11625" target="_blank" rel="noopener" class="ref-link">[25]</a></td><td>Up to 3.2 points better</td><td>Yes</td></tr>
+                    <tr><td>ALP length penalty</td><td>50 percent <a href="https://arxiv.org/pdf/2506.05256v2" target="_blank" rel="noopener" class="ref-link">[26]</a></td><td>No significant drop</td><td>Yes</td></tr>
+                    <tr><td>Plan and Budget</td><td>39 percent <a href="https://arxiv.org/abs/2505.16122" target="_blank" rel="noopener" class="ref-link">[27]</a></td><td>Gains reported</td><td>No</td></tr>
+                    <tr><td>TAB for multi-turn</td><td>Up to 35 percent, 30 percent less latency <a href="https://arxiv.org/abs/2604.05164" target="_blank" rel="noopener" class="ref-link">[28]</a></td><td>Maintained</td><td>Yes</td></tr>
+                </tbody>
+            </table>
+
+            <p>I have to be honest about the fine print. Every figure in that table is author-reported, most come from a single preprint, and most were measured on math. Several need reinforcement learning fine-tuning that an API customer cannot do. So read these as proof that the waste is real and recoverable, not as savings you will get by flipping a switch.</p>
+
+            <p>One finding is genuinely useful for practitioners. You often do not need anything clever. A study of learned stopping found that learning pays where answers oscillate, while a single confidence threshold is enough where most problems are already solved at the first checkpoint <a href="https://arxiv.org/pdf/2606.30852v2" target="_blank" rel="noopener" class="ref-link">[29]</a>.</p>
+
+            <h2>Routing and Budgets for Agents</h2>
+
+            <p>For teams on hosted APIs, the biggest lever is not inside the model. It is in front of it.</p>
+
+            <p>Cascades are the old, boring answer that still works. An early study showed a cheap-first cascade matching the stronger model's performance at only 40 percent of its cost <a href="https://arxiv.org/pdf/2310.03094.pdf" target="_blank" rel="noopener" class="ref-link">[30]</a>. That was an older GPT generation, but the logic carries. One practitioner estimate suggests routing 70 percent of traffic to a cheaper tier can cut cost by 60 to 70 percent when quality holds on the easy tasks <a href="https://mbrenndoerfer.com/writing/model-routing-selection-ab-testing-cascades-strategies" target="_blank" rel="noopener" class="ref-link">[31]</a>.</p>
+
+            <p>Agents need budgets per step, not per run. The Ares work makes the intuitive point that an agent should save high effort for the hard steps and use low effort for trivial ones like opening a URL <a href="https://arxiv.org/html/2603.07915" target="_blank" rel="noopener" class="ref-link">[32]</a>. BAGEN goes further and asks agents to predict their remaining budget at each step and raise an alert when finishing looks unlikely <a href="https://arxiv.org/pdf/2606.00198v1" target="_blank" rel="noopener" class="ref-link">[33]</a>. In twenty years of building systems I have rarely seen a good idea that sensible go so unimplemented.</p>
+
+            <h2>A Four Tier Budget Policy You Can Use This Week</h2>
+
+            <p>Here is the framework I would hand to a team tomorrow. The token ranges are my own editorial synthesis, anchored on Anthropic's documented 1,024 token minimum. They are a starting point, not a vendor recommendation.</p>
+
+            <table class="comparison-table">
+                <thead><tr><th>Tier</th><th>Use it for</th><th>Setting</th><th>How you get there</th></tr></thead>
+                <tbody>
+                    <tr><td>0, no thinking</td><td>Lookup, extraction, formatting, classification, tool plumbing</td><td>Effort none or minimal, budget 0</td><td>Default for these task types</td></tr>
+                    <tr><td>1, light</td><td>Routine drafting, simple multi-step answers</td><td>Low effort, about 1k to 4k tokens</td><td>Default entry tier</td></tr>
+                    <tr><td>2, standard</td><td>Planning, debugging, structured analysis</td><td>Medium effort, about 8k to 16k tokens</td><td>Escalate when a verifier or schema check fails</td></tr>
+                    <tr><td>3, deep</td><td>Hard sequential work, complex code, final agent synthesis</td><td>High effort, about 32k tokens, capped per task</td><td>Explicit task type or a second failed check</td></tr>
+                </tbody>
+            </table>
+
+            <p>Anthropic's own guidance points the same way, to start at the minimum and raise it as needed <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/extended-thinking-tips" target="_blank" rel="noopener" class="ref-link">[34]</a>. The principle underneath the table is the one that matters. Default low, escalate on failure, never default to maximum.</p>
+
+            <h2>Measure the Right Thing and Guard Production</h2>
+
+            <p>The last trap is measuring tokens at all. A 2026 study of coding agents concluded that token reduction is an inadequate proxy for cost, and that efficiency should be judged by success-adjusted end-to-end cost <a href="https://arxiv.org/html/2607.12161v5" target="_blank" rel="noopener" class="ref-link">[35]</a>. So run a budget sweep, and pick each tier by billed cost divided by successful outcomes, checked against your p95 latency.</p>
+
+            <p>Then protect yourself in production with a few habits.</p>
+
+            <ul>
+                <li><strong>Leave headroom.</strong> Keep output limits well above the thinking cap, and alert on length stop reasons and empty answers.</li>
+                <li><strong>Use manual budgets where latency matters.</strong> Anthropic notes manual mode remains useful when you need predictable latency or precise cost control <a href="https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking?q=extended%20output" target="_blank" rel="noopener" class="ref-link">[4]</a>.</li>
+                <li><strong>Retest on every model upgrade.</strong> On Bedrock, the older budget parameter returns an error on Claude Opus 4.7, so migrations can break silently in testing and loudly in production <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-opus-4-7.html" target="_blank" rel="noopener" class="ref-link">[36]</a>.</li>
+                <li><strong>Handle missing thoughts.</strong> Gemini may answer without thinking and return no thought parts, so your parser must cope <a href="https://docs--cloud--google--com.storefront-preview-proxy.getredo.com/gemini-enterprise-agent-platform/models/thinking" target="_blank" rel="noopener" class="ref-link">[37]</a>.</li>
+                <li><strong>Audit the meter.</strong> One user report describes reported output tokens running far above actual generation <a href="https://community.openai.com/t/gpt-5-6-usage-output-tokens-is-9x-actual-generation-re-summed-once-per-reasoning-item-exceeds-max-output-tokens-and-is-what-gets-billed/1386467/5" target="_blank" rel="noopener" class="ref-link">[38]</a>. It is an unconfirmed anecdote, but it is a good reason to reconcile your own usage logs against invoices.</li>
+            </ul>
+
+            <p>I will admit I am not fully convinced the industry will fix this on its own. Vendors have little reason to make their customers think less. That is why the budget has to live in your configuration, owned by your team, and reported next to every model comparison you make.</p>
+
+            <p>The empty answer that started this piece was not a model failure. It was a budget nobody owned. Own it, measure it by outcomes, and the cheapest performance gain of the year is sitting right there.</p>
+
+            <!-- REFERENCES -->
+            <div class="callout">
+                <div class="callout-title"><i class="fas fa-book-open"></i> References</div>
+                <p style="margin-bottom: 0.5rem;"><strong>[1]</strong> <a href="https://www.ml4devs.com/articles/llm-reasoning-model-output-token-budget/" target="_blank" rel="noopener">https://www.ml4devs.com/articles/llm-reasoning-model-output-token-budget/</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[2]</strong> <a href="https://arxiv.org/abs/2605.07686" target="_blank" rel="noopener">https://arxiv.org/abs/2605.07686</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[3]</strong> <a href="https://platform.openai.com/docs/guides/reasoning?example=research" target="_blank" rel="noopener">https://platform.openai.com/docs/guides/reasoning?example=research</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[4]</strong> <a href="https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking?q=extended%20output" target="_blank" rel="noopener">https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking?q=extended%20output</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[5]</strong> <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-adaptive-thinking.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-adaptive-thinking.html</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[6]</strong> <a href="https://vercel.com/docs/ai-gateway/capabilities/reasoning/google" target="_blank" rel="noopener">https://vercel.com/docs/ai-gateway/capabilities/reasoning/google</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[7]</strong> <a href="https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-live-preview" target="_blank" rel="noopener">https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-live-preview</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[8]</strong> <a href="https://github.com/vllm-project/vllm/issues/55382" target="_blank" rel="noopener">https://github.com/vllm-project/vllm/issues/55382</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[9]</strong> <a href="https://community.openai.com/t/how-are-reasoning-tokens-cached-tokens-input-tokens-and-output-tokens-counted-for-billing/1386849/2" target="_blank" rel="noopener">https://community.openai.com/t/how-are-reasoning-tokens-cached-tokens-input-tokens-and-output-tokens-counted-for-billing/1386849/2</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[10]</strong> <a href="https://help.openai.com/en/articles/4936856-understanding-and-counting-tokens" target="_blank" rel="noopener">https://help.openai.com/en/articles/4936856-understanding-and-counting-tokens</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[11]</strong> <a href="https://www.aifreeapi.com/en/posts/reasoning-token-billing" target="_blank" rel="noopener">https://www.aifreeapi.com/en/posts/reasoning-token-billing</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[12]</strong> <a href="https://intuitionlabs.ai/articles/llm-api-pricing-cost-per-task-comparison" target="_blank" rel="noopener">https://intuitionlabs.ai/articles/llm-api-pricing-cost-per-task-comparison</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[13]</strong> <a href="https://requesty.ai/data/reasoning-token-share-by-provider-april-2026" target="_blank" rel="noopener">https://requesty.ai/data/reasoning-token-share-by-provider-april-2026</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[14]</strong> <a href="https://arxiv.org/pdf/2608.26235v1" target="_blank" rel="noopener">https://arxiv.org/pdf/2608.26235v1</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[15]</strong> <a href="https://chatgptaihub.com/why-reasoning-effort-matters-tuning-gpt-5-1-reasoning-effort-for-cost-vs-quality/" target="_blank" rel="noopener">https://chatgptaihub.com/why-reasoning-effort-matters-tuning-gpt-5-1-reasoning-effort-for-cost-vs-quality/</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[16]</strong> <a href="https://firebase.google.com/docs/reference/js/ai.thinkingconfig.md" target="_blank" rel="noopener">https://firebase.google.com/docs/reference/js/ai.thinkingconfig.md</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[17]</strong> <a href="https://arxiv.org/html/2507.14417" target="_blank" rel="noopener">https://arxiv.org/html/2507.14417</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[18]</strong> <a href="https://arxiv.org/abs/2608.12150" target="_blank" rel="noopener">https://arxiv.org/abs/2608.12150</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[19]</strong> <a href="https://arxiv.org/pdf/2608.03401" target="_blank" rel="noopener">https://arxiv.org/pdf/2608.03401</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[20]</strong> <a href="https://arxiv.org/html/2506.05256v1" target="_blank" rel="noopener">https://arxiv.org/html/2506.05256v1</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[21]</strong> <a href="https://arxiv.org/abs/2608.26235" target="_blank" rel="noopener">https://arxiv.org/abs/2608.26235</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[22]</strong> <a href="https://arxiv.org/abs/2507.14417" target="_blank" rel="noopener">https://arxiv.org/abs/2507.14417</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[23]</strong> <a href="https://arxiv.org/abs/2608.16033v1" target="_blank" rel="noopener">https://arxiv.org/abs/2608.16033v1</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[24]</strong> <a href="https://arxiv.org/pdf/2505.11274v3" target="_blank" rel="noopener">https://arxiv.org/pdf/2505.11274v3</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[25]</strong> <a href="https://arxiv.org/abs/2605.11625" target="_blank" rel="noopener">https://arxiv.org/abs/2605.11625</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[26]</strong> <a href="https://arxiv.org/pdf/2506.05256v2" target="_blank" rel="noopener">https://arxiv.org/pdf/2506.05256v2</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[27]</strong> <a href="https://arxiv.org/abs/2505.16122" target="_blank" rel="noopener">https://arxiv.org/abs/2505.16122</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[28]</strong> <a href="https://arxiv.org/abs/2604.05164" target="_blank" rel="noopener">https://arxiv.org/abs/2604.05164</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[29]</strong> <a href="https://arxiv.org/pdf/2606.30852v2" target="_blank" rel="noopener">https://arxiv.org/pdf/2606.30852v2</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[30]</strong> <a href="https://arxiv.org/pdf/2310.03094.pdf" target="_blank" rel="noopener">https://arxiv.org/pdf/2310.03094.pdf</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[31]</strong> <a href="https://mbrenndoerfer.com/writing/model-routing-selection-ab-testing-cascades-strategies" target="_blank" rel="noopener">https://mbrenndoerfer.com/writing/model-routing-selection-ab-testing-cascades-strategies</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[32]</strong> <a href="https://arxiv.org/html/2603.07915" target="_blank" rel="noopener">https://arxiv.org/html/2603.07915</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[33]</strong> <a href="https://arxiv.org/pdf/2606.00198v1" target="_blank" rel="noopener">https://arxiv.org/pdf/2606.00198v1</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[34]</strong> <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/extended-thinking-tips" target="_blank" rel="noopener">https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/extended-thinking-tips</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[35]</strong> <a href="https://arxiv.org/html/2607.12161v5" target="_blank" rel="noopener">https://arxiv.org/html/2607.12161v5</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[36]</strong> <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-opus-4-7.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-opus-4-7.html</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[37]</strong> <a href="https://docs--cloud--google--com.storefront-preview-proxy.getredo.com/gemini-enterprise-agent-platform/models/thinking" target="_blank" rel="noopener">https://docs--cloud--google--com.storefront-preview-proxy.getredo.com/gemini-enterprise-agent-platform/models/thinking</a></p>
+                <p style="margin-bottom: 0.5rem;"><strong>[38]</strong> <a href="https://community.openai.com/t/gpt-5-6-usage-output-tokens-is-9x-actual-generation-re-summed-once-per-reasoning-item-exceeds-max-output-tokens-and-is-what-gets-billed/1386467/5" target="_blank" rel="noopener">https://community.openai.com/t/gpt-5-6-usage-output-tokens-is-9x-actual-generation-re-summed-once-per-reasoning-item-exceeds-max-output-tokens-and-is-what-gets-billed/1386467/5</a></p>
+            </div>
+
+        </div>
+
+    <footer class="article-footer">
+            <a href="../index.html" onclick="sessionStorage.setItem('openTab','articles')"><i class="fas fa-arrow-left"></i> Back to all articles</a>
+            <div class="share-links">
+                <a href="https://twitter.com/intent/tweet?text=Stop%20Paying%20Your%20Model%20to%20Overthink&url=https://wricktalukdar.technology/articles/stop-paying-your-model-to-overthink.html" title="Share on X"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://wricktalukdar.technology/articles/stop-paying-your-model-to-overthink.html" title="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </footer>
+
+    </article>
+
+    <script>
+        try {
+            window.addEventListener('scroll', function() {
+                var bar = document.getElementById('reading-progress');
+                var scrollTop = window.pageYOffset;
+                var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                if (docHeight > 0) { bar.style.width = (scrollTop / docHeight) * 100 + '%'; }
+            });
+        } catch(e) {}
+    </script>
+
+    <script>
+        try {
+            var readAloudUtterance = null;
+            var readAloudActive = false;
+            function toggleReadAloud() {
+                var btn = document.getElementById('read-aloud-btn');
+                var icon = document.getElementById('read-aloud-icon');
+                var label = document.getElementById('read-aloud-text');
+                if (readAloudActive) {
+                    window.speechSynthesis.cancel();
+                    readAloudActive = false; btn.classList.remove('active');
+                    icon.className = 'fas fa-volume-up'; label.textContent = 'Read Full Article Aloud';
+                    return;
+                }
+                var body = document.querySelector('.article-body');
+                if (!body) return;
+                var text = body.innerText; if (!text) return;
+                readAloudUtterance = new SpeechSynthesisUtterance(text);
+                readAloudUtterance.rate = 1.0; readAloudUtterance.pitch = 1.0; readAloudUtterance.lang = 'en-US';
+                var voices = window.speechSynthesis.getVoices();
+                var preferred = voices.find(function(v) { return v.name.indexOf('Samantha') > -1; }) ||
+                               voices.find(function(v) { return v.name.indexOf('Google') > -1 && v.lang === 'en-US'; }) ||
+                               voices.find(function(v) { return v.lang === 'en-US'; });
+                if (preferred) readAloudUtterance.voice = preferred;
+                readAloudUtterance.onend = function() {
+                    readAloudActive = false; btn.classList.remove('active');
+                    icon.className = 'fas fa-volume-up'; label.textContent = 'Read Full Article Aloud';
+                };
+                window.speechSynthesis.speak(readAloudUtterance);
+                readAloudActive = true; btn.classList.add('active');
+                icon.className = 'fas fa-pause'; label.textContent = 'Stop Reading';
+            }
+            if (window.speechSynthesis) {
+                window.speechSynthesis.getVoices();
+                if (window.speechSynthesis.onvoiceschanged !== undefined) {
+                    window.speechSynthesis.onvoiceschanged = function() { window.speechSynthesis.getVoices(); };
+                }
+            }
+        } catch(e) {}
+    </script>
+
+    <script>
+        try {
+            function toggleArticleTheme() {
+                var body = document.body;
+                var icon = document.getElementById('article-theme-icon');
+                body.classList.toggle('light-mode');
+                if (body.classList.contains('light-mode')) {
+                    icon.className = 'fas fa-moon'; localStorage.setItem('theme', 'light');
+                } else {
+                    icon.className = 'fas fa-sun'; localStorage.setItem('theme', 'dark');
+                }
+            }
+            (function() {
+                var saved = localStorage.getItem('theme');
+                if (saved === 'light') {
+                    document.body.classList.add('light-mode');
+                    var icon = document.getElementById('article-theme-icon');
+                    if (icon) icon.className = 'fas fa-moon';
+                }
+            })();
+        } catch(e) {}
+    </script>
+</body>
+</html>
