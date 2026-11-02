@@ -5,9 +5,15 @@
     <link>https://wricktalukdar.technology</link>
     <description>Articles on AI, Machine Learning, Agentic AI, Generative AI, Leadership, and emerging technology by Wrick Talukdar.</description>
     <language>en-us</language>
-    <lastBuildDate>Fri, 23 Oct 2026 16:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 02 Nov 2026 16:00:00 +0000</lastBuildDate>
     <atom:link href="https://wricktalukdar.technology/articles.xml" rel="self" type="application/rss+xml"/>
 <item>
+      <title>Stop Paying Your Model to Overthink</title>
+      <link>https://wricktalukdar.technology/articles/stop-paying-your-model-to-overthink.html</link>
+      <description>Reasoning tokens are billed as output, often dominate spend, and can even make answers worse. Why the thinking budget is a product decision, and a practical four tier policy for setting it by cost per successful outcome.</description>
+      <guid>https://wricktalukdar.technology/articles/stop-paying-your-model-to-overthink.html</guid>
+    </item>
+    <item>
       <title>Governance Is the Accelerator, Not the Brake</title>
       <link>https://wricktalukdar.technology/articles/governance-is-the-accelerator-not-the-brake.html</link>
       <description>Agentic AI adoption is near universal, yet most agents never reach production and governance is the top reason they stall. The contrarian case that governance is not a cost center or a brake, it is the lever that decides which deployments scale and return value.</description>
